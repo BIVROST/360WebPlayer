@@ -11,3 +11,5 @@ nb-configuration.xml
 .nb-gradle/
 
 mrdoob-three.js-74e7d09
+
+.DS_Store
