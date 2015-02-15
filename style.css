@@ -1,0 +1,40 @@
+html {
+  height: 100%; }
+
+body {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: 0px;
+  padding: 0px; }
+  body.index {
+    background: white;
+    color: black; }
+    body.index a {
+      color: blue; }
+  body.show {
+    background: black;
+    color: white; }
+    body.show a {
+      color: lightblue; }
+
+.show .canvas {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0; }
+
+/*
+:-webkit-full-screen, 
+:fullscreen,  
+.show {
+	.bivrost {
+		width:100%;
+		height:100%;
+	}
+}*/
+
+/*# sourceMappingURL=style.css.map */

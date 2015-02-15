@@ -3,31 +3,57 @@ var scene, camera, renderer;
 
 
 var rotatable=[];
+var container;
+var textures=[];
 
-
-function init() {
-	scene=new THREE.Scene();
-	renderer = new THREE.WebGLRenderer();
-	renderer.setSize(width, height);
-	document.getElementById("bivrost_pano").appendChild(renderer.domElement);
+function set_size() {
+	width=container.offsetWidth;
+	height=container.offsetHeight;
+	console.log("[Bivrost] resize: "+width+"x"+height);
+	renderer.setSize(width, height);	
+	if(camera) {
+		camera.aspect=width/height;
+		camera.updateProjectionMatrix();
+	}
 }
 
+function init() {
+	container=document.body;
+	
+	scene=new THREE.Scene();
+	renderer = new THREE.WebGLRenderer();
+	set_size();
+
+	vrEffect=new THREE.VREffect(renderer);
+
+	// http://stackoverflow.com/a/14139497/785171
+	window.addEventListener("resize", set_size);
+	
+	container.appendChild(renderer.domElement);	
+}
+
+var vrControls, vrEffect;
 
 function player_mono(texture, on_play) {
 	console.log("[bivrost] loading mono player");
 
+	textures=[texture];
+
 	init();
 
-	camera=new THREE.PerspectiveCamera(75, width/height, 0.1, 1000 );
+	camera=new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
 	scene.add(camera);
+	
+	vrControls = new THREE.VRControls(camera, function(e){console.warn(e);});	
+	
+	var material=new THREE.MeshBasicMaterial({
+		map: texture,
+		side: THREE.DoubleSide
+	});
 	
 	var sphere=new THREE.Mesh(
 		new THREE.SphereGeometry(3, 20, 20), 
-		new THREE.MeshBasicMaterial({
-			map: texture,
-			overdraw: 0.5,
-			side: THREE.BackSide
-		})
+		material
 	);
 	scene.add(sphere);
 	rotatable.push(sphere);
@@ -43,6 +69,8 @@ function player_mono(texture, on_play) {
 function player_stereo(textureLeft, textureRight, on_play) {
 	console.log("[bivrost] loading stereo player");
 	
+	textures=[textureLeft, textureRight];
+
 	init();
 	
 	camera=new THREE.PerspectiveCamera(75, width/height, 0.1, 1000 );
@@ -52,7 +80,7 @@ function player_stereo(textureLeft, textureRight, on_play) {
 		new THREE.SphereGeometry(1, 20, 20), 
 		new THREE.MeshBasicMaterial({
 			map: textureLeft,
-			side: THREE.BackSide
+			side: THREE.DoubleSide
 		})
 	)
 	sphereLeft.position.setX(1);
@@ -63,7 +91,7 @@ function player_stereo(textureLeft, textureRight, on_play) {
 		new THREE.SphereGeometry(1, 20, 20), 
 		new THREE.MeshBasicMaterial({
 			map: textureRight,
-			side: THREE.BackSide
+			side: THREE.DoubleSide
 		})
 	);
 	sphereRight.position.setX(-1);
@@ -83,7 +111,10 @@ function load_texture(path, onload) {
 	var loader=new THREE.TextureLoader();
 	loader.load(
 		path,
-		onload || player_mono,
+		function(texture) {
+			texture.name="texture:path";
+			(onload || player_mono)(texture);
+		},
 		function progress(xhr) {
 			console.log(path + ": "+ (xhr.loaded / xhr.total * 100) + '% loaded' );
 		}
@@ -93,14 +124,15 @@ function load_texture(path, onload) {
 
 function load_video(path, onload, width, height) {
 	console.log("[bivrost] video loading: "+path);
-	var video=document.createElement( 'video' );
-	video.width=width || 32;
-	video.height=height || 32;
+	var video=document.createElement("video");
+	video.width=width || 512;
+	video.height=height || 512;
 	video.loop=true;
 	
 	video.addEventListener("loadeddata", function() {
 		console.log("[bivrost] video loaded");
 		var texture = new THREE.VideoTexture(video);
+		texture.name="video:"+path;
 		texture.minFilter = THREE.LinearFilter;
 		texture.magFilter = THREE.LinearFilter;
 		(onload || player_mono)(texture, function() {
@@ -114,66 +146,70 @@ function load_video(path, onload, width, height) {
 
 
 var lookEuler=[0,0,0];
-(function(domElement, scale){
+(function(domElement, scale) {
 	var enabled=false;
-	var x,y;
-	var w=domElement.offsetWidth;
-	var h=domElement.offsetHeight;
-	domElement.addEventListener("mousedown", function(e) {
+	var originX,originY;
+	var reverseWidth=1/domElement.offsetWidth;
+	var reverseHeight=1/domElement.offsetHeight;
+	
+	var originEulerY=0, originEulerX=0;
+	
+	function mousedown(e) {
 		enabled=true;
-		x=e.x;
-		y=e.y;
-//		console.log("down", e);
-	});
-	domElement.addEventListener("mouseup", function() {
+		originX=~~(e.x || e.clientX);
+		originY=~~(e.y || e.clientY);
+		originEulerX=lookEuler[0];
+		originEulerY=lookEuler[1];
+	}
+	
+	function mouseend(e) {
 		enabled=false;
-//		console.log("up");
-	});
-	domElement.addEventListener("mousemove", function(e) {
+	}
+	
+	function mousemove(e) {
 		if(!enabled)
 			return;
-		var dx=e.x-x;
-		var dy=e.y-y;
-		x=e.x;
-		y=e.y;
-		lookEuler[0]-=scale*dx/width;
-		lookEuler[1]-=scale*dy/height;
-//		console.log("move", e);
-	});
+		var dx=~~(e.x || e.clientX)-originX;
+		var dy=~~(e.y || e.clientY)-originY;
+		lookEuler[0]=originEulerX+scale*dx*reverseWidth;
+		lookEuler[1]=originEulerY+scale*dy*reverseHeight;
+	}
 	
-})(document.getElementById("bivrost_pano"), 1);
+	domElement.addEventListener("mousedown", mousedown);
+	domElement.addEventListener("mousemove", mousemove);
+	domElement.addEventListener("mouseup", mouseend);
+	domElement.addEventListener("mouseout", mouseend);
+	
+	
+	function keydown(e) {
+		console.log("down", e);
+	}
+	
+	function keyup(e) {
+		console.log("up", e);
+	}
+	
+	window.addEventListener("keydown", keydown);
+	window.addEventListener("keyup", keyup);
+
+	
+})(document.body, -1);
 
 
 var clock=new THREE.Clock();
 function render() {
 	var dt=clock.getDelta();
 
+	vrControls.update();
+
 	for(var i in rotatable)
 		if(rotatable.hasOwnProperty(i)) {
-//			console.log(lookEuler);
 			rotatable[i].rotation.x=lookEuler[1];
 			rotatable[i].rotation.y=lookEuler[0];
 		}
 	
-//	if(cube) {
-////		cube.rotation.x+=dt*.1;
-////		cube.rotation.y+=dt*1;
-//	}
-	
-	renderer.render(scene, camera);
+//	renderer.render(scene, camera);
+	vrEffect.render(scene, camera);
 	requestAnimationFrame(render);
 }
-//
-load_video("scenes/holland.mp4", function(vid1, onload1) {
-	load_video("scenes/holland2.mp4", function(vid2, onload2) {
-		player_stereo(vid1, vid2, function(){
-			onload1();
-			onload2();
-		});
-	});
-} );
 
-
-
-//load_video("scenes/holland.mp4");
-//load_texture("scenes/holland.jpeg");
