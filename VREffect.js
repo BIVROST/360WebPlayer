@@ -65,6 +65,7 @@ THREE.VREffect = function ( renderer, done ) {
 
 	this._init();
 
+	// scene: scene or scene[] (0 - left eye, 1 - right eye)
 	this.render = function ( scene, camera ) {
 		var renderer = this._renderer;
 		var vrHMD = this._vrHMD;
@@ -74,7 +75,7 @@ THREE.VREffect = function ( renderer, done ) {
 			return;
 		}
 		// Regular render mode if not HMD
-		renderer.render.apply( this._renderer, arguments );
+		renderer.render.call( this._renderer, scene[0] || scene, camera );
 	};
 
 	this.renderStereo = function( scene, camera, renderTarget, forceClear ) {
@@ -105,12 +106,12 @@ THREE.VREffect = function ( renderer, done ) {
 		// render left eye
 		renderer.setViewport( 0, 0, eyeDivisionLine, rendererHeight );
 		renderer.setScissor( 0, 0, eyeDivisionLine, rendererHeight );
-		renderer.render( scene, cameraLeft );
+		renderer.render( scene[0] || scene, cameraLeft );
 
 		// render right eye
 		renderer.setViewport( eyeDivisionLine, 0, eyeDivisionLine, rendererHeight );
 		renderer.setScissor( eyeDivisionLine, 0, eyeDivisionLine, rendererHeight );
-		renderer.render( scene, cameraRight );
+		renderer.render( scene[1] || scene, cameraRight );
 
 		renderer.enableScissorTest( false );
 

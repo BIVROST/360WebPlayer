@@ -55,3 +55,43 @@ Do web przyjęty format filmów to:
 
 > ffmpeg -i in.mp4 -vf scale=2048:2048 -r 30 -c:v libvpx -b:v 1M -strict -2 out.webm
 
+
+
+Moduł `Viewer` - wyświetlanie
+-----------------------------
+
+- wykrycie możliwości:
+	- fullscreen stereo+vr.js (cardboard/oculus)
+	- przeciągana kulka
+	- inne?
+- rozglądanie się
+	- zawsze: przeciągana kulka
+	- opcjonalnie: sensor orientacji
+
+
+Moduł `Picture` - materiał do prezentacji
+-----------------------------------------
+
+Konfiguracja:
+- source (typ materiału)
+	- still (obraz)
+	- video (film)
+- projection (typ projekcji)
+	- equirectangular - zawinięta kula
+	- frame - obraz w ramce (nie zawinięty)
+- stereoscopy (typ stereoskopii)
+	- none - brak
+	- top-bottom - prawe oko na górze, lewe na dole
+	- top-bottom-reversed - lewe oko na górze, prawe na dole
+	- left-right - prawe po prawej, lewe po lewej
+
+API:
+- callback onload - jak materiał się wgra
+- callback onend - jak materiał się skończy
+
+2. picture - film/obraz, projekcja, typ stereo.
+ Wynik: obiekt Picture z onload, cameraCenter, cameraLeft i cameraRight, play, 
+pause, length i rewind
+3. ui
+
+TODO: wiele uri jednocześnie (cubemapa, dwa osobne pliki na lewy/prawy)

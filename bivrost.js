@@ -100,7 +100,7 @@ function player_stereo(textureLeft, textureRight, on_play) {
 	
 	camera.position.setZ(2);
 	
-	on_play();
+	on_play && on_play();
 
 	console.log("[bivrost] start stereo renderer");
 	render();
@@ -200,7 +200,7 @@ var clock=new THREE.Clock();
 function render() {
 	var dt=clock.getDelta();
 
-	vrControls.update();
+	vrControls && vrControls.update();
 
 	for(var i in rotatable)
 		if(rotatable.hasOwnProperty(i)) {
@@ -213,3 +213,8 @@ function render() {
 	requestAnimationFrame(render);
 }
 
+
+function enable_top_bottom() {
+	for(var i=textures.length-1; i >= 0; i--)
+		;
+}
