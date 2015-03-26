@@ -78,8 +78,8 @@ Bivrost.STEREOSCOPY_LEFT_RIGHT=304;
 				log("video loading", url);
 				
 				var video=document.createElement("video");
-				video.width=128;	// TODO: ważne?
-				video.height=128;	// TODO: ważne?
+				video.width=32;	// TODO: ważne?
+				video.height=32;	// TODO: ważne?
 				video.loop=true;	// TODO: config
 
 				this.play=function() {

@@ -32,19 +32,27 @@ Bivrost.AVAILABLE_VRMODES=[
 
 		// http://stackoverflow.com/a/14139497/785171
 		window.addEventListener("resize", this.resize.bind(this));
-		this.resize();
 		
-		mainDom.addEventListener("dblclick", this.toggleFullscreen.bind(this));
+		mainDom.addEventListener("dblclick", this.fullscreenToggle.bind(this));
 		
 		mainDom.addEventListener("keypress", this.keyPress.bind(this));
 		
 		this.mouseLook=new Bivrost.MouseLook(mainDom, 1);
 		
 		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
-//		this.riftRenderer.
+		
+		// fullscreen
+		var onFullscreenChange=this.onFullscreenChange.bind(this);
+		document.addEventListener("fullscreenchange", onFullscreenChange);
+		document.addEventListener("fullscreenchange", onFullscreenChange);
+		document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+		document.addEventListener("mozfullscreenchange", onFullscreenChange);
+		document.addEventListener("MSFullscreenChange", onFullscreenChange);
 		
 		this._loopBound=this.loop.bind(this);
 		this.loop();
+		
+		this.resize();
 		
 		// TODO:
 		// if(hmd detected)
@@ -57,7 +65,7 @@ Bivrost.AVAILABLE_VRMODES=[
 	scene.add(camera);
 	camera.position.setZ(0);
 	var mat,sphere=new THREE.Mesh(
-		new THREE.SphereGeometry(1, 20, 20),
+		new THREE.SphereGeometry(1, 50, 50),
 		mat=new THREE.MeshBasicMaterial({
 			side: THREE.DoubleSide
 		})
@@ -124,7 +132,15 @@ Bivrost.AVAILABLE_VRMODES=[
 //			this.renderer.setViewport(0, 0, width, height);
 			camera.aspect=width/height;
 			camera.updateProjectionMatrix();
-			this.renderer.setViewport(0, 0, this.renderer.domElement.offsetWidth, this.renderer.domElement.offsetHeight);		
+//			delete this.renderer.domElement.style["width"];
+//			delete this.renderer.domElement.style["height"];
+			if(this.riftRenderer) {
+				this.riftRenderer.HMD.hResolution=width;
+				this.riftRenderer.HMD.vResolution=height;
+				this.riftRenderer.setSize(width, height);
+			}
+			this.renderer.setSize(width, height, false);
+//			this.renderer.setViewport(0, 0, width, height);
 		},
 
 		
@@ -136,53 +152,81 @@ Bivrost.AVAILABLE_VRMODES=[
 			this.resize();
 		},
 		
-				
-		_fullscreen: false,
+		
+		_sizeBeforeFullscreen: null,
 		
 		
-		_fullscreenLastSize: null,
-		
-
-		toggleFullscreen: function() {
-			this._fullscreen=!this._fullscreen;
-			log("fullscreen", this._fullscreen);
-			var elem = this.renderer.domElement;
-			switch(this._fullscreen) {
-				case true:
-					// TODO: bind esc
-					this._fullscreenLastSize=[
-						this.renderer.domElement.offsetWidth,
-						this.renderer.domElement.offsetHeight,
-					];
-					this.renderer.setSize(screen.width, screen.height);
-					(
-						elem.requestFullscreen 
-						|| elem.msRequestFullscreen 
-						|| elem.mozRequestFullScreen
-						|| elem.webkitRequestFullscreen 
-						|| function() {throw "fullscreen not supported";}
-					).call(elem);
-					setTimeout(this.resize.bind(this), 0);
-					break;
-				case false:
-					this.renderer.setSize(this._fullscreenLastSize[0], this._fullscreenLastSize[1]);
-					(
-						document.exitFullscreen
-						|| document.mozCancelFullScreen 
-						|| document.webkitExitFullscreen 
-						|| document.msExitFullscreen 
-						|| function() {console.warn("no API to exit fullscreen");}
-					).call(document);
-					setTimeout(this.resize.bind(this), 0);
-					break;
+		fullscreenEnter: function() {
+			if(this.isFullscreen) {
+				console.warn("already in fullscreen");
+				return;
 			}
+			
+			
+			
+			if(!this._sizeBeforeFullscreen)
+				this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];
+			log("fullscreen enter, stored size", this._sizeBeforeFullscreen);
+			
+			(
+				elem.requestFullscreen 
+				|| elem.msRequestFullscreen 
+				|| elem.mozRequestFullScreen
+				|| elem.webkitRequestFullscreen 
+				|| function() {throw "fullscreen not supported";}
+			).call(elem);
+		},
+		
+		
+		fullscreenExit: function() {
+			if(!this.isFullscreen) {
+				console.warn("not in fullscreen");
+				return;
+			}
+			
+			(
+				document.exitFullscreen
+				|| document.mozCancelFullScreen 
+				|| document.webkitExitFullscreen 
+				|| document.msExitFullscreen 
+				|| function() {throw "exiting fullscreen not supported";}
+			).call(document);
+		},
+		
+		
+		fullscreenToggle: function() {
+			if(this.isFullscreen)
+				this.fullscreenExit();
+			else
+				this.fullscreenEnter();
+		},
+		
+		
+		isFullscreen: false,
+		
+		
+		onFullscreenChange: function() {
+			this.isFullscreen=(
+				document.fullscreenElement ||
+				document.webkitFullscreenElement ||
+				document.mozFullScreenElement ||
+				document.msFullscreenElement
+			) === this.renderer.domElement;
+	
+			if(!this.isFullscreen) {
+				log("fullscreen exit, resize to", this._sizeBeforeFullscreen);
+				this.renderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
+			}
+	
+			setTimeout(this.resize.bind(this), 0);
 		},
 		
 		
 		keyPress: function(e) {
-			switch(e.key) {
+			log(e.key, e);
+			switch(e.key || String.fromCharCode(e.which)) {
 				case "f": case "F":
-					this.toggleFullscreen();
+					this.fullscreenToggle();
 					break;
 					
 				case "v": case "V": // TODO: toggle VR mode
@@ -211,6 +255,9 @@ Bivrost.AVAILABLE_VRMODES=[
 				case "X": break // TODO: picture.woffset++;
 				case "y": break // TODO: picture.hoffset--;
 				case "Y": break // TODO: picture.hoffset++;
+					
+				default:
+					log("key?", e.key || String.fromCharCode(e.which));
 			};
 		},
 		
