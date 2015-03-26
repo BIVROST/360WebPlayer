@@ -5,10 +5,11 @@ window.Bivrost=window.Bivrost || {};
 Bivrost.PROJECTION_EQUIRECTANGULAR=101;
 Bivrost.PROJECTION_FRAME=102;
 
-Bivrost.SOURCE_AUTODETECT_FROM_EXT=201;
-Bivrost.SOURCE_VIDEO=202;
-Bivrost.SOURCE_STILL=203;
+Bivrost.SOURCE_AUTODETECT_FROM_EXT=200;
+Bivrost.SOURCE_VIDEO=201;
+Bivrost.SOURCE_STILL=202;
 
+Bivrost.STEREOSCOPY_AUTODETECT_FROM_RATIO=300;
 Bivrost.STEREOSCOPY_NONE=301;
 Bivrost.STEREOSCOPY_TOP_BOTTOM=302;
 Bivrost.STEREOSCOPY_TOP_BOTTOM_REVERSED=303;
@@ -44,13 +45,13 @@ Bivrost.STEREOSCOPY_LEFT_RIGHT=304;
 		this.onload=onload;
 		
 		this.projection=projection=projection || Bivrost.PROJECTION_EQUIRECTANGULAR;
-		this.stereoscopy=stereoscopy=stereoscopy || Bivrost.STEREOSCOPY_NONE;
+		this.stereoscopy=stereoscopy=stereoscopy || Bivrost.STEREOSCOPY_AUTODETECT_FROM_RATIO;
 		
 		if(!source || source === Bivrost.SOURCE_AUTODETECT_FROM_EXT) {
 			source=(/\.(jpe?g|png|bmp|tiff|gif)$/i.test(url))
 				?Bivrost.SOURCE_STILL
 				:Bivrost.SOURCE_VIDEO;
-			log("detected source: "+source);
+			log("detected source: "+Bivrost.reverseConstToName(source));
 		}
 		
 		switch(source) {
@@ -126,7 +127,7 @@ Bivrost.STEREOSCOPY_LEFT_RIGHT=304;
 		projection: Bivrost.PROJECTION_EQUIRECTANGULAR,
 		
 		
-		stereoscopy: Bivrost.STEREOSCOPY_NONE,
+		stereoscopy: Bivrost.STEREOSCOPY_AUTODETECT_FROM_RATIO,
 		
 		
 		title: null,
@@ -148,8 +149,23 @@ Bivrost.STEREOSCOPY_LEFT_RIGHT=304;
 		},
 		
 		
+		/**
+		 * @param {THREE.Texture} texture
+		 */
 		gotTexture: function(texture) {
 			this.texture=texture;
+			log(this.stereoscopy);
+			if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT_FROM_RATIO) {
+				var w=texture.image.videoWidth || texture.image.width;
+				var h=texture.image.videoHeight || texture.image.height;
+				if(w === h)
+					this.stereoscopy=Bivrost.STEREOSCOPY_TOP_BOTTOM;
+				else // if(w === 2*h)
+					this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
+				
+				// TODO: guess frame
+				log("guessed stereoscopy from ratio: ", Bivrost.reverseConstToName(this.stereoscopy));
+			}
 			log("got texture", texture);
 			this.onload();
 		},

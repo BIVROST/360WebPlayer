@@ -16,8 +16,6 @@ Bivrost.MouseLook=(function() {
 		this.enabled=false;
 		
 		var originX,originY;
-		var reverseWidth=1/domElement.offsetWidth;
-		var reverseHeight=1/domElement.offsetHeight;
 
 		var originEulerY=0, originEulerX=0;
 
@@ -40,8 +38,8 @@ Bivrost.MouseLook=(function() {
 				return;
 			var dx=~~(e.x || e.clientX)-originX;
 			var dy=~~(e.y || e.clientY)-originY;
-			that.lookEuler.x=originEulerX+scale*dy*reverseHeight;
-			that.lookEuler.y=originEulerY+scale*dx*reverseWidth;
+			that.lookEuler.x=originEulerX+scale*dy/domElement.offsetHeight;
+			that.lookEuler.y=originEulerY+scale*dx/domElement.offsetWidth;
 		}
 
 		domElement.addEventListener("mousedown", mousedown);

@@ -85,6 +85,11 @@ Konfiguracja:
 	- top-bottom-reversed - lewe oko na górze, prawe na dole
 	- left-right - prawe po prawej, lewe po lewej
 
+Heurystyka:
+- ratio 1:1 POT - prawdopodobnie stereo top-bottom equirectangular
+- ratio 2:1 POT - prawdopodobnie mono equirectangular
+- else - zależnie od konfiguracji: (czy frame dopuszczone)?frame:equirectangular
+
 API:
 - callback onload - jak materiał się wgra
 - callback onend - jak materiał się skończy

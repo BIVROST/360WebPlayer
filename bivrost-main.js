@@ -11,6 +11,14 @@ Bivrost.AVAILABLE_VRMODES=[
 ];
 
 
+Bivrost.reverseConstToName=function(constValue) {
+	for(var k in Bivrost)
+		if(Bivrost[k] === constValue)
+			return k;
+	throw "const value "+k+" not found";
+};
+
+
 (function(){
 	
 	var log=console.log.bind(console, "[Bivrost.Main]");
@@ -162,7 +170,7 @@ Bivrost.AVAILABLE_VRMODES=[
 				return;
 			}
 			
-			
+			var elem=this.renderer.domElement;
 			
 			if(!this._sizeBeforeFullscreen)
 				this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];
