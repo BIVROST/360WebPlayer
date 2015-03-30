@@ -9,11 +9,41 @@ Bivrost.SOURCE_AUTODETECT=200;
 Bivrost.SOURCE_VIDEO=201;
 Bivrost.SOURCE_STILL=202;
 
+/**
+ * Autodetect stereoscopy by keywords and size
+ * @type Number
+ */
 Bivrost.STEREOSCOPY_AUTODETECT=300;
+
+/**
+ * None, no stereoscopy, default
+ * keyword: mono
+ * @type Number
+ */
 Bivrost.STEREOSCOPY_NONE=301;
-Bivrost.STEREOSCOPY_TOP_BOTTOM=302;
-Bivrost.STEREOSCOPY_TOP_BOTTOM_REVERSED=303;
-Bivrost.STEREOSCOPY_LEFT_RIGHT=304;
+
+/**
+ * Top and Bottom stereoscopy
+ * Left frame is top half, right is bottom
+ * keyword: TaB
+ * @type Number
+ */
+Bivrost.STEREOSCOPY_TOP_AND_BOTTOM=302;
+
+/**
+ * Side by side stereoscopy
+ * keyword: SbS
+ * @type Number
+ */
+Bivrost.STEREOSCOPY_SIDE_BY_SIDE=303;
+
+/**
+ * Top and Bottom stereoscopy, reversed
+ * Right frame is top half, left is bottom
+ * @type Number
+ */
+Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
+
 
 (function() {
 
@@ -104,6 +134,18 @@ Bivrost.STEREOSCOPY_LEFT_RIGHT=304;
 			default:
 				throw "unknown source type: "+source;
 		}	
+		
+		
+		// phase one detect, by keywords
+		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
+			if(/\bSbS\b/.test(url))
+				this.stereoscopy=Bivrost.STEREOSCOPY_SIDE_BY_SIDE;
+			else if(/\bTaB\b/.test(url))
+				this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
+			else if(/\bmono\b/.test(url))
+				this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
+			log("detected stereoscopy from uri: ", Bivrost.reverseConstToName(this.stereoscopy));
+		}
 	};
 	
 	
@@ -154,11 +196,12 @@ Bivrost.STEREOSCOPY_LEFT_RIGHT=304;
 		 */
 		gotTexture: function(texture) {
 			this.texture=texture;
+			// phase two autodetect - by size
 			if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
 				var w=texture.image.videoWidth || texture.image.width;
 				var h=texture.image.videoHeight || texture.image.height;
 				if(w === h)
-					this.stereoscopy=Bivrost.STEREOSCOPY_TOP_BOTTOM;
+					this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
 				else // if(w === 2*h)
 					this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
 				

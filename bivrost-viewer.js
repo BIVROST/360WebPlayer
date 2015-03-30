@@ -19,27 +19,27 @@ Bivrost.Viewer=function(picture) {
 	// [left, top, width, height]
 	var left,right,center;
 	
-	console.log(picture.stereoscopy);
-
 	switch(picture.stereoscopy) {
 		case Bivrost.STEREOSCOPY_NONE:
 			left=right=center=[1,0, -1,1];
 			break;
-		case Bivrost.STEREOSCOPY_LEFT_RIGHT:
+		case Bivrost.STEREOSCOPY_SIDE_BY_SIDE:
 			left=[0.5,0, -0.5,1];
 			right=[1,0, -0.5,1];
 			center=left;
 			break;
-		case Bivrost.STEREOSCOPY_TOP_BOTTOM:
+		case Bivrost.STEREOSCOPY_TOP_AND_BOTTOM:
 			left=[1,.5, -1,.5];
 			right=[1,0, -1,.5];
 			center=left;
 			break;
-		case Bivrost.STEREOSCOPY_TOP_BOTTOM_REVERSED:
+		case Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED:
 			left=[1,0, -1,.5];
 			right=[1,.5, -1,.5];
 			center=left;
 			break;
+		default:
+			throw "stereoscopy mode "+(Bivrost.reverseConstToName(picture.stereoscopy) || picture.stereoscopy)+" unknown";
 	}
 	
 	this._leftCamera=new THREE.PerspectiveCamera(75, 3/4, 0.1, 1000);
@@ -118,6 +118,7 @@ Bivrost.Viewer.prototype={
 	scaleUV: function(mesh, scale, materialIndex) {
 		materialIndex=materialIndex || 0;
 		var uvs=mesh.geometry.faceVertexUvs[materialIndex];
+		console.log("scaleUV", uvs.length, "elements, scale=", scale);
 		for(var faceIndex=uvs.length-1; faceIndex >= 0; faceIndex--) {
 			for(var vertexIndex=uvs[faceIndex].length-1; vertexIndex >= 0; vertexIndex--) {
 				/** @type {THREE.Vector2} uvs */
@@ -127,7 +128,6 @@ Bivrost.Viewer.prototype={
 			}
 		}
 		mesh.geometry.uvsNeedUpdate=true;
-		console.log("scaleUV", uvs.length, "elements, scale=", scale);
 	},
 	
 	

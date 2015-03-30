@@ -8,7 +8,7 @@ Bivrost.MouseLook=(function() {
 	
 	
 	function MouseLook(domElement, scale) {
-		this.lookEuler=new THREE.Euler(0,0,0,'YXZ');
+		this.lookEuler=new THREE.Euler(0,-Math.PI/2,0,'YXZ');
 		this.lookEulerDelta=new THREE.Euler();
 		this.lookQuaternion=new THREE.Quaternion();
 		this.vrLookQuaternion=new THREE.Quaternion();

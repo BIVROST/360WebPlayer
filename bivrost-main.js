@@ -15,7 +15,8 @@ Bivrost.reverseConstToName=function(constValue) {
 	for(var k in Bivrost)
 		if(Bivrost[k] === constValue)
 			return k;
-	throw "const value "+k+" not found";
+	return undefined;
+//	throw "const value "+k+" not found";
 };
 
 
@@ -100,8 +101,8 @@ Bivrost.reverseConstToName=function(constValue) {
 						this.viewer.renderMono(this.renderer.render.bind(this.renderer), this.mouseLook, pos);
 						break;
 				}
-			} else
-				console.log("waiting for viewer");
+			} //else
+			//	console.log("waiting for viewer");
 			
 			requestAnimationFrame(this._loopBound);
 		},

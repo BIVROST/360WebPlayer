@@ -27,9 +27,9 @@
 					
 				Bivrost.Picture.load(<?=json_encode($_GET['file'])?>).then(function(pic){
 //					window.viewer=new Bivrost.Viewer(pic);
-					console.log(b);
+//					console.log(b);
 					
-					pic.stereoscopy=Bivrost.STEREOSCOPY_LEFT_RIGHT;
+//					pic.stereoscopy=Bivrost.STEREOSCOPY_LEFT_RIGHT;
 //					
 					b.setPicture(pic);
 				});
