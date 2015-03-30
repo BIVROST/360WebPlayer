@@ -25,8 +25,8 @@ THREE.OculusRiftEffect = function ( renderer, options ) {
 		chromaAbParameter: [ 0.996, -0.004, 1.014, 0.0]
 		*/
 		// DK2
-		hResolution: 1280, //1920,
-		vResolution: 800, // 1080,
+		hResolution: 1920,
+		vResolution: 1080,
 		hScreenSize: 0.12576,
 		vScreenSize: 0.07074,
 		interpupillaryDistance: 0.0635,
@@ -187,7 +187,7 @@ THREE.OculusRiftEffect = function ( renderer, options ) {
 		renderer.setViewport(left.viewport[0], left.viewport[1], left.viewport[2], left.viewport[3]);
 
 		RTMaterial.uniforms['lensCenter'].value = left.lensCenter;
-		renderer.render( scene, pCamera, renderTarget, true );
+		renderer.render( scene[0] || scene, pCamera, renderTarget, true );
 
 		renderer.render( finalScene, oCamera );
 
@@ -203,10 +203,55 @@ THREE.OculusRiftEffect = function ( renderer, options ) {
 
 		RTMaterial.uniforms['lensCenter'].value = right.lensCenter;
 
-		renderer.render( scene, pCamera, renderTarget, true );
+		renderer.render( scene[1] || scene, pCamera, renderTarget, true );
 		renderer.render( finalScene, oCamera );
 
 	};
+	
+	
+	this.render2 = function(scenes, cameras) {
+		var cc = renderer.getClearColor().clone();
+
+		// Clear
+		renderer.setClearColor(emptyColor);
+		renderer.clear();
+		renderer.setClearColor(cc);
+
+		// camera parameters
+		if (cameras[0].matrixAutoUpdate) cameras[0].updateMatrix();
+		if (cameras[1].matrixAutoUpdate) cameras[1].updateMatrix();
+
+		// Render left
+		this.preLeftRender();
+
+		pCamera.projectionMatrix.copy(left.proj);
+
+		pCamera.matrix.copy(cameras[0].matrix);
+		pCamera.matrixWorldNeedsUpdate = true;
+
+		renderer.setViewport(left.viewport[0], left.viewport[1], left.viewport[2], left.viewport[3]);
+
+		RTMaterial.uniforms['lensCenter'].value = left.lensCenter;
+		renderer.render( scenes[0], pCamera, renderTarget, true );
+
+		renderer.render( finalScene, oCamera );
+
+		// Render right
+		this.preRightRender();
+
+		pCamera.projectionMatrix.copy(right.proj);
+
+		pCamera.matrix.copy(cameras[1].matrix);
+		pCamera.matrixWorldNeedsUpdate = true;
+
+		renderer.setViewport(right.viewport[0], right.viewport[1], right.viewport[2], right.viewport[3]);
+
+		RTMaterial.uniforms['lensCenter'].value = right.lensCenter;
+
+		renderer.render( scenes[1], pCamera, renderTarget, true );
+		renderer.render( finalScene, oCamera );
+	};
+
 
 	this.dispose = function() {
 		if ( RTMaterial ) {

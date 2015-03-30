@@ -66,20 +66,7 @@ Bivrost.reverseConstToName=function(constValue) {
 		// if(hmd detected)
 		//   riftmode is default in fullscreen
 	};
-	
-	/// TEMP viewer
-	var scene=new THREE.Scene();
-	var camera=new THREE.PerspectiveCamera(75, 3/4, 0.1, 1000);
-	scene.add(camera);
-	camera.position.setZ(0);
-	var mat,sphere=new THREE.Mesh(
-		new THREE.SphereGeometry(1, 50, 50),
-		mat=new THREE.MeshBasicMaterial({
-			side: THREE.DoubleSide
-		})
-	);
-	scene.add(sphere);	
-	
+
 	
 	Bivrost.Main.prototype={
 			
@@ -87,6 +74,9 @@ Bivrost.reverseConstToName=function(constValue) {
 		
 		
 		picture: null,
+		
+		
+		viewer: null,
 		
 		
 		renderer: null,
@@ -98,20 +88,20 @@ Bivrost.reverseConstToName=function(constValue) {
 		loop: function() {
 			var dt=this._clock.getDelta();
 			this.mouseLook.update(dt);
-//			sphere.rotation.x=this.mouseLook.lookEuler[1];
-//			sphere.rotation.y=this.mouseLook.lookEuler[0];
-
-			camera.quaternion.copy(this.mouseLook.lookQuaternion);
+			var pos=0;
 			
-			switch(this._vrMode) {
-//				case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO: inne parametry
-				case Bivrost.VRMODE_OCULUS_RIFT_DK2:
-					this.riftRenderer.render(scene, camera);
-					break;
-				case Bivrost.VRMODE_NONE:
-					this.renderer.render(scene, camera);
-					break;
-			}
+			if(this.viewer) {
+				switch(this._vrMode) {
+	//				case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO: inne parametry
+					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
+						this.viewer.renderStereo(this.riftRenderer.render2.bind(this.riftRenderer), this.mouseLook, pos);
+						break;
+					case Bivrost.VRMODE_NONE:
+						this.viewer.renderMono(this.renderer.render.bind(this.renderer), this.mouseLook, pos);
+						break;
+				}
+			} else
+				console.log("waiting for viewer");
 			
 			requestAnimationFrame(this._loopBound);
 		},
@@ -124,9 +114,14 @@ Bivrost.reverseConstToName=function(constValue) {
 		setPicture: function(picture) {
 			log("picture set", picture);
 			this.picture=picture;
-			mat.map=picture.texture;
-			mat.needsUpdate=true;
+//			mat.map=picture.texture;
+//			mat.needsUpdate=true;
+			log("before viewer");
+			this.viewer=new Bivrost.Viewer(picture);
+			this.viewer.aspect=this.aspect;
+			log("set viewer: ",this.viewer,"on",this);
 			picture.play();
+			log("picture play");
 			return picture;
 		},
 		
@@ -135,21 +130,20 @@ Bivrost.reverseConstToName=function(constValue) {
 			var width=this.renderer.domElement.offsetWidth;
 			var height=this.renderer.domElement.offsetHeight;
 			log("size", width, height);
-//			this.renderer.setSize(width, height);
-//			camera=new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
-//			this.renderer.setViewport(0, 0, width, height);
-			camera.aspect=width/height;
-			camera.updateProjectionMatrix();
-//			delete this.renderer.domElement.style["width"];
-//			delete this.renderer.domElement.style["height"];
 			if(this.riftRenderer) {
 				this.riftRenderer.HMD.hResolution=width;
 				this.riftRenderer.HMD.vResolution=height;
 				this.riftRenderer.setSize(width, height);
 			}
 			this.renderer.setSize(width, height, false);
+			this.aspect=width/height;
+			if(this.viewer)
+				this.viewer.aspect=this.aspect;
 //			this.renderer.setViewport(0, 0, width, height);
 		},
+
+
+		aspect: 4/3,
 
 		
 		_vrMode: Bivrost.VRMODE_NONE,
@@ -231,7 +225,6 @@ Bivrost.reverseConstToName=function(constValue) {
 		
 		
 		keyPress: function(e) {
-			log(e.key, e);
 			switch(e.key || String.fromCharCode(e.which)) {
 				case "f": case "F":
 					this.fullscreenToggle();
@@ -247,12 +240,10 @@ Bivrost.reverseConstToName=function(constValue) {
 
 				// z/Z - zoom
 				case "z": 
-					camera.zoom*=0.95; 
-					camera.updateProjectionMatrix();
+					this.viewer.zoom/=0.95; 
 					break;
 				case "Z": 
-					camera.zoom/=0.95; 
-					camera.updateProjectionMatrix();
+					this.viewer.zoom*=0.95; 
 					break;
 					
 				case "w": break // TODO: picture.width--;
@@ -265,7 +256,7 @@ Bivrost.reverseConstToName=function(constValue) {
 				case "Y": break // TODO: picture.hoffset++;
 					
 				default:
-					log("key?", e.key || String.fromCharCode(e.which));
+//					log("key?", e.key || String.fromCharCode(e.which));
 			};
 		},
 		
