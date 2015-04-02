@@ -92,7 +92,7 @@ Bivrost.reverseConstToName=function(constValue) {
 			var pos=0;
 			
 			if(this.viewer) {
-				switch(this._vrMode) {
+				switch(this.isFullscreen?this._vrMode:Bivrost.VRMODE_NONE) {
 	//				case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO: inne parametry
 					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
 						this.viewer.renderStereo(this.riftRenderer.render2.bind(this.riftRenderer), this.mouseLook, pos);
@@ -115,14 +115,9 @@ Bivrost.reverseConstToName=function(constValue) {
 		setPicture: function(picture) {
 			log("picture set", picture);
 			this.picture=picture;
-//			mat.map=picture.texture;
-//			mat.needsUpdate=true;
-			log("before viewer");
 			this.viewer=new Bivrost.Viewer(picture);
 			this.viewer.aspect=this.aspect;
-			log("set viewer: ",this.viewer,"on",this);
 			picture.play();
-			log("picture play");
 			return picture;
 		},
 		
@@ -231,7 +226,7 @@ Bivrost.reverseConstToName=function(constValue) {
 					this.fullscreenToggle();
 					break;
 					
-				case "v": case "V": // TODO: toggle VR mode
+				case "v": case "V":
 					this.setVRMode(Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this._vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length]);
 					break;
 				
@@ -245,6 +240,24 @@ Bivrost.reverseConstToName=function(constValue) {
 					break;
 				case "Z": 
 					this.viewer.zoom*=0.95; 
+					break;
+					
+				// space - play/pause
+				case " ":
+					this.picture.pauseToggle();
+					break;
+					
+				// r - rewind
+				case "r": case "R":
+					this.picture.rewind();
+					break;
+					
+				// [/] - seek 5 sec
+				case "[":
+					this.picture.time-=5;
+					break;
+				case "]":
+					this.picture.time+=5;
 					break;
 					
 				case "w": break // TODO: picture.width--;

@@ -100,3 +100,11 @@ pause, length i rewind
 3. ui
 
 TODO: wiele uri jednocześnie (cubemapa, dwa osobne pliki na lewy/prawy)
+
+
+
+Inne
+----
+
+http://en.wikipedia.org/wiki/DVB_3D-TV - skróty SbS i TaB
+http://en.wikipedia.org/wiki/Free_viewpoint_television - przebadać

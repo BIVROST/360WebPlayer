@@ -113,11 +113,18 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				video.height=32;	// TODO: ważne?
 				video.loop=true;	// TODO: config
 
-				this.play=function() {
-					log("video play");
-					video.play();
+				this.play=function() {video.play();};
+				this.pause=function() {video.pause();};
+				this.pauseToggle=function() {
+					if(video.paused)
+						video.play();
+					else
+						video.pause();
 				};
-
+				this.setTime=function(val) {video.currentTime=val;};
+				this.getTime=function() {return video.currentTime;};
+				this.getDuration=function() {return video.duration;};
+				
 				video.addEventListener("loadeddata", function() {
 					log("video loaded", this, arguments);
 					var texture = new THREE.VideoTexture(video);
@@ -125,6 +132,14 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 					texture.minFilter = THREE.LinearFilter;
 					texture.magFilter = THREE.LinearFilter;
 					that.gotTexture(texture);
+				});
+				
+				video.addEventListener("seeking", function(ev) {
+					log("seeking, t=", video.currentTime);
+				});
+				
+				video.addEventListener("seeked", function(ev) {
+					log("seeked, t=", video.currentTime);
 				});
 
 				// last to prevent event before load
@@ -213,8 +228,15 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		},
 		
 		
-		play: function() {}
-		
+		play: function() {},
+		pause: function() {},
+		pauseToggle: function() {},
+		rewind: function() {this.setTime(0); this.play();},
+		getTime: function() {return -1;},
+		setTime: function() {},
+		getDuration: function() {return 0;},
+		set time(value) {this.setTime(value);},
+		get time() {return this.getTime();}
 	};
 
 	

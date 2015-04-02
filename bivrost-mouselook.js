@@ -7,6 +7,9 @@ Bivrost.MouseLook=(function() {
 	var log=console.log.bind(console, "[Bivrost.MouseLook]");
 	
 	
+	var DEG2RAD=Math.PI/180.0;
+	
+	
 	function MouseLook(domElement, scale) {
 		this.lookEuler=new THREE.Euler(0,-Math.PI/2,0,'YXZ');
 		this.lookEulerDelta=new THREE.Euler();
@@ -109,6 +112,23 @@ Bivrost.MouseLook=(function() {
 			});
 		else
 			log("no VR API available");
+
+		window.addEventListener("deviceorientation", function(ev) {
+			var a=DEG2RAD*ev.alpha;	// bank (left-right)
+			var b=DEG2RAD*ev.beta; // pitch (up-down)
+			var c=DEG2RAD*ev.gamma;
+			
+			var euler=new THREE.Euler(c,0,0, 'XZY');
+			var gyro=new THREE.Quaternion();
+			gyro.setFromEuler(euler);
+//			log(ev.beta, ev.gamma);
+			if(!that.gyroOriginQuaternion) {
+				log("deviceorientation: reoriented gyro to ", euler);
+				that.gyroOriginQuaternion=gyro.clone();
+				that.gyroOriginQuaternion.inverse();
+			}
+//			that.gyroLookQuaternion.multiplyQuaternions(that.gyroOriginQuaternion, gyro);
+		}, false);
 	};
 	
 	
@@ -116,6 +136,11 @@ Bivrost.MouseLook=(function() {
 	
 	
 	MouseLook.prototype.vrDevice=undefined;
+	
+	
+	MouseLook.prototype.gyroOriginQuaternion=undefined;
+	MouseLook.prototype.gyroLookQuaternion=new THREE.Quaternion();
+	
 	
 	
 	MouseLook.prototype.update=function(dt) {
@@ -129,10 +154,14 @@ Bivrost.MouseLook=(function() {
 			var vrState=this.vrDevice.getState();
 			if(vrState.hasOrientation) {
 				this.vrLookQuaternion.copy(vrState.orientation);
-//				this.lookQuaternion.multiply(this.vrLookQuaternion);
-//				this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this.vrLookQuaternion);
 				this.lookQuaternion.multiplyQuaternions(this.vrLookQuaternion, this.lookQuaternion);
+				return;
 			}
+		}
+		
+		if(this.gyroLookQuaternion) {
+			this.lookQuaternion.multiplyQuaternions(this.gyroLookQuaternion, this.lookQuaternion);
+			return;
 		}
 	};
 	
