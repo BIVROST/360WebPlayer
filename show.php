@@ -7,7 +7,36 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body class="show">
-		<p>Lorem ipsum dolor sit amet enim. Suspendisse et netus et malesuada velit sed eros. Fusce venenatis tristique, urna luctus tellus ante ipsum dolor sit amet, consectetuer lectus. Curabitur volutpat quam molestie aliquam. Etiam aliquam vehicula vitae, ullamcorper ut, rutrum ut, faucibus orci et lacus at lacus diam justo, hendrerit sollicitudin quis, tincidunt tellus. Fusce enim. Maecenas eget urna. Nulla facilisi. Phasellus vulputate tempus ornare vitae, fringilla sem vel lorem. Sed in quam velit, a mauris. Etiam varius risus facilisis enim. Aenean ipsum ut quam elit nibh, mollis aliquam, purus convallis ligula felis, feugiat pede. Morbi felis tincidunt wisi, eu odio. Vestibulum ante congue eu, eleifend vel, tortor. Phasellus dignissim. Donec odio consequat diam. Fusce nonummy sodales quam. Cum sociis natoque penatibus et ultrices fringilla ligula enim sodales lectus urna a leo. Aliquam gravida tellus non augue. Maecenas eget lectus. Vestibulum ante ipsum dolor tellus tincidunt in, purus. Sed laoreet enim. Quisque quis neque vitae imperdiet tempor, sapien a pellentesque at, lacus. Quisque placerat vestibulum. Nunc eleifend et, tristique ullamcorper. Nam ultrices. Sed mauris quis enim. Duis mauris pulvinar mollis, orci.</p>
+		
+		<article>
+			<h1><img src="logo.png" alt="Bivrost" /></h1>
+
+			<a class="rounded" href="index.php">powrót do listy materiałów</a>
+			
+			<p>Nazwa pliku: <a href="<?=htmlspecialchars($_GET['file'])?>"><tt><?=htmlspecialchars($_GET['file'])?></tt></a></p>
+			
+			<div id="bivrost_container"></div>
+
+			<p>Skróty klawiszowe playera</p>
+			<ul>
+				<li><kbd>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</kbd> - play/pauza filmu</li>
+				<li><kbd>&uparrow;</kbd> <kbd>&rightarrow;</kbd> <kbd>&downarrow;</kbd> <kbd>&leftarrow;</kbd> lub przeciąganie myszą - rozglądanie się dookoła</li>
+				<li><kbd>F</kbd> lub podwójne kliknięcie - pełny ekran</li>
+				<li><kbd>V</kbd> - tryb VR (dostępny tylko w pełnym ekranie)</li>
+				<li><kbd>R</kbd> - przewinięcie filmu do początku i odtworzenie go</li>
+				<li><kbd>[</kbd> / <kbd>]</kbd> - przewinięcie filmu do przodu/tyłu o 5 sekund</li>
+				<li><kbd>Z</kbd> / <kbd>shift</kbd>+<kbd>Z</kbd> - zoom (niedostępny w trybie Oculusa)</li>
+			</ul>
+			
+			<p>
+				Do oglądania sugerowany
+				<a href="http://mozvr.com/downloads/" target="_blank">Firefox Nightly with VR</a>
+				lub
+				<a href="http://webvr.info/" target="_blank">Chromium branch WebVR</a>.
+			</p>
+			
+		</article>
+		
 		
 		<script src="three.js" type="text/javascript"></script>
 		<script src="VRControls.js" type="text/javascript"></script>
@@ -21,7 +50,7 @@
 		<!--<script src="bivrost.js" type="text/javascript"></script>-->
 		<script type="text/javascript">
 			window.addEventListener("load", function() {			
-				var b=new Bivrost.Main(document.body);
+				var b=new Bivrost.Main(document.getElementById("bivrost_container"));
 				
 				window.bivrost=b;
 					

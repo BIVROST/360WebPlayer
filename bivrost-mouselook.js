@@ -70,7 +70,11 @@ Bivrost.MouseLook=(function() {
 				case KEYCODE_RIGHT:
 					that.lookEulerDelta.y=-scale*that.keyboardSpeed;
 					break;
-			}
+				default:
+					return;
+			};
+			e.preventDefault();
+			e.stopPropagation();
 		}
 
 		function keyup(e) {
@@ -104,14 +108,31 @@ Bivrost.MouseLook=(function() {
 		if(navigator.getVRDevices)
 			navigator.getVRDevices().then(function(devices) {
 				for(var i in devices)
-					if(devices.hasOwnProperty(i))
+					if(devices.hasOwnProperty(i)) {
 						if(devices[i] instanceof PositionSensorVRDevice) {
 							that.vrDevice=devices[i];
-							log("found VR device", that.vrDevice, that.vrDevice.getState());
+							log(
+								"found VR device",
+								"state=", that.vrDevice.getState(),
+								"hardwareUnitId=", that.vrDevice.hardwareUnitId, 
+								"deviceId=", that.vrDevice.deviceId, 
+								"deviceName=", that.vrDevice.deviceName,
+								"(using)"
+							);
 						}
+						else {
+							log(
+								"found VR device, but not PositionSensorVRDevice",
+								"hardwareUnitId=", that.vrDevice.hardwareUnitId, 
+								"deviceId=", that.vrDevice.deviceId, 
+								"deviceName=", that.vrDevice.deviceName,
+								"(ignored)"
+							);
+						}
+					}
 			});
 		else
-			log("no VR API available");
+			log("no VR API available, try http://webvr.info");
 
 		window.addEventListener("deviceorientation", function(ev) {
 			var a=DEG2RAD*ev.alpha;	// bank (left-right)
@@ -121,7 +142,6 @@ Bivrost.MouseLook=(function() {
 			var euler=new THREE.Euler(c,0,0, 'XZY');
 			var gyro=new THREE.Quaternion();
 			gyro.setFromEuler(euler);
-//			log(ev.beta, ev.gamma);
 			if(!that.gyroOriginQuaternion) {
 				log("deviceorientation: reoriented gyro to ", euler);
 				that.gyroOriginQuaternion=gyro.clone();

@@ -195,8 +195,11 @@ Bivrost.reverseConstToName=function(constValue) {
 		fullscreenToggle: function() {
 			if(this.isFullscreen)
 				this.fullscreenExit();
-			else
+			else {
+				if(this.mouseLook.vrDevice && this.mouseLook.vrDevice.getState().hasOrientation)
+					this.setVRMode(Bivrost.VRMODE_OCULUS_RIFT_DK2);
 				this.fullscreenEnter();
+			}
 		},
 		
 		
@@ -227,6 +230,8 @@ Bivrost.reverseConstToName=function(constValue) {
 					break;
 					
 				case "v": case "V":
+					if(!this.isFullscreen)
+						this.fullscreenEnter();
 					this.setVRMode(Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this._vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length]);
 					break;
 				
@@ -270,8 +275,10 @@ Bivrost.reverseConstToName=function(constValue) {
 				case "Y": break // TODO: picture.hoffset++;
 					
 				default:
-//					log("key?", e.key || String.fromCharCode(e.which));
+					return;	// key not found? use default
 			};
+			e.preventDefault();
+			e.stopPropagation();
 		},
 		
 
