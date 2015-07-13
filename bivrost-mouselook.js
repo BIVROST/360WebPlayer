@@ -109,7 +109,7 @@ Bivrost.MouseLook=(function() {
 			navigator.getVRDevices().then(function(devices) {
 				for(var i in devices)
 					if(devices.hasOwnProperty(i)) {
-						if(devices[i] instanceof PositionSensorVRDevice) {
+						if(devices[i] instanceof PositionSensorVRDevice && devices[i].getState().hasOrientation) {
 							that.vrDevice=devices[i];
 							log(
 								"found VR device",
@@ -117,15 +117,16 @@ Bivrost.MouseLook=(function() {
 								"hardwareUnitId=", that.vrDevice.hardwareUnitId, 
 								"deviceId=", that.vrDevice.deviceId, 
 								"deviceName=", that.vrDevice.deviceName,
-								"(using)"
+								"(using and ignoring other)"
 							);
+							return;
 						}
 						else {
 							log(
-								"found VR device, but not PositionSensorVRDevice",
-								"hardwareUnitId=", that.vrDevice.hardwareUnitId, 
-								"deviceId=", that.vrDevice.deviceId, 
-								"deviceName=", that.vrDevice.deviceName,
+								"found VR device, but no orientation",
+								"hardwareUnitId=", devices[i].hardwareUnitId, 
+								"deviceId=", devices[i].deviceId, 
+								"deviceName=", devices[i].deviceName,
 								"(ignored)"
 							);
 						}
@@ -174,7 +175,7 @@ Bivrost.MouseLook=(function() {
 			var vrState=this.vrDevice.getState();
 			if(vrState.hasOrientation) {
 				this.vrLookQuaternion.copy(vrState.orientation);
-				this.lookQuaternion.multiplyQuaternions(this.vrLookQuaternion, this.lookQuaternion);
+				this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this.vrLookQuaternion);
 				return;
 			}
 		}
