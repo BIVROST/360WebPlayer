@@ -109,6 +109,9 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				log("video loading", url);
 				
 				var video=document.createElement("video");
+
+				window.video=video;
+
 				video.width=32;	// TODO: ważne?
 				video.height=32;	// TODO: ważne?
 				video.loop=true;	// TODO: config
@@ -124,7 +127,25 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				this.setTime=function(val) {video.currentTime=val;};
 				this.getTime=function() {return video.currentTime;};
 				this.getDuration=function() {return video.duration;};
-				
+
+				["loadstart", "progress", "suspend", "abort", "error", "emptied", "stalled", "loadedmetadata", "loadeddata", "canplay", 
+				"canplaythrough", "playing", "waiting", "seeking", "seeked", "ended", "durationchange", "timeupdate", "play", "pause", 
+				"ratechange", "resize", "volumechange"].forEach(function(n) {
+					video.addEventListener(n, console.log.bind(console, "event:"+n));
+				});
+
+				video.addEventListener("error", function(e) {
+					var description={
+						"-1": "unknown",
+						"1": "MEDIA_ERR_ABORTED - fetching process aborted by user",
+						"2": "MEDIA_ERR_NETWORK - error occurred when downloading",
+						"3": "MEDIA_ERR_DECODE - error occurred when decoding",
+						"4": "MEDIA_ERR_SRC_NOT_SUPPORTED - audio/video not supported"
+					}[(video.error || {code:-1}) && video.error.code];
+					console.error("error: ", description);
+					that.onerror(description);
+				});
+
 				video.addEventListener("loadeddata", function() {
 					log("video loaded", this, arguments);
 					var texture = new THREE.VideoTexture(video);
