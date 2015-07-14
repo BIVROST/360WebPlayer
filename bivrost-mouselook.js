@@ -159,6 +159,8 @@ Bivrost.MouseLook=(function() {
 	MouseLook.prototype.vrDevice=undefined;
 	
 	
+	MouseLook.prototype.clampY=true;
+	
 	MouseLook.prototype.gyroOriginQuaternion=undefined;
 	MouseLook.prototype.gyroLookQuaternion=new THREE.Quaternion();
 	
@@ -168,6 +170,16 @@ Bivrost.MouseLook=(function() {
 		this.lookEuler.x+=this.lookEulerDelta.x*dt;
 		this.lookEuler.y+=this.lookEulerDelta.y*dt;
 		this.lookEuler.z+=this.lookEulerDelta.z*dt;
+		
+		if(this.clampY) {
+			var clamped=this.lookEuler.x;
+			var clamp=Math.PI/2;
+			var lerp=dt*3;
+			if(lerp > 1) lerp=1;
+			if(clamped < -clamp) clamped=-clamp;
+			if(clamped > clamp) clamped=clamp;
+			this.lookEuler.x=(1-lerp)*this.lookEuler.x+clamped*lerp;
+		}
 		
 		this.lookQuaternion.setFromEuler(this.lookEuler);
 		
