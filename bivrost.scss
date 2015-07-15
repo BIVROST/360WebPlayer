@@ -1,0 +1,30 @@
+#bivrost_container {
+	display: block;
+
+	position: relative;
+	
+	canvas {
+		position:absolute;
+		top:0; left:0; right:0; bottom:0;
+	}
+	
+	.ui {
+		position: absolute;
+		bottom: 20%;
+		left: 20%;
+		right: 20%;
+		min-height: 10px;
+		background: red;
+	}
+	
+}
+
+canvas {width:100%}
+
+:-webkit-full-screen {
+    position: fixed;
+    width: 100% !important;
+	height: 100% !important;
+    top: 0;
+    background: none;
+}
