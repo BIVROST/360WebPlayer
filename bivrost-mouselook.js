@@ -15,8 +15,9 @@ Bivrost.MouseLook=(function() {
 		this.lookEulerDelta=new THREE.Euler();
 		this.lookQuaternion=new THREE.Quaternion();
 		this.vrLookQuaternion=new THREE.Quaternion();
-		this._domElement=domElement;
-		this.enabled=false;
+		
+		var isDown=false;
+		var isIn=false;
 		
 		var originX,originY;
 
@@ -25,30 +26,47 @@ Bivrost.MouseLook=(function() {
 		var that=this;
 
 		function mousedown(e) {
-			that.enabled=true;
+			isDown=true;
+			isIn=true;
 			originX=~~(e.x || e.clientX);
 			originY=~~(e.y || e.clientY);
 			originEulerX=that.lookEuler.x;
 			originEulerY=that.lookEuler.y;
+			
+			window.addEventListener("mouseup", mouseup);
+			window.addEventListener("mousemove", mousemove);
+			window.addEventListener("selectstart", selectstart);
+			
+			return false;
 		}
 
-		function mouseend(e) {
-			that.enabled=false;
+		function mouseup(e) {
+			isDown=false;
+			isIn=false;
+			window.removeEventListener("up", mouseup);
+			window.removeEventListener("move", mousemove);
+			window.removeEventListener("selectstart", selectstart);
 		}
 
 		function mousemove(e) {
-			if(!that.enabled)
-				return;
+			if(!that.enabled || !isDown || !isIn)
+				return false;
+			
 			var dx=~~(e.x || e.clientX)-originX;
 			var dy=~~(e.y || e.clientY)-originY;
 			that.lookEuler.x=originEulerX+scale*dy/domElement.offsetHeight;
 			that.lookEuler.y=originEulerY+scale*dx/domElement.offsetWidth;
 		}
+		
+		function mouseover(e) { isIn=true; }
+		
+		function mouseout(e) { isIn=false; }
+		
+		function selectstart(e) { e.preventDefault(); e.stopPropagation(); return false; }
 
 		domElement.addEventListener("mousedown", mousedown);
-		domElement.addEventListener("mousemove", mousemove);
-		domElement.addEventListener("mouseup", mouseend);
-		domElement.addEventListener("mouseout", mouseend);
+		domElement.addEventListener("mouseout", mouseout);
+		domElement.addEventListener("mouseover", mouseover);
 
 
 		var KEYCODE_LEFT=37;
@@ -71,10 +89,11 @@ Bivrost.MouseLook=(function() {
 					that.lookEulerDelta.y=-scale*that.keyboardSpeed;
 					break;
 				default:
-					return;
+					return true;
 			};
 			e.preventDefault();
 			e.stopPropagation();
+			return false;
 		}
 
 		function keyup(e) {
@@ -87,21 +106,31 @@ Bivrost.MouseLook=(function() {
 				case KEYCODE_RIGHT:
 					that.lookEulerDelta.y=0;
 					break;
+				default:
+					return true;
 			}
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
 		}
 
-		window.addEventListener("keydown", keydown);
-		window.addEventListener("keyup", keyup);
+		domElement.addEventListener("keydown", keydown);
+		domElement.addEventListener("keyup", keyup);
 		
 		
 		this.unattach=function() {
-			that._domElement.removeEventListener("mousedown", mousedown);
-			that._domElement.removeEventListener("mousemove", mousemove);
-			that._domElement.removeEventListener("mouseup", mouseend);
-			that._domElement.removeEventListener("mouseout", mouseend);
-			window.removeEventListener("keydown", keydown);
-			window.removeEventListener("keyup", keyup);
+			domElement.removeEventListener("mousedown", mousedown);
+			window.removeEventListener("mousemove", mousemove);
+			window.removeEventListener("mouseup", mouseup);
+			window.removeEventListener("selectstart", selectstart);
+			domElement.removeEventListener("mouseout", mouseout);
+			domElement.removeEventListener("mouseover", mouseover);
+			domElement.removeEventListener("keydown", keydown);
+			domElement.removeEventListener("keyup", keyup);
 		}
+		
+		
+		
 		
 		
 		// VR controls; based on VRContols.js by dmarcos and mrdoob
@@ -202,8 +231,7 @@ Bivrost.MouseLook=(function() {
 	MouseLook.prototype.lookEuler=new THREE.Euler();
 	MouseLook.prototype.lookQuaternion=new THREE.Quaternion();
 	MouseLook.prototype.vrLookQuaternion=new THREE.Quaternion();
-	MouseLook.prototype._domElement=undefined;
-	MouseLook.prototype.enabled=false;
+	MouseLook.prototype.enabled=true;
 	MouseLook.prototype.keyboardSpeed=Math.PI*0.5;
 	
 	return MouseLook;

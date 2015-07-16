@@ -36,17 +36,22 @@ Bivrost.reverseConstToName=function(constValue) {
 		this.renderer=new THREE.WebGLRenderer();		
 		var mainDom=this.renderer.domElement;
 		container.appendChild(mainDom);
+		this.container=container;
 		
-		mainDom.setAttribute("tabindex", 1337);
+		this.ui=document.createElement("div");
+		this.ui.className="ui";
+		container.appendChild(this.ui);
+		
+		container.setAttribute("tabindex", 1337);
 
 		// http://stackoverflow.com/a/14139497/785171
 		window.addEventListener("resize", this.resize.bind(this));
 		
-		mainDom.addEventListener("dblclick", this.fullscreenToggle.bind(this));
+		container.addEventListener("dblclick", this.fullscreenToggle.bind(this));
 		
-		mainDom.addEventListener("keypress", this.keyPress.bind(this));
+		container.addEventListener("keypress", this.keyPress.bind(this));
 		
-		this.mouseLook=new Bivrost.MouseLook(mainDom, 1);
+		this.mouseLook=new Bivrost.MouseLook(container, 1);
 		
 		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
 		
@@ -72,6 +77,12 @@ Bivrost.reverseConstToName=function(constValue) {
 	Bivrost.Main.prototype={
 			
 		mouseLook: null,
+		
+		
+		container: null,
+		
+		
+		ui: null,
 		
 		
 		picture: null,
@@ -132,6 +143,8 @@ Bivrost.reverseConstToName=function(constValue) {
 				this.riftRenderer.setSize(width, height);
 			}
 			this.renderer.setSize(width, height, false);
+			this.container.style.width=width+"px";
+			this.container.style.height=height+"px";
 			this.aspect=width/height;
 			if(this.viewer)
 				this.viewer.aspect=this.aspect;
@@ -172,7 +185,7 @@ Bivrost.reverseConstToName=function(constValue) {
 				|| elem.mozRequestFullScreen
 				|| elem.webkitRequestFullscreen 
 				|| function() {throw "fullscreen not supported";}
-			).call(elem);
+			).call(elem, this.hmd && {vrDisplay: this.hmd} || undefined);			/// TODO: wypuścić hmd na zewnątrz
 		},
 		
 		
@@ -275,10 +288,12 @@ Bivrost.reverseConstToName=function(constValue) {
 				case "Y": break // TODO: picture.hoffset++;
 					
 				default:
-					return;	// key not found? use default
+					return true;
 			};
+			
 			e.preventDefault();
 			e.stopPropagation();
+			return false;
 		},
 		
 

@@ -128,11 +128,11 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				this.getTime=function() {return video.currentTime;};
 				this.getDuration=function() {return video.duration;};
 
-				["loadstart", "progress", "suspend", "abort", "error", "emptied", "stalled", "loadedmetadata", "loadeddata", "canplay", 
-				"canplaythrough", "playing", "waiting", "seeking", "seeked", "ended", "durationchange", "timeupdate", "play", "pause", 
-				"ratechange", "resize", "volumechange"].forEach(function(n) {
-					video.addEventListener(n, console.log.bind(console, "event:"+n));
-				});
+//				["loadstart", "progress", "suspend", "abort", "error", "emptied", "stalled", "loadedmetadata", "loadeddata", "canplay", 
+//				"canplaythrough", "playing", "waiting", "seeking", "seeked", "ended", "durationchange", "timeupdate", "play", "pause", 
+//				"ratechange", "resize", "volumechange"].forEach(function(n) {
+//					video.addEventListener(n, console.log.bind(console, "event:"+n));
+//				});
 
 				video.addEventListener("error", function(e) {
 					var description={

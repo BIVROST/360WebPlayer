@@ -108,3 +108,5 @@ Inne
 
 http://en.wikipedia.org/wiki/DVB_3D-TV - skróty SbS i TaB
 http://en.wikipedia.org/wiki/Free_viewpoint_television - przebadać
+
+https://blog.weckx.net/en/streaming-videos-with-php/ - strumieniowanie wideo z php
