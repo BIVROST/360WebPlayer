@@ -13,4 +13,4 @@ nb-configuration.xml
 smieci
 
 .DS_Store
-style.css.map
+*.css.map

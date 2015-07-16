@@ -41,17 +41,14 @@
 		
 		
 		<script src="three.js" type="text/javascript"></script>
-		<!--<script src="VRControls.js" type="text/javascript"></script>-->
-		<!--<script src="VREffect.js" type="text/javascript"></script>-->
 		<script src="OculusRiftEffect.js" type="text/javascript"></script>
 		<script src="q.js" type="text/javascript"></script>
 		<script src="bivrost-viewer.js" type="text/javascript"></script>
 		<script src="bivrost-picture.js" type="text/javascript"></script>
 		<script src="bivrost-mouselook.js" type="text/javascript"></script>
 		<script src="bivrost-main.js" type="text/javascript"></script>
-		<!--<script src="bivrost.js" type="text/javascript"></script>-->
 		<script type="text/javascript">
-			window.addEventListener("load", function() {			
+			window.addEventListener("load", function() {
 				var b=new Bivrost.Main(document.getElementById("bivrost_container"));
 				
 				window.bivrost=b;
