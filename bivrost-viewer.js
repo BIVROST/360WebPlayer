@@ -118,7 +118,6 @@ Bivrost.Viewer.prototype={
 	scaleUV: function(mesh, scale, materialIndex) {
 		materialIndex=materialIndex || 0;
 		var uvs=mesh.geometry.faceVertexUvs[materialIndex];
-		console.log("scaleUV", uvs.length, "elements, scale=", scale);
 		for(var faceIndex=uvs.length-1; faceIndex >= 0; faceIndex--) {
 			for(var vertexIndex=uvs[faceIndex].length-1; vertexIndex >= 0; vertexIndex--) {
 				/** @type {THREE.Vector2} uvs */

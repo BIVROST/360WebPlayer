@@ -110,7 +110,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				
 				var video=document.createElement("video");
 
-				window.video=video;
+				this.video=video;
 
 				video.width=32;	// TODO: ważne?
 				video.height=32;	// TODO: ważne?
@@ -214,6 +214,9 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		texture: null,
 		
 		
+		video: null,	// null if still
+		
+		
 		onload: function() {},
 		
 		
@@ -231,6 +234,8 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		 * @param {THREE.Texture} texture
 		 */
 		gotTexture: function(texture) {
+			log("got texture: ", texture);
+			
 			this.texture=texture;
 			// phase two autodetect - by size
 			if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
@@ -245,7 +250,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				log("guessed stereoscopy from ratio: ", Bivrost.reverseConstToName(this.stereoscopy));
 			}
 			log("got texture", texture);
-			this.onload();
+			this.onload(this);
 		},
 		
 		

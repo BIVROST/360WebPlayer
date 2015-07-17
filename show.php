@@ -37,31 +37,38 @@
 				<a href="http://webvr.info/" target="_blank">Chromium branch WebVR</a>.
 			</p>
 			
+			
+			
 		</article>
 		
 		
 		<script src="three.js" type="text/javascript"></script>
 		<script src="OculusRiftEffect.js" type="text/javascript"></script>
 		<script src="q.js" type="text/javascript"></script>
+		<script src="bivrost-main.js" type="text/javascript"></script>
 		<script src="bivrost-viewer.js" type="text/javascript"></script>
 		<script src="bivrost-picture.js" type="text/javascript"></script>
 		<script src="bivrost-mouselook.js" type="text/javascript"></script>
-		<script src="bivrost-main.js" type="text/javascript"></script>
+		<script src="bivrost-ui.js" type="text/javascript"></script>
 		<script type="text/javascript">
-			window.addEventListener("load", function() {
-				var b=new Bivrost.Main(document.getElementById("bivrost_container"));
-				
-				window.bivrost=b;
-					
-				Bivrost.Picture.load(<?=json_encode($_GET['file'])?>).then(function(pic){
-//					window.viewer=new Bivrost.Viewer(pic);
-//					console.log(b);
-					
-//					pic.stereoscopy=Bivrost.STEREOSCOPY_LEFT_RIGHT;
+			window.thefile=<?=json_encode($_GET['file'])?>;
+			
+//			window.addEventListener("load", function() {
+//				var b=new Bivrost.Main(document.getElementById("bivrost_container"));
+//				
+//				window.bivrost=b;
+//				
+//				Q.longStackSupport=true;
 //					
-					b.setPicture(pic);
-				});
-			});
+//				Bivrost.Picture.load().then(function(pic){
+////					window.viewer=new Bivrost.Viewer(pic);
+////					console.log(b);
+//					
+////					pic.stereoscopy=Bivrost.STEREOSCOPY_LEFT_RIGHT;
+////					
+//					b.setPicture(pic);
+//				}).done();
+//			});
 		</script>
 	</body>
 </html>

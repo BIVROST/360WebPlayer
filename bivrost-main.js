@@ -29,20 +29,22 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @constructor
 	 * @class Bivrost.Main
 	 * @param {HTMLElement} container
+	 * @param {string} [url=null]
 	 */
-	Bivrost.Main=function(container) {
+	Bivrost.Main=function(container, url) {
 		this._clock=new THREE.Clock();
 		
 		this.renderer=new THREE.WebGLRenderer();		
 		var mainDom=this.renderer.domElement;
 		container.appendChild(mainDom);
+		container.setAttribute("tabindex", 1337);
 		this.container=container;
 		
-		this.ui=document.createElement("div");
-		this.ui.className="ui";
-		container.appendChild(this.ui);
+		var uiDiv=document.createElement("div");
+		uiDiv.className="ui";
+		container.appendChild(uiDiv);
+		this.ui=new Bivrost.UI(uiDiv, this);
 		
-		container.setAttribute("tabindex", 1337);
 
 		// http://stackoverflow.com/a/14139497/785171
 		window.addEventListener("resize", this.resize.bind(this));
@@ -67,6 +69,10 @@ Bivrost.reverseConstToName=function(constValue) {
 		this.loop();
 		
 		this.resize();
+		
+		if(url) {
+			new Bivrost.Picture(url, this.setPicture.bind(this));
+		}
 		
 		// TODO:
 		// if(hmd detected)
@@ -128,14 +134,21 @@ Bivrost.reverseConstToName=function(constValue) {
 			this.picture=picture;
 			this.viewer=new Bivrost.Viewer(picture);
 			this.viewer.aspect=this.aspect;
+			this.ui.setPicture(picture);
 			picture.play();
 			return picture;
 		},
 		
 		
 		resize: function() {
-			var width=this.renderer.domElement.offsetWidth;
-			var height=this.renderer.domElement.offsetHeight;
+			var width=this.container.offsetWidth;
+			var height=this.container.offsetHeight;
+			if(height === 0) {
+				log("guess height from w=", width, "and aspect=", this.aspect);
+				height=width/this.aspect;
+				this.container.style.height=height+"px";
+			}
+			
 			log("size", width, height);
 			if(this.riftRenderer) {
 				this.riftRenderer.HMD.hResolution=width;
@@ -143,8 +156,7 @@ Bivrost.reverseConstToName=function(constValue) {
 				this.riftRenderer.setSize(width, height);
 			}
 			this.renderer.setSize(width, height, false);
-			this.container.style.width=width+"px";
-			this.container.style.height=height+"px";
+			//this.container.style.width=width+"px";
 			this.aspect=width/height;
 			if(this.viewer)
 				this.viewer.aspect=this.aspect;
@@ -173,7 +185,7 @@ Bivrost.reverseConstToName=function(constValue) {
 				return;
 			}
 			
-			var elem=this.renderer.domElement;
+			var elem=this.container;
 			
 			if(!this._sizeBeforeFullscreen)
 				this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];
@@ -225,7 +237,7 @@ Bivrost.reverseConstToName=function(constValue) {
 				document.webkitFullscreenElement ||
 				document.mozFullScreenElement ||
 				document.msFullscreenElement
-			) === this.renderer.domElement;
+			) === this.container;
 	
 			if(!this.isFullscreen) {
 				log("fullscreen exit, resize to", this._sizeBeforeFullscreen);
