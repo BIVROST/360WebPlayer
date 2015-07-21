@@ -13,14 +13,16 @@
 			
 			<ul>
 			<?php foreach(glob('scenes/*') as $f): 
-				$uri=http_build_query(array(
-					'file' => $f
-				));
 				$name=str_replace('scenes/', '', $f);
-				$size=(round(filesize($f)/104857)/10).'MB';
-				?>
-				<li><a href="show.php?<?=$uri?>"><?=$name?> <span style="file-size">(<?=$size?>)</span></a></li>
-			<?php endforeach ?>
+				
+				if(is_dir($f)):
+					?><li><a href="show.php?<?=http_build_query( array('file' => glob("$f/*") ))?>"><?=$name?> <span style="file-size">(dir)</span></a></li><?php
+				else:
+					$size=(round(filesize($f)/104857)/10).'MB';
+					?><li><a href="show.php?<?=http_build_query( array('file' => $f ))?>"><?=$name?> <span style="file-size">(<?=$size?>)</span></a></li><?php
+				endif;
+	
+			endforeach ?>
 			</ul>
 			
 			<p>

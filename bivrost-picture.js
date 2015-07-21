@@ -60,7 +60,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	 * Loads a picture (still or video), you might want to add an onload
 	 * @constructor
 	 * @class
-	 * @param {string} url
+	 * @param {string|array<string>} url
 	 * @param {onloadCallback} onload
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
@@ -69,6 +69,9 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	 */
 	Bivrost.Picture=function(url, onload, projection, stereoscopy, source) {
 		var that=this;
+		
+		if(typeof url !== "object")
+			url=[url];
 		
 		if(arguments.length < 2)
 			throw "url and onload required";
@@ -87,6 +90,8 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		switch(source) {
 			case Bivrost.SOURCE_STILL:
 				this.title="still:"+url;
+				if(url.length !== 1)
+					throw "still supports only one picture at this time";
 				log("still loading", url);
 				
 				var loader=new THREE.TextureLoader();
@@ -154,17 +159,14 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 					texture.magFilter = THREE.LinearFilter;
 					that.gotTexture(texture);
 				});
-				
-//				video.addEventListener("seeking", function(ev) {
-//					log("seeking, t=", video.currentTime);
-//				});
-//				
-//				video.addEventListener("seeked", function(ev) {
-//					log("seeked, t=", video.currentTime);
-//				});
 
 				// last to prevent event before load
-				video.src=url;
+				url.forEach(function(e) {
+					var sourceTag=document.createElement("source");
+					sourceTag.src=e;
+					video.appendChild(sourceTag);
+				});
+				
 				break;
 				
 			default:

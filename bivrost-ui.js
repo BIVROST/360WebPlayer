@@ -113,7 +113,7 @@ Bivrost.UI=(function() {
 					playButton.changeIcons("pause");
 					playButton.action=video.pause.bind(video);
 				}
-			}
+			};
 			video.addEventListener("playing", pauseCheck);
 			video.addEventListener("stalled", pauseCheck);
 			video.addEventListener("stalled", pauseCheck);
@@ -135,7 +135,7 @@ Bivrost.UI=(function() {
 		
 		
 		this.domElement.appendChild(status);
-	}
+	};
 	
 	UI.prototype.domElement=null;
 	
