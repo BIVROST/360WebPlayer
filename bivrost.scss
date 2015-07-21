@@ -1,4 +1,5 @@
-#bivrost_container {
+.bivrost-container,
+bivrost-container {
 	display: block;
 
 	position: relative;
@@ -117,8 +118,6 @@
 	}
 	
 }
-
-canvas {width:100%}
 
 :-webkit-full-screen {
     position: fixed;

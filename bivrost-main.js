@@ -30,8 +30,12 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @class Bivrost.Main
 	 * @param {HTMLElement} container
 	 * @param {string} [url=null]
+	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
+	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
+	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
+	 * @returns {Bivrost.Picture}
 	 */
-	Bivrost.Main=function(container, url) {
+	Bivrost.Main=function(container, url, projection, stereoscopy, source) {
 		this._clock=new THREE.Clock();
 		
 		this.renderer=new THREE.WebGLRenderer();		
@@ -71,7 +75,7 @@ Bivrost.reverseConstToName=function(constValue) {
 		this.resize();
 		
 		if(url) {
-			new Bivrost.Picture(url, this.setPicture.bind(this));
+			new Bivrost.Picture(url, this.setPicture.bind(this), projection, stereoscopy, source);
 		}
 		
 		// TODO:

@@ -1,13 +1,16 @@
-#bivrost_container {
+.bivrost-container,
+bivrost-container {
   display: block;
   position: relative; }
-  #bivrost_container canvas {
+  .bivrost-container canvas,
+  bivrost-container canvas {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0; }
-  #bivrost_container .ui {
+  .bivrost-container .ui,
+  bivrost-container .ui {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -15,26 +18,32 @@
     height: 68px;
     background: rgba(0, 0, 0, 0.5);
     /* thumb */ }
-    #bivrost_container .ui .bivrost-button {
+    .bivrost-container .ui .bivrost-button,
+    bivrost-container .ui .bivrost-button {
       position: relative;
       width: 50px;
       height: 50px;
       display: inline-block;
       margin: 9px 0 0 0; }
-      #bivrost_container .ui .bivrost-button img {
+      .bivrost-container .ui .bivrost-button img,
+      bivrost-container .ui .bivrost-button img {
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
         right: 0;
         visibility: visible; }
-      #bivrost_container .ui .bivrost-button img.bivrost-button-hover {
+      .bivrost-container .ui .bivrost-button img.bivrost-button-hover,
+      bivrost-container .ui .bivrost-button img.bivrost-button-hover {
         visibility: hidden; }
-      #bivrost_container .ui .bivrost-button:hover img {
+      .bivrost-container .ui .bivrost-button:hover img,
+      bivrost-container .ui .bivrost-button:hover img {
         visibility: hidden; }
-      #bivrost_container .ui .bivrost-button:hover img.bivrost-button-hover {
+      .bivrost-container .ui .bivrost-button:hover img.bivrost-button-hover,
+      bivrost-container .ui .bivrost-button:hover img.bivrost-button-hover {
         visibility: visible; }
-    #bivrost_container .ui input[type="range"] {
+    .bivrost-container .ui input[type="range"],
+    bivrost-container .ui input[type="range"] {
       position: absolute;
       top: 0px;
       -webkit-appearance: none;
@@ -49,19 +58,25 @@
       -webkit-box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
       outline: none;
       /* no focus outline */ }
-      #bivrost_container .ui input[type="range"]::-moz-range-track {
+      .bivrost-container .ui input[type="range"]::-moz-range-track,
+      bivrost-container .ui input[type="range"]::-moz-range-track {
         border: inherit;
         background: transparent; }
-      #bivrost_container .ui input[type="range"]::-ms-track {
+      .bivrost-container .ui input[type="range"]::-ms-track,
+      bivrost-container .ui input[type="range"]::-ms-track {
         border: inherit;
         color: transparent;
         /* don't drawn vertical reference line */
         background: transparent; }
-      #bivrost_container .ui input[type="range"]::-ms-fill-lower, #bivrost_container .ui input[type="range"]::-ms-fill-upper {
+      .bivrost-container .ui input[type="range"]::-ms-fill-lower, .bivrost-container .ui input[type="range"]::-ms-fill-upper,
+      bivrost-container .ui input[type="range"]::-ms-fill-lower,
+      bivrost-container .ui input[type="range"]::-ms-fill-upper {
         background: transparent; }
-      #bivrost_container .ui input[type="range"]::-ms-tooltip {
+      .bivrost-container .ui input[type="range"]::-ms-tooltip,
+      bivrost-container .ui input[type="range"]::-ms-tooltip {
         display: none; }
-    #bivrost_container .ui input[type="range"]::-webkit-slider-thumb {
+    .bivrost-container .ui input[type="range"]::-webkit-slider-thumb,
+    bivrost-container .ui input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       width: 10px;
       height: 10px;
@@ -73,23 +88,22 @@
       /* older mobile safari and android > 2.2 */
       background-image: linear-gradient(to bottom, #529de1 0, #245e8f 100%);
       /* W3C */ }
-    #bivrost_container .ui input[type="range"]::-moz-range-thumb {
+    .bivrost-container .ui input[type="range"]::-moz-range-thumb,
+    bivrost-container .ui input[type="range"]::-moz-range-thumb {
       width: 10px;
       height: 10px;
       border: none;
       border-radius: 12px;
       background-image: linear-gradient(to bottom, #00a6f4 0, #00a6f4 100%);
       /* W3C */ }
-    #bivrost_container .ui input[type="range"]::-ms-thumb {
+    .bivrost-container .ui input[type="range"]::-ms-thumb,
+    bivrost-container .ui input[type="range"]::-ms-thumb {
       width: 10px;
       height: 10px;
       border-radius: 12px;
       border: 0;
       background-image: linear-gradient(to bottom, #00a6f4 0, #00a6f4 100%);
       /* W3C */ }
-
-canvas {
-  width: 100%; }
 
 :-webkit-full-screen {
   position: fixed;

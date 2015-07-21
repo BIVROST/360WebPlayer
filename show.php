@@ -17,7 +17,9 @@
 			
 			<p>Nazwa pliku: <a href="<?=htmlspecialchars($_GET['file'])?>"><tt><?=htmlspecialchars($_GET['file'])?></tt></a></p>
 			
-			<div id="bivrost_container"></div>
+			<div class="bivrost-container" id="bivrost_container"></div>
+
+			<div class="bivrost-container" id="bivrost_container2"></div>
 
 			<p>Skróty klawiszowe playera</p>
 			<ul>
@@ -51,24 +53,10 @@
 		<script src="bivrost-mouselook.js" type="text/javascript"></script>
 		<script src="bivrost-ui.js" type="text/javascript"></script>
 		<script type="text/javascript">
-			window.thefile=<?=json_encode($_GET['file'])?>;
-			
-//			window.addEventListener("load", function() {
-//				var b=new Bivrost.Main(document.getElementById("bivrost_container"));
-//				
-//				window.bivrost=b;
-//				
-//				Q.longStackSupport=true;
-//					
-//				Bivrost.Picture.load().then(function(pic){
-////					window.viewer=new Bivrost.Viewer(pic);
-////					console.log(b);
-//					
-////					pic.stereoscopy=Bivrost.STEREOSCOPY_LEFT_RIGHT;
-////					
-//					b.setPicture(pic);
-//				}).done();
-//			});
+			var bivrost=new Bivrost.Main(document.getElementById("bivrost_container"), <?=json_encode($_GET['file'])?>);			
+			<?php if(isset($_GET['file2'])): ?>
+			var bivrost2=new Bivrost.Main(document.getElementById("bivrost_container2"), <?=json_encode($_GET['file2'])?>);			
+			<?php endif ?>
 		</script>
 	</body>
 </html>

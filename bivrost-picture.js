@@ -112,9 +112,9 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 
 				this.video=video;
 
-				video.width=32;	// TODO: ważne?
-				video.height=32;	// TODO: ważne?
-				video.loop=true;	// TODO: config
+				video.width=32;
+				video.height=32;
+				video.loop=false;	// TODO: config
 
 				this.play=function() {video.play();};
 				this.pause=function() {video.pause();};
@@ -155,13 +155,13 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 					that.gotTexture(texture);
 				});
 				
-				video.addEventListener("seeking", function(ev) {
-					log("seeking, t=", video.currentTime);
-				});
-				
-				video.addEventListener("seeked", function(ev) {
-					log("seeked, t=", video.currentTime);
-				});
+//				video.addEventListener("seeking", function(ev) {
+//					log("seeking, t=", video.currentTime);
+//				});
+//				
+//				video.addEventListener("seeked", function(ev) {
+//					log("seeked, t=", video.currentTime);
+//				});
 
 				// last to prevent event before load
 				video.src=url;
@@ -174,12 +174,13 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		
 		// phase one detect, by keywords
 		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
-			if(/\bSbS\b/.test(url))
+			if(/\b(SbS|LR)\b/.test(url))
 				this.stereoscopy=Bivrost.STEREOSCOPY_SIDE_BY_SIDE;
-			else if(/\bTaB\b/.test(url))
+			else if(/\b(TaB|TB)\b/.test(url))
 				this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
 			else if(/\bmono\b/.test(url))
 				this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
+			// else: detect in phase 2, by resolution
 			log("detected stereoscopy from uri: ", Bivrost.reverseConstToName(this.stereoscopy));
 		}
 	};
@@ -258,11 +259,14 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		pause: function() {},
 		pauseToggle: function() {},
 		rewind: function() {this.setTime(0); this.play();},
+		
 		getTime: function() {return -1;},
 		setTime: function() {},
-		getDuration: function() {return 0;},
 		set time(value) {this.setTime(value);},
-		get time() {return this.getTime();}
+		get time() {return this.getTime();},
+		
+		getDuration: function() {return 0;},
+		get duration() { return this.getDuration(); }
 	};
 
 	

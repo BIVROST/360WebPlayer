@@ -59,9 +59,11 @@ Bivrost.UI=(function() {
 	}
 	
 	
+	/**
+	 * @param {Bivrost.Picture} picture
+	 */
 	UI.prototype.setPicture=function(picture) {
 		var that=this;
-		
 		
 		var status=document.createElement("span");
 		status.className="status";
@@ -70,13 +72,13 @@ Bivrost.UI=(function() {
 			var video=picture.video;
 			
 			var currentTime=document.createElement("span");
-			currentTime.textContent=timeFormat(video.currentTime);
+			currentTime.textContent=timeFormat(picture.time);
 			
 			var separator=document.createElement("span");
 			separator.textContent="/";
 			
 			var duration=document.createElement("span");
-			duration.textContent=timeFormat(video.duration);
+			duration.textContent=timeFormat(picture.duration);
 			status.appendChild(currentTime);
 			status.appendChild(separator);
 			status.appendChild(duration);
@@ -84,21 +86,19 @@ Bivrost.UI=(function() {
 			var range=document.createElement("input");
 			range.setAttribute("type", "range");
 			range.setAttribute("min", 0);
-			range.setAttribute("max", video.duration || 1);
+			range.setAttribute("max", picture.duration || 1);
 			
 			video.addEventListener("timeupdate", function(e) {
-				currentTime.textContent=timeFormat(video.currentTime);
-				range.value=video.currentTime;
+				currentTime.textContent=timeFormat(picture.time);
+				range.value=picture.time;
 			});
 			
 			video.addEventListener("durationchange", function(e) {
-				duration.textContent=timeFormat(video.duration);
-				range.setAttribute("max", video.duration || 1);
+				duration.textContent=timeFormat(picture.duration);
+				range.setAttribute("max", picture.duration || 1);
 			});
 			
-			var rangeChange=function() {
-				video.currentTime=range.value;
-			}
+			var rangeChange=function() { picture.time=range.value; };
 			range.addEventListener("change", rangeChange);
 			range.addEventListener("input", rangeChange);
 			
