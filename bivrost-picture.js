@@ -268,22 +268,5 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		getDuration: function() {return 0;},
 		get duration() { return this.getDuration(); }
 	};
-
-	
-	/**
-	 * Promise style constructor
-	 * @param {type} url
-	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
-	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
-	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
-	 * @returns {Q@call;defer.promise}
-	 */
-	Bivrost.Picture.load=function(url, projection, stereoscopy, source) {
-		var deferred=Q.defer();
-		var pic=new Bivrost.Picture(url, function() {deferred.resolve(pic);}, projection, stereoscopy, source);
-		pic.onerror=function(error) {deferred.reject(error);};
-		pic.onprogress=function(progress01) {deferred.notify(progress01);};
-		return deferred.promise;
-	};
 	
 })();

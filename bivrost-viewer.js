@@ -3,8 +3,6 @@
 window.Bivrost=window.Bivrost || {};
 
 
-//Bivrost.IPD=0.64;
-
 /**
  * @class
  * @constructor
@@ -16,8 +14,8 @@ Bivrost.Viewer=function(picture) {
 	if(picture.projection !== Bivrost.PROJECTION_EQUIRECTANGULAR)
 		throw "only equirectangular implemented";
 	
-	// [left, top, width, height]
-	var left,right,center;
+	// mesh transform declaration: [left, top, width, height] for eyes:
+	var left, right, center;
 	
 	switch(picture.stereoscopy) {
 		case Bivrost.STEREOSCOPY_NONE:
