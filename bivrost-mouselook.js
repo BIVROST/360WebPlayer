@@ -1,16 +1,17 @@
+
+
+/* global Bivrost, THREE */
 "use strict";
 
-window.Bivrost=window.Bivrost || {};
-
-Bivrost.MouseLook=(function() {
+(function() {
 	
-	var log=console.log.bind(console, "[Bivrost.MouseLook]");
+	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.MouseLook] "+Array.prototype.join.call(arguments, " ")); };
 	
 	
 	var DEG2RAD=Math.PI/180.0;
 	
 	
-	function MouseLook(domElement, scale) {
+	Bivrost.MouseLook=function(domElement, scale) {
 		this.lookEuler=new THREE.Euler(0,-Math.PI/2,0,'YXZ');
 		this.lookEulerDelta=new THREE.Euler();
 		this.lookQuaternion=new THREE.Quaternion();
@@ -182,20 +183,20 @@ Bivrost.MouseLook=(function() {
 	};
 	
 	
-	MouseLook.prototype.unattach=function() {};
+	Bivrost.MouseLook.prototype.unattach=function() {};
 	
 	
-	MouseLook.prototype.vrDevice=undefined;
+	Bivrost.MouseLook.prototype.vrDevice=undefined;
 	
 	
-	MouseLook.prototype.clampY=true;
+	Bivrost.MouseLook.prototype.clampY=true;
 	
-	MouseLook.prototype.gyroOriginQuaternion=undefined;
-	MouseLook.prototype.gyroLookQuaternion=new THREE.Quaternion();
+	Bivrost.MouseLook.prototype.gyroOriginQuaternion=undefined;
+	Bivrost.MouseLook.prototype.gyroLookQuaternion=new THREE.Quaternion();
 	
 	
 	
-	MouseLook.prototype.update=function(dt) {
+	Bivrost.MouseLook.prototype.update=function(dt) {
 		this.lookEuler.x+=this.lookEulerDelta.x*dt;
 		this.lookEuler.y+=this.lookEulerDelta.y*dt;
 		this.lookEuler.z+=this.lookEulerDelta.z*dt;
@@ -227,13 +228,11 @@ Bivrost.MouseLook=(function() {
 		}
 	};
 	
-	MouseLook.prototype.lookDelta=new THREE.Euler();
-	MouseLook.prototype.lookEuler=new THREE.Euler();
-	MouseLook.prototype.lookQuaternion=new THREE.Quaternion();
-	MouseLook.prototype.vrLookQuaternion=new THREE.Quaternion();
-	MouseLook.prototype.enabled=true;
-	MouseLook.prototype.keyboardSpeed=Math.PI*0.5;
-	
-	return MouseLook;
+	Bivrost.MouseLook.prototype.lookDelta=new THREE.Euler();
+	Bivrost.MouseLook.prototype.lookEuler=new THREE.Euler();
+	Bivrost.MouseLook.prototype.lookQuaternion=new THREE.Quaternion();
+	Bivrost.MouseLook.prototype.vrLookQuaternion=new THREE.Quaternion();
+	Bivrost.MouseLook.prototype.enabled=true;
+	Bivrost.MouseLook.prototype.keyboardSpeed=Math.PI*0.5;
 	
 })();

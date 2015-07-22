@@ -1,6 +1,6 @@
-"use strict";
+/* global Bivrost */
 
-window.Bivrost=window.Bivrost || {};
+"use strict";
 
 Bivrost.PROJECTION_EQUIRECTANGULAR=101;
 Bivrost.PROJECTION_FRAME=102;
@@ -47,7 +47,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 
 (function() {
 
-	var log=console.log.bind(console, "[Bivrost.Picture]");
+	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.Picture] "+Array.prototype.join.call(arguments, " ")); };
 
 
 	/**
@@ -129,9 +129,9 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 					else
 						video.pause();
 				};
-				this.setTime=function(val) {video.currentTime=val;};
-				this.getTime=function() {return video.currentTime;};
-				this.getDuration=function() {return video.duration;};
+				this._setTime=function(val) {video.currentTime=val;};
+				this._getTime=function() {return video.currentTime;};
+				this._getDuration=function() {return video.duration;};
 
 //				["loadstart", "progress", "suspend", "abort", "error", "emptied", "stalled", "loadedmetadata", "loadeddata", "canplay", 
 //				"canplaythrough", "playing", "waiting", "seeking", "seeked", "ended", "durationchange", "timeupdate", "play", "pause", 
@@ -188,87 +188,85 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	};
 	
 	
-	Bivrost.Picture.prototype={
-		
-		constructor: Bivrost.Picture,
-		
-		
-		width: 360,
-		
-		
-		height: 180,
-		
-		
-		hoffset: 0,
-		
-		
-		woffset: 0,
-		
-		
-		projection: Bivrost.PROJECTION_EQUIRECTANGULAR,
-		
-		
-		stereoscopy: Bivrost.STEREOSCOPY_AUTODETECT,
-		
-		
-		title: null,
-		
-		
-		texture: null,
-		
-		
-		video: null,	// null if still
-		
-		
-		onload: function() {},
-		
-		
-		onprogress: function(progress01) {
-			console.log(this, "progress", ~~(100*progress01)+"%");
-		},
-		
-		
-		onerror: function(error) {
-			throw error;
-		},
-		
-		
-		/**
-		 * @param {THREE.Texture} texture
-		 */
-		gotTexture: function(texture) {
-			log("got texture: ", texture);
-			
-			this.texture=texture;
-			// phase two autodetect - by size
-			if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
-				var w=texture.image.videoWidth || texture.image.width;
-				var h=texture.image.videoHeight || texture.image.height;
-				if(w === h)
-					this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
-				else // if(w === 2*h)
-					this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
-				
-				// TODO: guess frame
-				log("guessed stereoscopy from ratio: ", Bivrost.reverseConstToName(this.stereoscopy));
-			}
-			log("got texture", texture);
-			this.onload(this);
-		},
-		
-		
-		play: function() {},
-		pause: function() {},
-		pauseToggle: function() {},
-		rewind: function() {this.setTime(0); this.play();},
-		
-		getTime: function() {return -1;},
-		setTime: function() {},
-		set time(value) {this.setTime(value);},
-		get time() {return this.getTime();},
-		
-		getDuration: function() {return 0;},
-		get duration() { return this.getDuration(); }
+
+	// TODO:
+	//	Bivrost.Picture.prototype.width: 360,
+	//	Bivrost.Picture.prototype.height: 180,
+	//	Bivrost.Picture.prototype.hoffset: 0,
+	//	Bivrost.Picture.prototype.woffset: 0,
+
+
+	Bivrost.Picture.prototype.projection=Bivrost.PROJECTION_EQUIRECTANGULAR;
+
+
+	Bivrost.Picture.prototype.stereoscopy=Bivrost.STEREOSCOPY_AUTODETECT;
+
+
+	Bivrost.Picture.prototype.title=null;
+
+
+	Bivrost.Picture.prototype.texture=null;
+
+
+	/**
+	 * Null if picture is a still
+	 * @type {HTMLVideoElement}
+	 */
+	Bivrost.Picture.prototype.video=null;
+
+
+	Bivrost.Picture.prototype.onload=function() {};
+
+
+	Bivrost.Picture.prototype.onprogress=function(progress01) {
+		log(this, "progress", ~~(100*progress01)+"%");
 	};
+
+
+	Bivrost.Picture.prototype.onerror=function(error) {
+		throw error;
+	};
+
+
+	/**
+	 * @param {THREE.Texture} texture
+	 */
+	Bivrost.Picture.prototype.gotTexture=function(texture) {
+		log("got texture: ", texture);
+
+		this.texture=texture;
+		// phase two autodetect - by size
+		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
+			var w=texture.image.videoWidth || texture.image.width;
+			var h=texture.image.videoHeight || texture.image.height;
+			if(w === h)
+				this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
+			else // if(w === 2*h)
+				this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
+
+			// TODO: guess frame
+			log("guessed stereoscopy from ratio: ", Bivrost.reverseConstToName(this.stereoscopy));
+		}
+		log("got texture", texture);
+		this.onload(this);
+	},
+
+
+	Bivrost.Picture.prototype.play=function() {};
+	Bivrost.Picture.prototype.pause=function() {};
+	Bivrost.Picture.prototype.pauseToggle=function() {};
+	Bivrost.Picture.prototype.rewind=function() { this.time=0; this.play(); };
+
+	Bivrost.Picture.prototype._getTime=function() { return -1; };
+	Bivrost.Picture.prototype._setTime=function() {};
+	Object.defineProperty(Bivrost.Picture.prototype, "time", {
+		get: function() {return this._getTime();},
+		set: function(value) {this._setTime(value);},
+	});
+
+	Bivrost.Picture.prototype._getDuration=function() { return 0; },
+	Object.defineProperty(Bivrost.Picture.prototype, "duration", {
+		get: function() { return this._getDuration(); }
+	});
 	
 })();

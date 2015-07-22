@@ -1,29 +1,21 @@
+/* global Bivrost */
+
 "use strict";
 
-window.Bivrost=window.Bivrost || {};
 
-
-Bivrost.UI=(function() {
+(function() {
 	
-	var log=console.log.bind(console, "[Bivrost.UI]");
+	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.UI] "+Array.prototype.join.call(arguments, " ")); };
 	
-	
-	/**
-	 * @param {HTMLElement} domElement
-	 * @param {Bivrost.Main} bivrostMain
-	 * @returns {bivrost-ui_L6.UI}
-	 */
-	function UI(domElement, bivrostMain) {
-		this.domElement=domElement;
-		this.bivrostMain=bivrostMain;
 		
-		
-		var cancel=function(e) { e.stopPropagation(); return false; };
-		domElement.addEventListener("mousedown", cancel);
-		domElement.addEventListener("dblclick", cancel);
-	}
-	
 	// TODO: spritesheet
+	/**
+	 * Creates a button for use in the UI
+	 * @param {string} name of the image
+	 * @param {function} action on press
+	 * @param {string} alt
+	 * @returns {HTMLElement}
+	 */
 	function makeButton(name, action, alt) {
 		var button=document.createElement("span");
 		button.className="bivrost-button";
@@ -52,6 +44,11 @@ Bivrost.UI=(function() {
 	}
 	
 	
+	/**
+	 * Formats a number of seconds to a minute:second format
+	 * @param {number} seconds
+	 * @returns {String}
+	 */
 	function timeFormat(seconds) {
 		if(isNaN(seconds))
 			return "-";
@@ -60,9 +57,25 @@ Bivrost.UI=(function() {
 	
 	
 	/**
+	 * @param {HTMLElement} domElement
+	 * @param {Bivrost.Main} bivrostMain
+	 * @returns {bivrost-ui_L6.UI}
+	 */
+	Bivrost.UI=function(domElement, bivrostMain) {
+		this.domElement=domElement;
+		this.bivrostMain=bivrostMain;
+		
+		
+		var cancel=function(e) { e.stopPropagation(); return false; };
+		domElement.addEventListener("mousedown", cancel);
+		domElement.addEventListener("dblclick", cancel);
+	}
+
+	
+	/**
 	 * @param {Bivrost.Picture} picture
 	 */
-	UI.prototype.setPicture=function(picture) {
+	Bivrost.UI.prototype.setPicture=function(picture) {
 		var that=this;
 		
 		var status=document.createElement("span");
@@ -116,7 +129,6 @@ Bivrost.UI=(function() {
 			};
 			video.addEventListener("playing", pauseCheck);
 			video.addEventListener("stalled", pauseCheck);
-			video.addEventListener("stalled", pauseCheck);
 			video.addEventListener("play", pauseCheck);
 			video.addEventListener("pause", pauseCheck);
 			
@@ -137,12 +149,17 @@ Bivrost.UI=(function() {
 		this.domElement.appendChild(status);
 	};
 	
-	UI.prototype.domElement=null;
 	
-	UI.prototype.bivrostMain=null;
+	/**
+	 * Container for the UI
+	 * @type {HTMLElement}
+	 */
+	Bivrost.UI.prototype.domElement=null;
 	
-	UI.prototype.picture=null;
 	
-	return UI;
+	/**
+	 * Reference to the main Bivrost class
+	 */
+	Bivrost.UI.prototype.bivrostMain=null;
 	
 })();
