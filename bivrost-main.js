@@ -8,8 +8,8 @@ Bivrost.VRMODE_NONE=501;
 Bivrost.VRMODE_OCULUS_RIFT_DK2=503;
 //Bivrost.VRMODE_CARDBOARD=503;
 Bivrost.AVAILABLE_VRMODES=[
-	Bivrost.VRMODE_NONE, 
-	Bivrost.VRMODE_OCULUS_RIFT_DK2
+	Bivrost.VRMODE_OCULUS_RIFT_DK2,
+	Bivrost.VRMODE_NONE
 ];
 
 
@@ -38,18 +38,21 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @returns {Bivrost.Picture}
 	 */
 	Bivrost.Main=function(container, url, projection, stereoscopy, source) {
+		/**
+		 * @type Bivrost.Main
+		 */
 		var thisRef=this;
 		
-		this._clock=new THREE.Clock();
-
 		// renderer
 		this.renderer=new THREE.WebGLRenderer();		
 		var mainDom=this.renderer.domElement;
 		container.appendChild(mainDom);
 		container.setAttribute("tabindex", 1337);
 		this.container=container;
-		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
 		
+		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
+
+		// UI
 		var uiDiv=document.createElement("div");
 		uiDiv.className="ui";
 		container.appendChild(uiDiv);
@@ -70,21 +73,44 @@ Bivrost.reverseConstToName=function(constValue) {
 		document.addEventListener("mozfullscreenchange", onFullscreenChange);
 		document.addEventListener("MSFullscreenChange", onFullscreenChange);
 		
-		// main loop
-		this._loopBound=this.loop.bind(this);
-		this.loop();
-		
+				
 		// resize handling
 		// http://stackoverflow.com/a/14139497/785171
 		window.addEventListener("resize", this.resize.bind(this));
 		
 		this.resize();
-
 		
+			
 		// load picture if provided
 		if(url) {
 			new Bivrost.Picture(url, this.setPicture.bind(this), projection, stereoscopy, source);
 		}
+		
+		
+		// Main loop, executed every frame
+		var clock=new THREE.Clock();
+		function loop() {
+			var dt=clock.getDelta();
+			thisRef.mouseLook.update(dt);
+			var pos=0;
+
+			// TODO: don't do this not every frame
+			if(thisRef.viewer) {
+				// VR mode is only valid in fullscreen
+				switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
+					//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
+					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
+						thisRef.viewer.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.mouseLook, pos);
+						break;
+					case Bivrost.VRMODE_NONE:
+						thisRef.viewer.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.mouseLook, pos);
+						break;
+				}
+			}
+
+			requestAnimationFrame(loop);
+		};
+		loop();
 	};
 
 	
@@ -128,31 +154,6 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @type {THREE.OculusRiftEffect}
 	 */
 	Bivrost.Main.prototype.riftRenderer=null;
-
-
-	/**
-	 * Main loop, executed every frame
-	 */
-	Bivrost.Main.prototype.loop=function() {
-		var dt=this._clock.getDelta();
-		this.mouseLook.update(dt);
-		var pos=0;
-
-		// TODO: not every frame
-		if(this.viewer) {
-			switch(this.fullscreen?this._vrMode:Bivrost.VRMODE_NONE) {
-//				case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
-				case Bivrost.VRMODE_OCULUS_RIFT_DK2:
-					this.viewer.renderStereo(this.riftRenderer.render2.bind(this.riftRenderer), this.mouseLook, pos);
-					break;
-				case Bivrost.VRMODE_NONE:
-					this.viewer.renderMono(this.renderer.render.bind(this.renderer), this.mouseLook, pos);
-					break;
-			}
-		}
-
-		requestAnimationFrame(this._loopBound);
-	};
 
 
 	/**
@@ -217,13 +218,16 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * Change VR mode
 	 * @param {number} mode, see Bivrost.VRMODE_*
 	 */
-	Bivrost.Main.prototype.setVRMode=function(mode) {
-		this._vrMode=mode;
-		this.resize();
-	};
+	Object.defineProperty(Bivrost.Main.prototype, "vrMode", {
+		get: function() { return this._vrMode; },
+		set: function(value) {
+			this._vrMode=value;
+			this.resize();
+		}
+	});
 		
 
-	/// REGION: fullscreen
+	/// REGION: fullscreen 
 
 	/**
 	 * Window size before fullscreen
@@ -315,12 +319,12 @@ Bivrost.reverseConstToName=function(constValue) {
 			// v - enable/toggle VR modes
 			case "v": case "V":
 				if(this.fullscreen) {	// already in fullscreen - toggle modes					
-					this.setVRMode(Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this._vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length]);
+					this.vrMode=Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this.vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length];
 				}
 				else {	// not in fullscreen - start with default mode
 					// TODO: add default mode detection
 					this.fullscreen=true;
-					this.setVRMode(Bivrost.AVAILABLE_VRMODES[0]);
+					this.vrMode=Bivrost.AVAILABLE_VRMODES[0];
 				}
 				break;
 
@@ -377,9 +381,5 @@ Bivrost.reverseConstToName=function(constValue) {
 //	Bivrost.Main.prototype.dispose=function() {
 //		// TODO: picture.dispose
 //	};
-
-
-	
-	Bivrost.Main.prototype._clock=null;
 		
 })();

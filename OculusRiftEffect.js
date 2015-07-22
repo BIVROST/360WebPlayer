@@ -1,5 +1,6 @@
 /**
  * @author troffmo5 / http://github.com/troffmo5
+ * @author chanibal - modifications for use in Bivrost
  *
  * Effect to render the scene in stereo 3d side by side with lens distortion.
  * It is written to be used with the Oculus Rift (http://www.oculusvr.com/) but
