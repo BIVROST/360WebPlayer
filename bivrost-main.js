@@ -104,15 +104,15 @@ Bivrost.reverseConstToName=function(constValue) {
 			var pos=0;
 
 			// TODO: don't do this not every frame
-			if(thisRef.viewer) {
+			if(thisRef.view) {
 				// VR mode is only valid in fullscreen
 				switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
 					//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
 					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
-						thisRef.viewer.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
+						thisRef.view.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
 						break;
 					case Bivrost.VRMODE_NONE:
-						thisRef.viewer.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.input, pos);
+						thisRef.view.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.input, pos);
 						break;
 				}
 			}
@@ -148,9 +148,9 @@ Bivrost.reverseConstToName=function(constValue) {
 		
 		
 	/**
-	 * @type {Bivrost.Viewer}
+	 * @type {Bivrost.View}
 	 */
-	Bivrost.Main.prototype.viewer=null;
+	Bivrost.Main.prototype.view=null;
 		
 		
 	/**
@@ -172,8 +172,8 @@ Bivrost.reverseConstToName=function(constValue) {
 	Bivrost.Main.prototype.setMedia=function(media) {
 		log("media set", media);
 		this.media=media;
-		this.viewer=new Bivrost.Viewer(media);
-		this.viewer.aspect=this.aspect;
+		this.view=new Bivrost.View(media);
+		this.view.aspect=this.aspect;
 		this.ui.setMedia(media);
 		media.play();
 	},
@@ -201,8 +201,8 @@ Bivrost.reverseConstToName=function(constValue) {
 		this.renderer.setSize(width, height, false);
 		//this.container.style.width=width+"px";
 		this.aspect=width/height;
-		if(this.viewer)
-			this.viewer.aspect=this.aspect;
+		if(this.view)
+			this.view.aspect=this.aspect;
 //			this.renderer.setViewport(0, 0, width, height);
 	},
 
@@ -342,10 +342,10 @@ Bivrost.reverseConstToName=function(constValue) {
 
 			// z/Z - zoom
 			case "z": 
-				this.viewer.zoom/=0.95; 
+				this.view.zoom/=0.95; 
 				break;
 			case "Z": 
-				this.viewer.zoom*=0.95; 
+				this.view.zoom*=0.95; 
 				break;
 
 			// space - play/pause
