@@ -46,15 +46,15 @@
 		
 		<script src="three.js" type="text/javascript"></script>
 		<script src="OculusRiftEffect.js" type="text/javascript"></script>
-		<script src="bivrost-main.js" type="text/javascript"></script>
+		<script src="bivrost-player.js" type="text/javascript"></script>
 		<script src="bivrost-view.js" type="text/javascript"></script>
 		<script src="bivrost-media.js" type="text/javascript"></script>
 		<script src="bivrost-input.js" type="text/javascript"></script>
 		<script src="bivrost-ui.js" type="text/javascript"></script>
 		<script type="text/javascript">
-			var bivrost=new Bivrost.Main(document.getElementById("bivrost_container"), <?=json_encode($_GET['file'])?>);			
+			var bivrost=new Bivrost.Player(document.getElementById("bivrost_container"), <?=json_encode($_GET['file'])?>);			
 			<?php if(isset($_GET['file2'])): ?>
-			var bivrost2=new Bivrost.Main(document.getElementById("bivrost_container2"), <?=json_encode($_GET['file2'])?>);			
+			var bivrost2=new Bivrost.Player(document.getElementById("bivrost_container2"), <?=json_encode($_GET['file2'])?>);			
 			<?php endif ?>
 		</script>
 	</body>

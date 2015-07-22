@@ -4,7 +4,12 @@
 
 (function() {
 	
-	function log(/*vargs...*/) { if(Bivrost.verbose && window.console) console.log("[Bivrost.UI] "+Array.prototype.join.call(arguments, " ")); };
+	/**
+	 * Logging helper
+	 * @private
+	 * @param {...object} vargs
+	 */
+	function log(/*vargs...*/) { Bivrost.log("Bivrost.UI", arguments); };
 	
 		
 	// TODO: spritesheet
@@ -58,12 +63,11 @@
 	/**
 	 * UI is short for User Interface - the buttons, slider and timing information
 	 * @param {HTMLElement} domElement
-	 * @param {Bivrost.Main} bivrostMain
-	 * @returns {bivrost-ui_L6.UI}
+	 * @param {Bivrost.Player} player
 	 */
-	Bivrost.UI=function(domElement, bivrostMain) {
+	Bivrost.UI=function(domElement, player) {
 		this.domElement=domElement;
-		this.bivrostMain=bivrostMain;
+		this.player=player;
 		
 		
 		var cancel=function(e) { e.stopPropagation(); return false; };
@@ -139,7 +143,7 @@
 			this.domElement.appendChild(playButton);
 			this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
 			
-			this.domElement.appendChild(makeButton("display", function() { that.bivrostMain.fullscreen=!that.bivrostMain.fullscreen; }, "fullscreen" ));
+			this.domElement.appendChild(makeButton("display", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
 		}
 		else {
 			status.textContent="";
@@ -158,8 +162,8 @@
 	
 	
 	/**
-	 * Reference to the main Bivrost class
+	 * Reference to the Bivrost player instance
 	 */
-	Bivrost.UI.prototype.bivrostMain=null;
+	Bivrost.UI.prototype.player=null;
 	
 })();

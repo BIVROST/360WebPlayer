@@ -3,7 +3,13 @@
 
 (function() {
 	
-	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.Input] "+Array.prototype.join.call(arguments, " ")); };
+	
+	/**
+	 * Logging helper
+	 * @private
+	 * @param {...object} vargs
+	 */
+	function log(/*vargs...*/) { Bivrost.log("Bivrost.Input", arguments); };
 	
 	
 	var DEG2RAD=Math.PI/180.0;

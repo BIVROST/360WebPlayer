@@ -2,13 +2,42 @@
 "use strict";
 
 
-var Bivrost={ 
+var Bivrost={
 	
 	/**
 	 * When on, there is some debug information on the console.log
 	 * @type Boolean
 	 */
-	verbose: true 
+	verbose: true,
+	
+	
+	/**
+	 * Logging helper, disable with Bivrost.verbose=false
+	 * @private
+	 */
+	log: function(module, args) {
+		if(Bivrost.verbose && window.console) {
+			if(console.table)	// advanced console
+				console.log.bind(console, "["+module+"]").apply(null, args);
+			else	// simple console impl.
+				console.log("["+module+"] "+Array.prototype.map.call(args, JSON.stringify).join(" ")); 
+		}
+	},
+	
+	
+	/**
+	 * Retrieves const name
+	 * @private
+	 * @return {string}
+	 */
+	reverseConstToName: function(constValue) {
+		for(var k in Bivrost)
+			if(Bivrost[k] === constValue)
+				return k;
+		// throw "const value "+k+" not found";
+		return undefined;
+	}
+	
 };
 
 Bivrost.VRMODE_NONE=501;
@@ -21,40 +50,36 @@ Bivrost.AVAILABLE_VRMODES=[
 ];
 
 
-Bivrost.reverseConstToName=function(constValue) {
-	for(var k in Bivrost)
-		if(Bivrost[k] === constValue)
-			return k;
-	return undefined;
-//	throw "const value "+k+" not found";
-};
-
-
 (function(){
 	
-	function log(/*vargs...*/) { if(Bivrost.verbose && window.console) console.log("[Bivrost.Main] "+Array.prototype.join.call(arguments, " ")); };
+	/**
+	 * Logging helper
+	 * @private
+	 * @param {...object} vargs
+	 */
+	function log(/*vargs...*/) { Bivrost.log("Bivrost.Player", arguments); };
 
 	
 	/**
+	 * The player glues everything else together, it is the entry point.
 	 * @constructor
-	 * @class Bivrost.Main
+	 * @class Bivrost.Player
 	 * @param {HTMLElement} container
-	 * @param {string} [url=null]
+	 * @param {string|Array<string>} [url=null] url to the media, may be an array. If not used, use setMedia later.
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
 	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
 	 */
-	Bivrost.Main=function(container, url, projection, stereoscopy, source) {
+	Bivrost.Player=function(container, url, projection, stereoscopy, source) {
 		/**
-		 * @type Bivrost.Main
+		 * @type Bivrost.Player
 		 */
 		var thisRef=this;
 		
 		
 		// renderer
 		this.renderer=new THREE.WebGLRenderer();		
-		var mainDom=this.renderer.domElement;
-		container.appendChild(mainDom);
+		container.appendChild(this.renderer.domElement);
 		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 		this.container=container;
 		
@@ -126,50 +151,50 @@ Bivrost.reverseConstToName=function(constValue) {
 	/**
 	 * @type {Bivrost.Input}
 	 */
-	Bivrost.Main.prototype.input=null;
+	Bivrost.Player.prototype.input=null;
 		
 		
 	/**
 	 * @type {HTMLElement}
 	 */
-	Bivrost.Main.prototype.container=null;
+	Bivrost.Player.prototype.container=null;
 		
 		
 	/**
 	 * @type {Bivrost.UI}
 	 */
-	Bivrost.Main.prototype.ui=null;
+	Bivrost.Player.prototype.ui=null;
 		
 	
 	/**
 	 * @type {Bivrost.Media}
 	 */
-	Bivrost.Main.prototype.media=null;
+	Bivrost.Player.prototype.media=null;
 		
 		
 	/**
 	 * @type {Bivrost.View}
 	 */
-	Bivrost.Main.prototype.view=null;
+	Bivrost.Player.prototype.view=null;
 		
 		
 	/**
 	 * @type {THREE.WebGLRenderer}
 	 */
-	Bivrost.Main.prototype.renderer=null;
+	Bivrost.Player.prototype.renderer=null;
 
 	
 	/**
 	 * @type {THREE.OculusRiftEffect}
 	 */
-	Bivrost.Main.prototype.riftRenderer=null;
+	Bivrost.Player.prototype.riftRenderer=null;
 
 
 	/**
 	 * Sets the current media
 	 * @param {Bivrost.Media} media
 	 */
-	Bivrost.Main.prototype.setMedia=function(media) {
+	Bivrost.Player.prototype.setMedia=function(media) {
 		log("media set", media);
 		this.media=media;
 		this.view=new Bivrost.View(media);
@@ -183,7 +208,7 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * Resizes the player window
 	 * @private
 	 */
-	Bivrost.Main.prototype.resize=function() {
+	Bivrost.Player.prototype.resize=function() {
 		var width=this.container.offsetWidth;
 		var height=this.container.offsetHeight;
 		if(height === 0) {
@@ -211,7 +236,7 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * Default aspect ratio for render window 
 	 * @type {number}
 	 */
-	Bivrost.Main.prototype.aspect=4/3;
+	Bivrost.Player.prototype.aspect=4/3;
 
 	
 	/**
@@ -219,14 +244,14 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @private
 	 * @type {number}
 	 */
-	Bivrost.Main.prototype._vrMode=Bivrost.VRMODE_NONE;
+	Bivrost.Player.prototype._vrMode=Bivrost.VRMODE_NONE;
 		
 	
 	/**
 	 * Change VR mode
 	 * @param {number} mode, see Bivrost.VRMODE_*
 	 */
-	Object.defineProperty(Bivrost.Main.prototype, "vrMode", {
+	Object.defineProperty(Bivrost.Player.prototype, "vrMode", {
 		get: function() { return this._vrMode; },
 		set: function(value) {
 			this._vrMode=value;
@@ -241,21 +266,21 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * Window size before fullscreen
 	 * @private
 	 */
-	Bivrost.Main.prototype._sizeBeforeFullscreen=null;
+	Bivrost.Player.prototype._sizeBeforeFullscreen=null;
 	
 	/**
 	 * Is fullscreen enabled?
 	 * @private
 	 * @type {boolean}
 	 */
-	Bivrost.Main.prototype._fullscreen=false;
+	Bivrost.Player.prototype._fullscreen=false;
 
 	/**
 	 * Call to enter/exit or check state of fullscreen. Changes must be called from an user event.
 	 * @property {boolean}
-	 * @name Bivrost.Main#fullscreen
+	 * @name Bivrost.Player#fullscreen
 	 */
-	Object.defineProperty(Bivrost.Main.prototype, "fullscreen", {
+	Object.defineProperty(Bivrost.Player.prototype, "fullscreen", {
 		get: function() { return this._fullscreen; },
 		set: function(value) {
 			if(value === this.fullscreen) // ignore if no change
@@ -292,7 +317,7 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * Event handler for managing full screen changes
 	 * @private
 	 */
-	Bivrost.Main.prototype._onFullscreenChange=function() {
+	Bivrost.Player.prototype._onFullscreenChange=function() {
 		this._fullscreen=(
 			document.fullscreenElement ||
 			document.webkitFullscreenElement ||
@@ -316,7 +341,7 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @private	
 	 * @param {KeyboardEvent} e
 	 */
-	Bivrost.Main.prototype._keyPress=function(e) {
+	Bivrost.Player.prototype._keyPress=function(e) {
 		var keyName=e.key || String.fromCharCode(e.which);
 		switch(keyName) {
 			// f - toggle fullscreen
@@ -386,7 +411,7 @@ Bivrost.reverseConstToName=function(constValue) {
 		
 
 	// TODO: cleanup
-//	Bivrost.Main.prototype.dispose=function() {
+//	Bivrost.Player.prototype.dispose=function() {
 //		// TODO: media.dispose
 //	};
 		

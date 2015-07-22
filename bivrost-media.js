@@ -47,7 +47,12 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 
 (function() {
 
-	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.Media] "+Array.prototype.join.call(arguments, " ")); };
+	/**
+	 * Logging helper
+	 * @private
+	 * @param {...object} vargs
+	 */
+	function log(/*vargs...*/) { Bivrost.log("Bivrost.Media", arguments); };
 
 
 	/**
@@ -60,7 +65,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	 * Loads a media (still or video), you might want to add an onload
 	 * @constructor
 	 * @class
-	 * @param {string|array<string>} url
+	 * @param {string|Array<string>} url - url to the media, may be an array.
 	 * @param {onloadCallback} onload
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]

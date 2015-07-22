@@ -4,7 +4,12 @@
 
 (function(){
 
-	function log(/*vargs...*/) { if(Bivrost.verbose && window.console) console.log("[Bivrost.View] "+Array.prototype.join.call(arguments, " ")); };
+	/**
+	 * Logging helper
+	 * @private
+	 * @param {...object} vargs
+	 */
+	function log(/*vargs...*/) { Bivrost.log("Bivrost.View", arguments); };
 
 
 	function scaleUV(mesh, scale, materialIndex) {
