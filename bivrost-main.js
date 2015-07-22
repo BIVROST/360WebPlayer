@@ -90,9 +90,9 @@ Bivrost.reverseConstToName=function(constValue) {
 		this.resize();
 		
 			
-		// load picture if provided
+		// load media if provided
 		if(url) {
-			new Bivrost.Picture(url, this.setPicture.bind(this), projection, stereoscopy, source);
+			new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source);
 		}
 		
 		
@@ -142,9 +142,9 @@ Bivrost.reverseConstToName=function(constValue) {
 		
 	
 	/**
-	 * @type {Bivrost.Picture}
+	 * @type {Bivrost.Media}
 	 */
-	Bivrost.Main.prototype.picture=null;
+	Bivrost.Main.prototype.media=null;
 		
 		
 	/**
@@ -166,18 +166,16 @@ Bivrost.reverseConstToName=function(constValue) {
 
 
 	/**
-	 * Sets the current picture
-	 * @param {Bivrost.Picture} picture
-	 * @returns {Bivrost.Picture}
+	 * Sets the current media
+	 * @param {Bivrost.Media} media
 	 */
-	Bivrost.Main.prototype.setPicture=function(picture) {
-		log("picture set", picture);
-		this.picture=picture;
-		this.viewer=new Bivrost.Viewer(picture);
+	Bivrost.Main.prototype.setMedia=function(media) {
+		log("media set", media);
+		this.media=media;
+		this.viewer=new Bivrost.Viewer(media);
 		this.viewer.aspect=this.aspect;
-		this.ui.setPicture(picture);
-		picture.play();
-		return picture;
+		this.ui.setMedia(media);
+		media.play();
 	},
 		
 		
@@ -340,7 +338,7 @@ Bivrost.reverseConstToName=function(constValue) {
 
 //			case "s": case "S": break; // TODO: toggle stereoscopy mode
 //
-//			case "i": case "I": break; // TODO: show picture info
+//			case "i": case "I": break; // TODO: show media info
 
 			// z/Z - zoom
 			case "z": 
@@ -352,30 +350,30 @@ Bivrost.reverseConstToName=function(constValue) {
 
 			// space - play/pause
 			case " ":
-				this.picture.pauseToggle();
+				this.media.pauseToggle();
 				break;
 
 			// r - rewind
 			case "r": case "R":
-				this.picture.rewind();
+				this.media.rewind();
 				break;
 
 			// [/] - seek 5 sec
 			case "[":
-				this.picture.time-=5;
+				this.media.time-=5;
 				break;
 			case "]":
-				this.picture.time+=5;
+				this.media.time+=5;
 				break;
 
-//			case "w": break // TODO: picture.width--;
-//			case "W": break // TODO: picture.width++;
-//			case "h": break // TODO: picture.height--;
-//			case "H": break // TODO: picture.height++;
-//			case "x": break // TODO: picture.woffset--;
-//			case "X": break // TODO: picture.woffset++;
-//			case "y": break // TODO: picture.hoffset--;
-//			case "Y": break // TODO: picture.hoffset++;
+//			case "w": break // TODO: media.width--;
+//			case "W": break // TODO: media.width++;
+//			case "h": break // TODO: media.height--;
+//			case "H": break // TODO: media.height++;
+//			case "x": break // TODO: media.woffset--;
+//			case "X": break // TODO: media.woffset++;
+//			case "y": break // TODO: media.hoffset--;
+//			case "Y": break // TODO: media.hoffset++;
 
 			default:
 				return true;
@@ -389,7 +387,7 @@ Bivrost.reverseConstToName=function(constValue) {
 
 	// TODO: cleanup
 //	Bivrost.Main.prototype.dispose=function() {
-//		// TODO: picture.dispose
+//		// TODO: media.dispose
 //	};
 		
 })();

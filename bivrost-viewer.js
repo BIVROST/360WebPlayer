@@ -24,21 +24,21 @@
 
 
 	/**
-	 * The Viewer displays the Picture, on a more technical side, it manages scenes and cameras
+	 * The Viewer displays the Media, on a more technical side, it manages scenes and cameras
 	 * @constructor
-	 * @class Bivrost.Picture
-	 * @param {Bivrost.Picture} picture
+	 * @class Bivrost.Media
+	 * @param {Bivrost.Media} media
 	 */
-	Bivrost.Viewer=function(picture) {
-		this.picture=picture;
+	Bivrost.Viewer=function(media) {
+		this.media=media;
 
-		if(picture.projection !== Bivrost.PROJECTION_EQUIRECTANGULAR)
-			throw "only equirectangular implemented";
+		if(media.projection !== Bivrost.PROJECTION_EQUIRECTANGULAR)
+			throw "only equirectangular media implemented";
 
 		// mesh transform declaration: [left, top, width, height] for eyes:
 		var left, right, center;
 		
-		switch(picture.stereoscopy) {
+		switch(media.stereoscopy) {
 			case Bivrost.STEREOSCOPY_NONE:
 				left=right=center=[1,0, -1,1];
 				break;
@@ -58,7 +58,7 @@
 				center=left;
 				break;
 			default:
-				throw "stereoscopy mode "+(Bivrost.reverseConstToName(picture.stereoscopy) || picture.stereoscopy)+" unknown";
+				throw "stereoscopy mode "+(Bivrost.reverseConstToName(media.stereoscopy) || media.stereoscopy)+" unknown";
 		}
 
 		this._leftCamera=new THREE.PerspectiveCamera(75, 3/4, 0.1, 1000);
@@ -69,7 +69,7 @@
 			new THREE.SphereGeometry(1, 50, 50),
 			new THREE.MeshBasicMaterial({
 				side: THREE.DoubleSide,
-				map: this.picture.texture,
+				map: this.media.texture,
 				needsUpdate: true
 			})
 		);
@@ -77,7 +77,7 @@
 			new THREE.SphereGeometry(1, 50, 50),
 			new THREE.MeshBasicMaterial({
 				side: THREE.DoubleSide,
-				map: this.picture.texture,
+				map: this.media.texture,
 				needsUpdate: true
 			})
 		);
@@ -99,14 +99,14 @@
 
 
 	/**
-	 * The picture this Viewer is presenting
-	 * @type {Bivrost.Picture}
+	 * The Media this Viewer is presenting
+	 * @type {Bivrost.Media}
 	 */
-	Bivrost.Viewer.prototype.picture=null;
+	Bivrost.Viewer.prototype.media=null;
 
 
 	/**
-	 * Renders one picture from the left eye
+	 * Renders one Media in the left and right eye of a stereo render delegate
 	 * @param {function(cameras[], scenes[])} renderDelegate, must be run immidiately
 	 * @param {Bivrost.Input} look
 	 * @param {number} position - 0 is current, -1 is previous, +1 is next, fractions occur during animations (currently unused)
@@ -119,7 +119,7 @@
 
 
 	/**
-	 * Renders one picture from a mono perspective
+	 * Renders one Media from a mono perspective
 	 * @param {function(camera, scene)} renderMonoDelegate
 	 * @param {Bivrost.Input} look
 	 * @param {number} position - 0 is current, -1 is previous, +1 is next, fractions occur during animations (currently unused)

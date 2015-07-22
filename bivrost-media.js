@@ -47,17 +47,17 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 
 (function() {
 
-	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.Picture] "+Array.prototype.join.call(arguments, " ")); };
+	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.Media] "+Array.prototype.join.call(arguments, " ")); };
 
 
 	/**
 	 * Parametrless callback when a texture is loaded
-	 * @callback Picture.onloadCallback
+	 * @callback Media.onloadCallback
 	 */
 	
 
 	/**
-	 * Loads a picture (still or video), you might want to add an onload
+	 * Loads a media (still or video), you might want to add an onload
 	 * @constructor
 	 * @class
 	 * @param {string|array<string>} url
@@ -65,9 +65,8 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
 	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
-	 * @returns {Bivrost.Picture}
 	 */
-	Bivrost.Picture=function(url, onload, projection, stereoscopy, source) {
+	Bivrost.Media=function(url, onload, projection, stereoscopy, source) {
 		var that=this;
 		
 		if(typeof url !== "object")
@@ -91,7 +90,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 			case Bivrost.SOURCE_STILL:
 				this.title="still:"+url;
 				if(url.length !== 1)
-					throw "still supports only one picture at this time";
+					throw "still supports only one url at this time";
 				log("still loading", url);
 				
 				var loader=new THREE.TextureLoader();
@@ -190,40 +189,40 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	
 
 	// TODO:
-	//	Bivrost.Picture.prototype.width: 360,
-	//	Bivrost.Picture.prototype.height: 180,
-	//	Bivrost.Picture.prototype.hoffset: 0,
-	//	Bivrost.Picture.prototype.woffset: 0,
+	//	Bivrost.Media.prototype.width: 360,
+	//	Bivrost.Media.prototype.height: 180,
+	//	Bivrost.Media.prototype.hoffset: 0,
+	//	Bivrost.Media.prototype.woffset: 0,
 
 
-	Bivrost.Picture.prototype.projection=Bivrost.PROJECTION_EQUIRECTANGULAR;
+	Bivrost.Media.prototype.projection=Bivrost.PROJECTION_EQUIRECTANGULAR;
 
 
-	Bivrost.Picture.prototype.stereoscopy=Bivrost.STEREOSCOPY_AUTODETECT;
+	Bivrost.Media.prototype.stereoscopy=Bivrost.STEREOSCOPY_AUTODETECT;
 
 
-	Bivrost.Picture.prototype.title=null;
+	Bivrost.Media.prototype.title=null;
 
 
-	Bivrost.Picture.prototype.texture=null;
+	Bivrost.Media.prototype.texture=null;
 
 
 	/**
-	 * Null if picture is a still
+	 * Null if this Media is a still
 	 * @type {HTMLVideoElement}
 	 */
-	Bivrost.Picture.prototype.video=null;
+	Bivrost.Media.prototype.video=null;
 
 
-	Bivrost.Picture.prototype.onload=function() {};
+	Bivrost.Media.prototype.onload=function() {};
 
 
-	Bivrost.Picture.prototype.onprogress=function(progress01) {
+	Bivrost.Media.prototype.onprogress=function(progress01) {
 		log(this, "progress", ~~(100*progress01)+"%");
 	};
 
 
-	Bivrost.Picture.prototype.onerror=function(error) {
+	Bivrost.Media.prototype.onerror=function(error) {
 		throw error;
 	};
 
@@ -231,7 +230,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	/**
 	 * @param {THREE.Texture} texture
 	 */
-	Bivrost.Picture.prototype.gotTexture=function(texture) {
+	Bivrost.Media.prototype.gotTexture=function(texture) {
 		log("got texture: ", texture);
 
 		this.texture=texture;
@@ -252,20 +251,20 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	},
 
 
-	Bivrost.Picture.prototype.play=function() {};
-	Bivrost.Picture.prototype.pause=function() {};
-	Bivrost.Picture.prototype.pauseToggle=function() {};
-	Bivrost.Picture.prototype.rewind=function() { this.time=0; this.play(); };
+	Bivrost.Media.prototype.play=function() {};
+	Bivrost.Media.prototype.pause=function() {};
+	Bivrost.Media.prototype.pauseToggle=function() {};
+	Bivrost.Media.prototype.rewind=function() { this.time=0; this.play(); };
 
-	Bivrost.Picture.prototype._getTime=function() { return -1; };
-	Bivrost.Picture.prototype._setTime=function() {};
-	Object.defineProperty(Bivrost.Picture.prototype, "time", {
+	Bivrost.Media.prototype._getTime=function() { return -1; };
+	Bivrost.Media.prototype._setTime=function() {};
+	Object.defineProperty(Bivrost.Media.prototype, "time", {
 		get: function() {return this._getTime();},
 		set: function(value) {this._setTime(value);},
 	});
 
-	Bivrost.Picture.prototype._getDuration=function() { return 0; },
-	Object.defineProperty(Bivrost.Picture.prototype, "duration", {
+	Bivrost.Media.prototype._getDuration=function() { return 0; },
+	Object.defineProperty(Bivrost.Media.prototype, "duration", {
 		get: function() { return this._getDuration(); }
 	});
 	

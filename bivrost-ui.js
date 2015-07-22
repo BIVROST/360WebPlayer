@@ -73,25 +73,25 @@
 
 	
 	/**
-	 * @param {Bivrost.Picture} picture
+	 * @param {Bivrost.Media} media
 	 */
-	Bivrost.UI.prototype.setPicture=function(picture) {
+	Bivrost.UI.prototype.setMedia=function(media) {
 		var that=this;
 		
 		var status=document.createElement("span");
 		status.className="status";
 		
-		if(picture.video) {
-			var video=picture.video;
+		if(media.video) {
+			var video=media.video;
 			
 			var currentTime=document.createElement("span");
-			currentTime.textContent=timeFormat(picture.time);
+			currentTime.textContent=timeFormat(media.time);
 			
 			var separator=document.createElement("span");
 			separator.textContent="/";
 			
 			var duration=document.createElement("span");
-			duration.textContent=timeFormat(picture.duration);
+			duration.textContent=timeFormat(media.duration);
 			status.appendChild(currentTime);
 			status.appendChild(separator);
 			status.appendChild(duration);
@@ -99,23 +99,23 @@
 			var range=document.createElement("input");
 			range.setAttribute("type", "range");
 			range.setAttribute("min", 0);
-			range.setAttribute("max", picture.duration || 1);
+			range.setAttribute("max", media.duration || 1);
 			
 			video.addEventListener("timeupdate", function(e) {
-				currentTime.textContent=timeFormat(picture.time);
-				range.value=picture.time;
+				currentTime.textContent=timeFormat(media.time);
+				range.value=media.time;
 			});
 			
 			video.addEventListener("durationchange", function(e) {
-				duration.textContent=timeFormat(picture.duration);
-				range.setAttribute("max", picture.duration || 1);
+				duration.textContent=timeFormat(media.duration);
+				range.setAttribute("max", media.duration || 1);
 			});
 			
-			var rangeChange=function() { picture.time=range.value; };
+			var rangeChange=function() { media.time=range.value; };
 			range.addEventListener("change", rangeChange);
 			range.addEventListener("input", rangeChange);
 			
-			var playButton=makeButton("play", picture.play.bind(picture), "play");
+			var playButton=makeButton("play", media.play.bind(media), "play");
 			
 			var pauseCheck=function() {
 				if(video.paused || video.ended) {
@@ -135,9 +135,9 @@
 			
 			this.domElement.appendChild(range);
 			
-			this.domElement.appendChild(makeButton("back", function() { picture.time-=5; }, "<<"));
+			this.domElement.appendChild(makeButton("back", function() { media.time-=5; }, "<<"));
 			this.domElement.appendChild(playButton);
-			this.domElement.appendChild(makeButton("next", function() { picture.time+=5; }, ">>"));
+			this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
 			
 			this.domElement.appendChild(makeButton("display", function() { that.bivrostMain.fullscreen=!that.bivrostMain.fullscreen; }, "fullscreen" ));
 		}
