@@ -1,5 +1,3 @@
-
-
 /* global Bivrost, THREE */
 "use strict";
 
@@ -11,8 +9,27 @@
 	var DEG2RAD=Math.PI/180.0;
 	
 	
+	var KEYCODE_LEFT=37;
+	var KEYCODE_UP=38;
+	var KEYCODE_RIGHT=39;
+	var KEYCODE_DOWN=40;
+	
+	
+	/**
+	 * This class manages the input of the player - it handles mouse, keyboard, gyro and VR headset movement
+	 * @constructor
+	 * @class Bivrost.Input
+	 * @param {HTMLElement} domElement
+	 * @param {number} scale - the scale in which mouse events work
+	 */
 	Bivrost.Input=function(domElement, scale) {
-		this.lookEuler=new THREE.Euler(0,-Math.PI/2,0,'YXZ');
+		/**
+		 * @type {Bivrost.Input}
+		 */
+		var thisRef=this;
+		
+		
+		this.lookEuler=new THREE.Euler(0, -Math.PI/2, 0, 'YXZ');
 		this.lookEulerDelta=new THREE.Euler();
 		this.lookQuaternion=new THREE.Quaternion();
 		this.vrLookQuaternion=new THREE.Quaternion();
@@ -20,19 +37,17 @@
 		var isDown=false;
 		var isIn=false;
 		
-		var originX,originY;
+		var originX, originY;
 
 		var originEulerY=0, originEulerX=0;
-
-		var that=this;
 
 		function mousedown(e) {
 			isDown=true;
 			isIn=true;
 			originX=~~(e.x || e.clientX);
 			originY=~~(e.y || e.clientY);
-			originEulerX=that.lookEuler.x;
-			originEulerY=that.lookEuler.y;
+			originEulerX=thisRef.lookEuler.x;
+			originEulerY=thisRef.lookEuler.y;
 			
 			window.addEventListener("mouseup", mouseup);
 			window.addEventListener("mousemove", mousemove);
@@ -50,13 +65,13 @@
 		}
 
 		function mousemove(e) {
-			if(!that.enabled || !isDown || !isIn)
+			if(!isDown || !isIn)
 				return false;
 			
 			var dx=~~(e.x || e.clientX)-originX;
 			var dy=~~(e.y || e.clientY)-originY;
-			that.lookEuler.x=originEulerX+scale*dy/domElement.offsetHeight;
-			that.lookEuler.y=originEulerY+scale*dx/domElement.offsetWidth;
+			thisRef.lookEuler.x=originEulerX+scale*dy/domElement.offsetHeight;
+			thisRef.lookEuler.y=originEulerY+scale*dx/domElement.offsetWidth;
 		}
 		
 		function mouseover(e) { isIn=true; }
@@ -70,24 +85,19 @@
 		domElement.addEventListener("mouseover", mouseover);
 
 
-		var KEYCODE_LEFT=37;
-		var KEYCODE_UP=38;
-		var KEYCODE_RIGHT=39;
-		var KEYCODE_DOWN=40;
-
 		function keydown(e) {
 			switch(e.which) {
 				case KEYCODE_DOWN:
-					that.lookEulerDelta.x=-scale*that.keyboardSpeed;
+					thisRef.lookEulerDelta.x=-scale*thisRef.keyboardSpeed;
 					break;
 				case KEYCODE_UP:
-					that.lookEulerDelta.x=scale*that.keyboardSpeed;
+					thisRef.lookEulerDelta.x=scale*thisRef.keyboardSpeed;
 					break;
 				case KEYCODE_LEFT:
-					that.lookEulerDelta.y=scale*that.keyboardSpeed;
+					thisRef.lookEulerDelta.y=scale*thisRef.keyboardSpeed;
 					break;
 				case KEYCODE_RIGHT:
-					that.lookEulerDelta.y=-scale*that.keyboardSpeed;
+					thisRef.lookEulerDelta.y=-scale*thisRef.keyboardSpeed;
 					break;
 				default:
 					return true;
@@ -101,11 +111,11 @@
 			switch(e.which) {
 				case KEYCODE_DOWN:
 				case KEYCODE_UP:
-					that.lookEulerDelta.x=0;
+					thisRef.lookEulerDelta.x=0;
 					break;
 				case KEYCODE_LEFT:
 				case KEYCODE_RIGHT:
-					that.lookEulerDelta.y=0;
+					thisRef.lookEulerDelta.y=0;
 					break;
 				default:
 					return true;
@@ -119,7 +129,7 @@
 		domElement.addEventListener("keyup", keyup);
 		
 		
-		this.unattach=function() {
+		this._unattach=function() {
 			domElement.removeEventListener("mousedown", mousedown);
 			window.removeEventListener("mousemove", mousemove);
 			window.removeEventListener("mouseup", mouseup);
@@ -140,13 +150,13 @@
 				for(var i in devices)
 					if(devices.hasOwnProperty(i)) {
 						if(devices[i] instanceof PositionSensorVRDevice && devices[i].getState().hasOrientation) {
-							that.vrDevice=devices[i];
+							thisRef.vrDevice=devices[i];
 							log(
 								"found VR device",
-								"state=", that.vrDevice.getState(),
-								"hardwareUnitId=", that.vrDevice.hardwareUnitId, 
-								"deviceId=", that.vrDevice.deviceId, 
-								"deviceName=", that.vrDevice.deviceName,
+								"state=", thisRef.vrDevice.getState(),
+								"hardwareUnitId=", thisRef.vrDevice.hardwareUnitId, 
+								"deviceId=", thisRef.vrDevice.deviceId, 
+								"deviceName=", thisRef.vrDevice.deviceName,
 								"(using and ignoring other)"
 							);
 							return;
@@ -165,6 +175,7 @@
 		else
 			log("no VR API available, try http://webvr.info");
 
+		// gyroscope controls
 		window.addEventListener("deviceorientation", function(ev) {
 			var a=DEG2RAD*ev.alpha;	// bank (left-right)
 			var b=DEG2RAD*ev.beta; // pitch (up-down)
@@ -173,29 +184,57 @@
 			var euler=new THREE.Euler(c,0,0, 'XZY');
 			var gyro=new THREE.Quaternion();
 			gyro.setFromEuler(euler);
-			if(!that.gyroOriginQuaternion) {
+			if(!thisRef._gyroOriginQuaternion) {
 				log("deviceorientation: reoriented gyro to ", euler);
-				that.gyroOriginQuaternion=gyro.clone();
-				that.gyroOriginQuaternion.inverse();
+				thisRef._gyroOriginQuaternion=gyro.clone();
+				thisRef._gyroOriginQuaternion.inverse();
 			}
-//			that.gyroLookQuaternion.multiplyQuaternions(that.gyroOriginQuaternion, gyro);
+//			that._gyroLookQuaternion.multiplyQuaternions(that._gyroOriginQuaternion, gyro);
 		}, false);
 	};
 	
 	
-	Bivrost.Input.prototype.unattach=function() {};
+	/**
+	 * Unattach events, replaced by construtor
+	 * @type {function}
+	 */
+	Bivrost.Input.prototype.dispose=null;
 	
 	
-	Bivrost.Input.prototype.vrDevice=undefined;
+	
+	/**
+	 * Currently used position sensor
+	 * @type {PositionSensorVRDevice}
+	 */
+	Bivrost.Input.prototype.vrDevice=null;
 	
 	
+	/**
+	 * Should the Y axis be clamped
+	 * if set to true, the user cannot look much more than to the zenith or nadir
+	 * @type {boolean}
+	 */
 	Bivrost.Input.prototype.clampY=true;
 	
-	Bivrost.Input.prototype.gyroOriginQuaternion=undefined;
-	Bivrost.Input.prototype.gyroLookQuaternion=new THREE.Quaternion();
+	
+	/**
+	 * Gyroscope origin (start angle)
+	 * @private
+	 */
+	Bivrost.Input.prototype._gyroOriginQuaternion=null;
 	
 	
+	/** 
+	 * Gyroscope angle (difference between now and origin)
+	 * @private 
+	 */
+	Bivrost.Input.prototype._gyroLookQuaternion=new THREE.Quaternion();
 	
+	
+	/**
+	 * Update runs once per frame
+	 * @param {number} dt - the delta time
+	 */
 	Bivrost.Input.prototype.update=function(dt) {
 		this.lookEuler.x+=this.lookEulerDelta.x*dt;
 		this.lookEuler.y+=this.lookEulerDelta.y*dt;
@@ -222,17 +261,45 @@
 			}
 		}
 		
-		if(this.gyroLookQuaternion) {
-			this.lookQuaternion.multiplyQuaternions(this.gyroLookQuaternion, this.lookQuaternion);
+		if(this._gyroLookQuaternion) {
+			this.lookQuaternion.multiplyQuaternions(this._gyroLookQuaternion, this.lookQuaternion);
 			return;
 		}
 	};
 	
+	
+	/**
+	 * Current movement delta (from keyboard)
+	 * @type {THREE.Euler}
+	 */
 	Bivrost.Input.prototype.lookDelta=new THREE.Euler();
+	
+	
+	/**
+	 * Current angle
+	 * @type {THREE.Euler}
+	 */
 	Bivrost.Input.prototype.lookEuler=new THREE.Euler();
+	
+	
+	/**
+	 * Look direction - this is the primary output
+	 * @type {THREE.Quaternion}
+	 */
 	Bivrost.Input.prototype.lookQuaternion=new THREE.Quaternion();
+	
+	
+	/**
+	 * VR part of the look direction
+	 * @type {THREE.Quaternion}
+	 */
 	Bivrost.Input.prototype.vrLookQuaternion=new THREE.Quaternion();
-	Bivrost.Input.prototype.enabled=true;
+	
+	
+	/**
+	 * How much rotation per second of keyboard rotation, in radians
+	 * @type {number}
+	 */
 	Bivrost.Input.prototype.keyboardSpeed=Math.PI*0.5;
 	
 })();

@@ -1,7 +1,15 @@
 /* global THREE */
 "use strict";
 
-var Bivrost={ verbose: true };
+
+var Bivrost={ 
+	
+	/**
+	 * When on, there is some debug information on the console.log
+	 * @type Boolean
+	 */
+	verbose: true 
+};
 
 Bivrost.VRMODE_NONE=501;
 //Bivrost.VRMODE_OCULUS_RIFT_DK1=502;
@@ -24,7 +32,7 @@ Bivrost.reverseConstToName=function(constValue) {
 
 (function(){
 	
-	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.Main] "+Array.prototype.join.call(arguments, " ")); };
+	function log(/*vargs...*/) { if(Bivrost.verbose && window.console) console.log("[Bivrost.Main] "+Array.prototype.join.call(arguments, " ")); };
 
 	
 	/**
@@ -35,7 +43,6 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
 	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
-	 * @returns {Bivrost.Picture}
 	 */
 	Bivrost.Main=function(container, url, projection, stereoscopy, source) {
 		/**
@@ -43,14 +50,16 @@ Bivrost.reverseConstToName=function(constValue) {
 		 */
 		var thisRef=this;
 		
+		
 		// renderer
 		this.renderer=new THREE.WebGLRenderer();		
 		var mainDom=this.renderer.domElement;
 		container.appendChild(mainDom);
-		container.setAttribute("tabindex", 1337);
+		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 		this.container=container;
 		
 		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
+
 
 		// UI
 		var uiDiv=document.createElement("div");

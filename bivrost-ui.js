@@ -1,11 +1,10 @@
 /* global Bivrost */
-
 "use strict";
 
 
 (function() {
 	
-	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.UI] "+Array.prototype.join.call(arguments, " ")); };
+	function log(/*vargs...*/) { if(Bivrost.verbose && window.console) console.log("[Bivrost.UI] "+Array.prototype.join.call(arguments, " ")); };
 	
 		
 	// TODO: spritesheet
@@ -57,6 +56,7 @@
 	
 	
 	/**
+	 * UI is short for User Interface - the buttons, slider and timing information
 	 * @param {HTMLElement} domElement
 	 * @param {Bivrost.Main} bivrostMain
 	 * @returns {bivrost-ui_L6.UI}

@@ -5,7 +5,7 @@
 (function(){
 
 
-	function log(/*vargs...*/) { console.log("[Bivrost.Viewer] "+Array.prototype.join.call(arguments, " ")); };
+	function log(/*vargs...*/) { if(Bivrost.verbose && window.console) console.log("[Bivrost.Viewer] "+Array.prototype.join.call(arguments, " ")); };
 
 
 	function scaleUV(mesh, scale, materialIndex) {
@@ -24,6 +24,7 @@
 
 
 	/**
+	 * The Viewer displays the Picture, on a more technical side, it manages scenes and cameras
 	 * @constructor
 	 * @class Bivrost.Picture
 	 * @param {Bivrost.Picture} picture
@@ -98,6 +99,7 @@
 
 
 	/**
+	 * The picture this Viewer is presenting
 	 * @type {Bivrost.Picture}
 	 */
 	Bivrost.Viewer.prototype.picture=null;
