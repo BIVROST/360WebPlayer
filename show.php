@@ -49,7 +49,7 @@
 		<script src="bivrost-main.js" type="text/javascript"></script>
 		<script src="bivrost-viewer.js" type="text/javascript"></script>
 		<script src="bivrost-picture.js" type="text/javascript"></script>
-		<script src="bivrost-mouselook.js" type="text/javascript"></script>
+		<script src="bivrost-input.js" type="text/javascript"></script>
 		<script src="bivrost-ui.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var bivrost=new Bivrost.Main(document.getElementById("bivrost_container"), <?=json_encode($_GET['file'])?>);			

@@ -61,7 +61,7 @@ Bivrost.reverseConstToName=function(constValue) {
 		
 		// input
 		container.addEventListener("keypress", this._keyPress.bind(this));
-		this.mouseLook=new Bivrost.MouseLook(container, 1);
+		this.input=new Bivrost.Input(container, 1);
 		
 		
 		// fullscreen
@@ -91,7 +91,7 @@ Bivrost.reverseConstToName=function(constValue) {
 		var clock=new THREE.Clock();
 		function loop() {
 			var dt=clock.getDelta();
-			thisRef.mouseLook.update(dt);
+			thisRef.input.update(dt);
 			var pos=0;
 
 			// TODO: don't do this not every frame
@@ -100,10 +100,10 @@ Bivrost.reverseConstToName=function(constValue) {
 				switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
 					//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
 					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
-						thisRef.viewer.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.mouseLook, pos);
+						thisRef.viewer.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
 						break;
 					case Bivrost.VRMODE_NONE:
-						thisRef.viewer.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.mouseLook, pos);
+						thisRef.viewer.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.input, pos);
 						break;
 				}
 			}
@@ -115,9 +115,9 @@ Bivrost.reverseConstToName=function(constValue) {
 
 	
 	/**
-	 * @type {Bivrost.MouseLook}
+	 * @type {Bivrost.Input}
 	 */
-	Bivrost.Main.prototype.mouseLook=null;
+	Bivrost.Main.prototype.input=null;
 		
 		
 	/**
@@ -173,7 +173,8 @@ Bivrost.reverseConstToName=function(constValue) {
 		
 		
 	/**
-	 * Resizes the render window
+	 * Resizes the player window
+	 * @private
 	 */
 	Bivrost.Main.prototype.resize=function() {
 		var width=this.container.offsetWidth;

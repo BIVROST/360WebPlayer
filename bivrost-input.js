@@ -5,13 +5,13 @@
 
 (function() {
 	
-	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.MouseLook] "+Array.prototype.join.call(arguments, " ")); };
+	function log(/*vargs...*/) { if(Bivrost.verbose) console.log("[Bivrost.Input] "+Array.prototype.join.call(arguments, " ")); };
 	
 	
 	var DEG2RAD=Math.PI/180.0;
 	
 	
-	Bivrost.MouseLook=function(domElement, scale) {
+	Bivrost.Input=function(domElement, scale) {
 		this.lookEuler=new THREE.Euler(0,-Math.PI/2,0,'YXZ');
 		this.lookEulerDelta=new THREE.Euler();
 		this.lookQuaternion=new THREE.Quaternion();
@@ -183,20 +183,20 @@
 	};
 	
 	
-	Bivrost.MouseLook.prototype.unattach=function() {};
+	Bivrost.Input.prototype.unattach=function() {};
 	
 	
-	Bivrost.MouseLook.prototype.vrDevice=undefined;
+	Bivrost.Input.prototype.vrDevice=undefined;
 	
 	
-	Bivrost.MouseLook.prototype.clampY=true;
+	Bivrost.Input.prototype.clampY=true;
 	
-	Bivrost.MouseLook.prototype.gyroOriginQuaternion=undefined;
-	Bivrost.MouseLook.prototype.gyroLookQuaternion=new THREE.Quaternion();
+	Bivrost.Input.prototype.gyroOriginQuaternion=undefined;
+	Bivrost.Input.prototype.gyroLookQuaternion=new THREE.Quaternion();
 	
 	
 	
-	Bivrost.MouseLook.prototype.update=function(dt) {
+	Bivrost.Input.prototype.update=function(dt) {
 		this.lookEuler.x+=this.lookEulerDelta.x*dt;
 		this.lookEuler.y+=this.lookEulerDelta.y*dt;
 		this.lookEuler.z+=this.lookEulerDelta.z*dt;
@@ -228,11 +228,11 @@
 		}
 	};
 	
-	Bivrost.MouseLook.prototype.lookDelta=new THREE.Euler();
-	Bivrost.MouseLook.prototype.lookEuler=new THREE.Euler();
-	Bivrost.MouseLook.prototype.lookQuaternion=new THREE.Quaternion();
-	Bivrost.MouseLook.prototype.vrLookQuaternion=new THREE.Quaternion();
-	Bivrost.MouseLook.prototype.enabled=true;
-	Bivrost.MouseLook.prototype.keyboardSpeed=Math.PI*0.5;
+	Bivrost.Input.prototype.lookDelta=new THREE.Euler();
+	Bivrost.Input.prototype.lookEuler=new THREE.Euler();
+	Bivrost.Input.prototype.lookQuaternion=new THREE.Quaternion();
+	Bivrost.Input.prototype.vrLookQuaternion=new THREE.Quaternion();
+	Bivrost.Input.prototype.enabled=true;
+	Bivrost.Input.prototype.keyboardSpeed=Math.PI*0.5;
 	
 })();

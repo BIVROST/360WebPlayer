@@ -106,7 +106,7 @@
 	/**
 	 * Renders one picture from the left eye
 	 * @param {function(cameras[], scenes[])} renderDelegate, must be run immidiately
-	 * @param {Bivrost.MouseLook} look
+	 * @param {Bivrost.Input} look
 	 * @param {number} position - 0 is current, -1 is previous, +1 is next, fractions occur during animations (currently unused)
 	 */
 	Bivrost.Viewer.prototype.renderStereo=function(renderStereoDelegate, look, position) {
@@ -119,7 +119,7 @@
 	/**
 	 * Renders one picture from a mono perspective
 	 * @param {function(camera, scene)} renderMonoDelegate
-	 * @param {Bivrost.MouseLook} look
+	 * @param {Bivrost.Input} look
 	 * @param {number} position - 0 is current, -1 is previous, +1 is next, fractions occur during animations (currently unused)
 	 */
 	Bivrost.Viewer.prototype.renderMono=function(renderMonoDelegate, look, position) {
