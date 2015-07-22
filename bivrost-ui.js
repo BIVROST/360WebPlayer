@@ -139,7 +139,7 @@
 			this.domElement.appendChild(playButton);
 			this.domElement.appendChild(makeButton("next", function() { picture.time+=5; }, ">>"));
 			
-			this.domElement.appendChild(makeButton("display", function() { that.bivrostMain.fullscreenToggle(); }, "fullscreen" ));
+			this.domElement.appendChild(makeButton("display", function() { that.bivrostMain.fullscreen=!that.bivrostMain.fullscreen; }, "fullscreen" ));
 		}
 		else {
 			status.textContent="";

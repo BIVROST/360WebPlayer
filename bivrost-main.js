@@ -38,32 +38,31 @@ Bivrost.reverseConstToName=function(constValue) {
 	 * @returns {Bivrost.Picture}
 	 */
 	Bivrost.Main=function(container, url, projection, stereoscopy, source) {
-		this._clock=new THREE.Clock();
+		var thisRef=this;
 		
+		this._clock=new THREE.Clock();
+
+		// renderer
 		this.renderer=new THREE.WebGLRenderer();		
 		var mainDom=this.renderer.domElement;
 		container.appendChild(mainDom);
 		container.setAttribute("tabindex", 1337);
 		this.container=container;
+		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
 		
 		var uiDiv=document.createElement("div");
 		uiDiv.className="ui";
 		container.appendChild(uiDiv);
 		this.ui=new Bivrost.UI(uiDiv, this);
-		
 
-		// http://stackoverflow.com/a/14139497/785171
-		window.addEventListener("resize", this.resize.bind(this));
 		
-		container.addEventListener("dblclick", this.fullscreenToggle.bind(this));
-		
+		// input
 		container.addEventListener("keypress", this._keyPress.bind(this));
-		
 		this.mouseLook=new Bivrost.MouseLook(container, 1);
 		
-		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
 		
 		// fullscreen
+		container.addEventListener("dblclick", function() { thisRef.fullscreen=!thisRef.fullscreen; });
 		var onFullscreenChange=this._onFullscreenChange.bind(this);
 		document.addEventListener("fullscreenchange", onFullscreenChange);
 		document.addEventListener("fullscreenchange", onFullscreenChange);
@@ -71,18 +70,21 @@ Bivrost.reverseConstToName=function(constValue) {
 		document.addEventListener("mozfullscreenchange", onFullscreenChange);
 		document.addEventListener("MSFullscreenChange", onFullscreenChange);
 		
+		// main loop
 		this._loopBound=this.loop.bind(this);
 		this.loop();
 		
-		this.resize();
+		// resize handling
+		// http://stackoverflow.com/a/14139497/785171
+		window.addEventListener("resize", this.resize.bind(this));
 		
+		this.resize();
+
+		
+		// load picture if provided
 		if(url) {
 			new Bivrost.Picture(url, this.setPicture.bind(this), projection, stereoscopy, source);
 		}
-		
-		// TODO:
-		// if(hmd detected)
-		//   riftmode is default in fullscreen
 	};
 
 	
@@ -138,7 +140,7 @@ Bivrost.reverseConstToName=function(constValue) {
 
 		// TODO: not every frame
 		if(this.viewer) {
-			switch(this.isFullscreen?this._vrMode:Bivrost.VRMODE_NONE) {
+			switch(this.fullscreen?this._vrMode:Bivrost.VRMODE_NONE) {
 //				case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
 				case Bivrost.VRMODE_OCULUS_RIFT_DK2:
 					this.viewer.renderStereo(this.riftRenderer.render2.bind(this.riftRenderer), this.mouseLook, pos);
@@ -221,91 +223,72 @@ Bivrost.reverseConstToName=function(constValue) {
 	};
 		
 
+	/// REGION: fullscreen
+
 	/**
 	 * Window size before fullscreen
 	 * @private
 	 */
 	Bivrost.Main.prototype._sizeBeforeFullscreen=null;
-		
-	
-	/**
-	 * Call to enter fullscreen. Must be called from an user event.
-	 */
-	Bivrost.Main.prototype.fullscreenEnter=function() {
-		if(this.isFullscreen) {
-			console.warn("already in fullscreen");
-			return;
-		}
-
-		var elem=this.container;
-
-		if(!this._sizeBeforeFullscreen)
-			this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];
-		log("fullscreen enter, stored size", this._sizeBeforeFullscreen);
-
-		(
-			elem.requestFullscreen 
-			|| elem.msRequestFullscreen 
-			|| elem.mozRequestFullScreen
-			|| elem.webkitRequestFullscreen 
-			|| function() {throw "fullscreen not supported";}
-		).call(elem, this.hmd && {vrDisplay: this.hmd} || undefined);			/// TODO: wypuścić hmd na zewnątrz
-	};
-		
-	
-	/**
-	 * Call to exit fullscreen
-	 */
-	Bivrost.Main.prototype.fullscreenExit=function() {
-		if(!this.isFullscreen) {
-			console.warn("not in fullscreen");
-			return;
-		}
-
-		(
-			document.exitFullscreen
-			|| document.mozCancelFullScreen 
-			|| document.webkitExitFullscreen 
-			|| document.msExitFullscreen 
-			|| function() {throw "exiting fullscreen not supported";}
-		).call(document);
-	};
-		
-		
-	/**
-	 * Call to toggle fullscreen, must be called from user event
-	 */
-	Bivrost.Main.prototype.fullscreenToggle=function() {
-		if(this.isFullscreen)
-			this.fullscreenExit();
-		else {
-			if(this.mouseLook.vrDevice && this.mouseLook.vrDevice.getState().hasOrientation)
-				this.setVRMode(Bivrost.VRMODE_OCULUS_RIFT_DK2);
-			this.fullscreenEnter();
-		}
-	};
-		
 	
 	/**
 	 * Is fullscreen enabled?
+	 * @private
 	 * @type {boolean}
 	 */
-	Bivrost.Main.prototype.isFullscreen=false;
-		
+	Bivrost.Main.prototype._fullscreen=false;
+
+	/**
+	 * Call to enter/exit or check state of fullscreen. Changes must be called from an user event.
+	 * @property {boolean}
+	 * @name Bivrost.Main#fullscreen
+	 */
+	Object.defineProperty(Bivrost.Main.prototype, "fullscreen", {
+		get: function() { return this._fullscreen; },
+		set: function(value) {
+			if(value === this.fullscreen) // ignore if no change
+				return;
+			if(value) {	// turn on
+				var elem=this.container;
+
+				if(!this._sizeBeforeFullscreen)
+					this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];
+				log("fullscreen enter, stored size", this._sizeBeforeFullscreen);
+
+				(
+					elem.requestFullscreen 
+					|| elem.msRequestFullscreen 
+					|| elem.mozRequestFullScreen
+					|| elem.webkitRequestFullscreen 
+					|| function() {throw "fullscreen not supported";}
+				).call(elem);			/// TODO: use HMD if available - , {vrDisplay: this.hmd}
+			}
+			else { // turn off
+				(
+					document.exitFullscreen
+					|| document.mozCancelFullScreen 
+					|| document.webkitExitFullscreen 
+					|| document.msExitFullscreen 
+					|| function() {throw "exiting fullscreen not supported";}
+				).call(document);
+			}
+		}
+	});
+	
 	
 	/**
 	 * Event handler for managing full screen changes
 	 * @private
 	 */
 	Bivrost.Main.prototype._onFullscreenChange=function() {
-		this.isFullscreen=(
+		this._fullscreen=(
 			document.fullscreenElement ||
 			document.webkitFullscreenElement ||
 			document.mozFullScreenElement ||
 			document.msFullscreenElement
 		) === this.container;
 
-		if(!this.isFullscreen) {
+		if(!this.fullscreen) {
 			log("fullscreen exit, resize to", this._sizeBeforeFullscreen);
 			this.renderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
 		}
@@ -313,6 +296,8 @@ Bivrost.reverseConstToName=function(constValue) {
 		setTimeout(this.resize.bind(this), 0);
 	};
 		
+	/// } END REGION
+	
 	
 	/**
 	 * Event handler for managing keyboard events
@@ -322,14 +307,21 @@ Bivrost.reverseConstToName=function(constValue) {
 	Bivrost.Main.prototype._keyPress=function(e) {
 		var keyName=e.key || String.fromCharCode(e.which);
 		switch(keyName) {
+			// f - toggle fullscreen
 			case "f": case "F":
-				this.fullscreenToggle();
+				this.fullscreen=!this.fullscreen;
 				break;
 
+			// v - enable/toggle VR modes
 			case "v": case "V":
-				if(!this.isFullscreen)
-					this.fullscreenEnter();
-				this.setVRMode(Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this._vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length]);
+				if(this.fullscreen) {	// already in fullscreen - toggle modes					
+					this.setVRMode(Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this._vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length]);
+				}
+				else {	// not in fullscreen - start with default mode
+					// TODO: add default mode detection
+					this.fullscreen=true;
+					this.setVRMode(Bivrost.AVAILABLE_VRMODES[0]);
+				}
 				break;
 
 //			case "s": case "S": break; // TODO: toggle stereoscopy mode
