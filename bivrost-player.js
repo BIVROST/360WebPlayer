@@ -65,7 +65,7 @@ Bivrost.AVAILABLE_VRMODES=[
 	 * @constructor
 	 * @class Bivrost.Player
 	 * @param {HTMLElement} container
-	 * @param {string|Array<string>} [url=null] url to the media, may be an array. If not used, use setMedia later.
+	 * @param {string|Array<string>} [url=null] url to the media, may be an array. If not used, call setMedia later.
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
 	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
