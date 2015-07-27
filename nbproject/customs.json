@@ -1,0 +1,11 @@
+{
+	"elements": {
+		"bivrost-player": {
+			"attributes": {
+				"bivrost-url": {},
+				"url": {}
+			}
+		}
+	},
+	"attributes": {}
+}

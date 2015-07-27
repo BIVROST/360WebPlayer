@@ -18,13 +18,14 @@ Features
 * Simple to use for the end user
 * Free (see the [license][12] for details)
 * Works on major browsers
+* Possible to embed more than one on the same page
 * Themable
 * Supports mono and stereoscopic video
-* [MovVR][11] support - working with Oculus Rift DK1, DK2, cardboard and more
+* [MozVR][11] support - working with Oculus Rift DK1, DK2, cardboard and more
 * Lots of configuration options
 * Accepting feature requests - tell us what you want in the player!
 
-[11]: http://mozvr...
+[11]: http://mozvr.com/
 [12]: #License
 
 

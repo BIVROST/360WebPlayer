@@ -5,7 +5,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
-		<link rel="stylesheet" type="text/css" href="bivrost.css" />
+		<link rel="stylesheet" type="text/css" href="../bivrost.css" />
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         </head>
 	<body class="show">
@@ -44,13 +44,9 @@
 		</article>
 		
 		
-		<script src="three.js" type="text/javascript"></script>
-		<script src="OculusRiftEffect.js" type="text/javascript"></script>
-		<script src="bivrost-player.js" type="text/javascript"></script>
-		<script src="bivrost-view.js" type="text/javascript"></script>
-		<script src="bivrost-media.js" type="text/javascript"></script>
-		<script src="bivrost-input.js" type="text/javascript"></script>
-		<script src="bivrost-ui.js" type="text/javascript"></script>
+		<?php foreach(json_decode(file_get_contents('../scripts.json')) as $f): ?>
+		<script src="../<?=$f?>" type="text/javascript"></script>
+		<?php endforeach ?>
 		<script type="text/javascript">
 			var bivrost=new Bivrost.Player(document.getElementById("bivrost_container"), <?=json_encode($_GET['file'])?>);			
 			<?php if(isset($_GET['file2'])): ?>
