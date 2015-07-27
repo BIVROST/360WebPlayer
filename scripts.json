@@ -1,0 +1,9 @@
+[
+	"three.js",
+	"OculusRiftEffect.js",
+	"bivrost-player.js",
+	"bivrost-view.js",
+	"bivrost-media.js",
+	"bivrost-input.js",
+	"bivrost-ui.js"
+]
