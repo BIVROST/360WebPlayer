@@ -4,6 +4,10 @@
 
 var Bivrost={
 	
+	
+	version: 0,
+	
+	
 	/**
 	 * When on, there is some debug information on the console.log
 	 * @type Boolean

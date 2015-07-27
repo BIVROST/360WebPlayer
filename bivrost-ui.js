@@ -11,8 +11,8 @@
 	 */
 	function log(/*vargs...*/) { Bivrost.log("Bivrost.UI", arguments); };
 	
-		
-	// TODO: spritesheet
+
+
 	/**
 	 * Creates a button for use in the UI
 	 * @param {string} name of the image
@@ -22,22 +22,9 @@
 	 */
 	function makeButton(name, action, alt) {
 		var button=document.createElement("span");
-		button.className="bivrost-button";
-		
-		var normalImg=document.createElement("img");
-		normalImg.src="bivrost-ui-"+name+".png";
-		normalImg.alt=alt || "";
-		button.appendChild(normalImg);
-		
-		var hoverImg=document.createElement("img");
-		hoverImg.src="bivrost-ui-"+name+"-hover.png";
-		hoverImg.alt="";
-		hoverImg.className="bivrost-button-hover";
-		button.appendChild(hoverImg);
-		
+		button.className="bivrost-button bivrost-icon-"+name;
 		button.changeIcons=function(newName) {
-			normalImg.src="bivrost-ui-"+newName+".png";
-			hoverImg.src="bivrost-ui-"+newName+"-hover.png";
+			button.className="bivrost-button bivrost-icon-"+newName;
 		};
 		
 		button.action=action;

@@ -1,8 +1,11 @@
+$bivrost-icon-spacing: 20px;
+$relative-assets: true;
 @import "compass/utilities/sprites";
-@import "icons/*.png";
-@include all-icons-sprites;
+@import "bivrost-icon/*.png";
+@include all-bivrost-icon-sprites;
 
 
+$ui-height: 68px;
 
 .bivrost-container,
 bivrost-container {
@@ -20,39 +23,19 @@ bivrost-container {
 		bottom: 0;
 		left: 0;
 		right: 0;
-		height: 68px;
+		height: $ui-height;
 		background: rgba(0,0,0, 0.5);
 		
 		.bivrost-button {
+			cursor: pointer;
 			position: relative;
-			width: 50px;
-			height: 50px;
+			$h: bivrost-icon-sprite-height(back);
+			$w: bivrost-icon-sprite-width(back);
+			width: $w;
+			height: $h;
 			display: inline-block;
 			
-			margin: (68px-50px)/2 0 0 0;
-			
-			img {
-				position: absolute;
-				top: 0;
-				left: 0;
-				bottom: 0;
-				right: 0;
-				visibility: visible;
-			}
-			
-			img.bivrost-button-hover {
-				visibility: hidden;
-			}
-			
-			&:hover {
-				img {
-					visibility: hidden;
-				}
-
-				img.bivrost-button-hover {
-					visibility: visible;
-				}
-			}
+			margin: ($ui-height - $h)/2 0 0 8px;
 		}
 
 		input[type="range"] {
@@ -124,6 +107,7 @@ bivrost-container {
 	}
 	
 }
+
 
 :-webkit-full-screen {
     position: fixed;
