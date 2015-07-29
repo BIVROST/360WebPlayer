@@ -17,7 +17,7 @@ Features
 * Easy integration into any website
 * Simple to use for the end user
 * Free (see the [license][12] for details)
-* Works on major browsers
+* Works on major browsers (chrome, firefox, IE9+)
 * Possible to embed more than one on the same page
 * Themable
 * Supports mono and stereoscopic video
@@ -38,7 +38,7 @@ Quickstart
 	<link rel="stylesheet" href="bivrost_dir/bivrost.css" />
 	<script type="text/javascript" src="bivrost_dir/bivrost-min.js"></script>
 
-	<bivrost-player bivrost-url="stereoscopic_movie_LR.mp4" />
+	<bivrost-player url="stereoscopic_movie_LR.mp4"></bivrost-player>
 
 Installation
 ------------
@@ -51,6 +51,9 @@ Configuration
 -------------
 
 Possible options:
+
+	* `url` (or `data-bivrost-url`), multiple
+	* `url-type` (or `data-bivrost-url-type`), multiple
 
 - urls
 - projection
@@ -70,6 +73,13 @@ The player can be run and configured in two ways:
 
 Media preparation guide
 -----------------------
+https://wiki.whatwg.org/wiki/Video_type_parameters
+http://linux.goeszen.com/html5-video-tag-and-codecs.html
+#t=10,20
+
+Roadmap
+-------
+* Standalone web component
 
 
 License

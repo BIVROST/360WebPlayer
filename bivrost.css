@@ -77,19 +77,19 @@
   .bivrost-icon-stop:hover, .bivrost-icon-stop.stop-hover {
     background-position: 0 -1624px; }
 
-.bivrost-container,
-bivrost-container {
+.bivrost-player,
+bivrost-player {
   display: block;
   position: relative; }
-  .bivrost-container canvas,
-  bivrost-container canvas {
+  .bivrost-player canvas,
+  bivrost-player canvas {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0; }
-  .bivrost-container .ui,
-  bivrost-container .ui {
+  .bivrost-player .ui,
+  bivrost-player .ui {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -97,16 +97,16 @@ bivrost-container {
     height: 68px;
     background: rgba(0, 0, 0, 0.5);
     /* thumb */ }
-    .bivrost-container .ui .bivrost-button,
-    bivrost-container .ui .bivrost-button {
+    .bivrost-player .ui .bivrost-button,
+    bivrost-player .ui .bivrost-button {
       cursor: pointer;
       position: relative;
       width: 36px;
       height: 36px;
       display: inline-block;
       margin: 16px 0 0 8px; }
-    .bivrost-container .ui input[type="range"],
-    bivrost-container .ui input[type="range"] {
+    .bivrost-player .ui input[type="range"],
+    bivrost-player .ui input[type="range"] {
       position: absolute;
       top: 0px;
       -webkit-appearance: none;
@@ -121,25 +121,25 @@ bivrost-container {
       -webkit-box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
       outline: none;
       /* no focus outline */ }
-      .bivrost-container .ui input[type="range"]::-moz-range-track,
-      bivrost-container .ui input[type="range"]::-moz-range-track {
+      .bivrost-player .ui input[type="range"]::-moz-range-track,
+      bivrost-player .ui input[type="range"]::-moz-range-track {
         border: inherit;
         background: transparent; }
-      .bivrost-container .ui input[type="range"]::-ms-track,
-      bivrost-container .ui input[type="range"]::-ms-track {
+      .bivrost-player .ui input[type="range"]::-ms-track,
+      bivrost-player .ui input[type="range"]::-ms-track {
         border: inherit;
         color: transparent;
         /* don't drawn vertical reference line */
         background: transparent; }
-      .bivrost-container .ui input[type="range"]::-ms-fill-lower, .bivrost-container .ui input[type="range"]::-ms-fill-upper,
-      bivrost-container .ui input[type="range"]::-ms-fill-lower,
-      bivrost-container .ui input[type="range"]::-ms-fill-upper {
+      .bivrost-player .ui input[type="range"]::-ms-fill-lower, .bivrost-player .ui input[type="range"]::-ms-fill-upper,
+      bivrost-player .ui input[type="range"]::-ms-fill-lower,
+      bivrost-player .ui input[type="range"]::-ms-fill-upper {
         background: transparent; }
-      .bivrost-container .ui input[type="range"]::-ms-tooltip,
-      bivrost-container .ui input[type="range"]::-ms-tooltip {
+      .bivrost-player .ui input[type="range"]::-ms-tooltip,
+      bivrost-player .ui input[type="range"]::-ms-tooltip {
         display: none; }
-    .bivrost-container .ui input[type="range"]::-webkit-slider-thumb,
-    bivrost-container .ui input[type="range"]::-webkit-slider-thumb {
+    .bivrost-player .ui input[type="range"]::-webkit-slider-thumb,
+    bivrost-player .ui input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       width: 10px;
       height: 10px;
@@ -151,16 +151,16 @@ bivrost-container {
       /* older mobile safari and android > 2.2 */
       background-image: linear-gradient(to bottom, #529de1 0, #245e8f 100%);
       /* W3C */ }
-    .bivrost-container .ui input[type="range"]::-moz-range-thumb,
-    bivrost-container .ui input[type="range"]::-moz-range-thumb {
+    .bivrost-player .ui input[type="range"]::-moz-range-thumb,
+    bivrost-player .ui input[type="range"]::-moz-range-thumb {
       width: 10px;
       height: 10px;
       border: none;
       border-radius: 12px;
       background-image: linear-gradient(to bottom, #00a6f4 0, #00a6f4 100%);
       /* W3C */ }
-    .bivrost-container .ui input[type="range"]::-ms-thumb,
-    bivrost-container .ui input[type="range"]::-ms-thumb {
+    .bivrost-player .ui input[type="range"]::-ms-thumb,
+    bivrost-player .ui input[type="range"]::-ms-thumb {
       width: 10px;
       height: 10px;
       border-radius: 12px;

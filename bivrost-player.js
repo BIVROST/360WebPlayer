@@ -1,57 +1,5 @@
-/* global THREE */
+/* global THREE, Bivrost */
 "use strict";
-
-
-var Bivrost={
-	
-	
-	version: 0,
-	
-	
-	/**
-	 * When on, there is some debug information on the console.log
-	 * @type Boolean
-	 */
-	verbose: true,
-	
-	
-	/**
-	 * Logging helper, disable with Bivrost.verbose=false
-	 * @private
-	 */
-	log: function(module, args) {
-		if(Bivrost.verbose && window.console) {
-			if(console.table)	// advanced console
-				console.log.bind(console, "["+module+"]").apply(null, args);
-			else	// simple console impl.
-				console.log("["+module+"] "+Array.prototype.map.call(args, JSON.stringify).join(" ")); 
-		}
-	},
-	
-	
-	/**
-	 * Retrieves const name
-	 * @private
-	 * @return {string}
-	 */
-	reverseConstToName: function(constValue) {
-		for(var k in Bivrost)
-			if(Bivrost[k] === constValue)
-				return k;
-		// throw "const value "+k+" not found";
-		return undefined;
-	}
-	
-};
-
-Bivrost.VRMODE_NONE=501;
-//Bivrost.VRMODE_OCULUS_RIFT_DK1=502;
-Bivrost.VRMODE_OCULUS_RIFT_DK2=503;
-//Bivrost.VRMODE_CARDBOARD=503;
-Bivrost.AVAILABLE_VRMODES=[
-	Bivrost.VRMODE_OCULUS_RIFT_DK2,
-	Bivrost.VRMODE_NONE
-];
 
 
 (function(){
@@ -69,23 +17,34 @@ Bivrost.AVAILABLE_VRMODES=[
 	 * @constructor
 	 * @class Bivrost.Player
 	 * @param {HTMLElement} container
-	 * @param {string|Array<string>} [url=null] url to the media, may be an array. If not used, call setMedia later.
+	 * @param {string|array<string>|object} [url=null] url to the media, may be an array. If not used, call setMedia later.
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
 	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
 	 */
-	Bivrost.Player=function(container, url, projection, stereoscopy, source) {
+	Bivrost.Player=function(container, url, projection, stereoscopy, source, autoplay, loop) {
 		/**
 		 * @type Bivrost.Player
 		 */
 		var thisRef=this;
 		
+
+		// container
+		this.container=container;
+		if(container.bivrost) {
+			if(window.console && window.console.error) 
+				console.error("Bivrost player already initialized in ", container);
+			throw "Bivrost player already initialized in "+container;
+		}
+		while(container.hasChildNodes())
+			container.removeChild(container.lastChild);
+		container.bivrost=this;
+			
 		
 		// renderer
 		this.renderer=new THREE.WebGLRenderer();		
 		container.appendChild(this.renderer.domElement);
 		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
-		this.container=container;
 		
 		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
 
@@ -369,11 +328,11 @@ Bivrost.AVAILABLE_VRMODES=[
 //
 //			case "i": case "I": break; // TODO: show media info
 
-			// z/Z - zoom
-			case "z": 
+			// -/+ - zoom
+			case "+": case "=": 
 				this.view.zoom/=0.95; 
 				break;
-			case "Z": 
+			case "-": 
 				this.view.zoom*=0.95; 
 				break;
 

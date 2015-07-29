@@ -17,9 +17,7 @@
 			
 			<p>Nazwa pliku: <a href="<?=htmlspecialchars($_GET['file'])?>"><tt><?=htmlspecialchars($_GET['file'])?></tt></a></p>
 			
-			<div class="bivrost-container" id="bivrost_container"></div>
-
-			<div class="bivrost-container" id="bivrost_container2"></div>
+			<div class="bivrost-player" id="bivrost_container"></div>
 
 			<p>Skróty klawiszowe playera</p>
 			<ul>
@@ -48,7 +46,14 @@
 		<script src="../<?=$f?>" type="text/javascript"></script>
 		<?php endforeach ?>
 		<script type="text/javascript">
-			var bivrost=new Bivrost.Player(document.getElementById("bivrost_container"), <?=json_encode($_GET['file'])?>);			
+			var bivrost=new Bivrost.Player(document.getElementById("bivrost_container"), <?=
+				json_encode(
+					array_combine(
+						$_GET['file'],
+						array_fill(0, count($_GET['file']), null)
+					)
+				)
+			?>);			
 			<?php if(isset($_GET['file2'])): ?>
 			var bivrost2=new Bivrost.Player(document.getElementById("bivrost_container2"), <?=json_encode($_GET['file2'])?>);			
 			<?php endif ?>

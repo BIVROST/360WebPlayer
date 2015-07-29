@@ -25,14 +25,14 @@ Bivrost.STEREOSCOPY_NONE=301;
 /**
  * Top and Bottom stereoscopy
  * Left frame is top half, right is bottom
- * keyword: TaB
+ * keyword: TaB, TB
  * @type Number
  */
 Bivrost.STEREOSCOPY_TOP_AND_BOTTOM=302;
 
 /**
  * Side by side stereoscopy
- * keyword: SbS
+ * keyword: SbS, LR
  * @type Number
  */
 Bivrost.STEREOSCOPY_SIDE_BY_SIDE=303;
@@ -65,7 +65,9 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	 * Loads a media (still or video), you might want to add an onload
 	 * @constructor
 	 * @class
-	 * @param {string|Array<string>} url - url to the media, may be an array.
+	 * @param {string|object} url - url to the media, may be an 
+	 *		object with the key being the url and the value being the
+	 *		type or null.
 	 * @param {onloadCallback} onload
 	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
 	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
@@ -75,7 +77,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		var that=this;
 		
 		if(typeof url !== "object")
-			url=[url];
+			url={url:null};
 		
 		if(arguments.length < 2)
 			throw "url and onload required";
@@ -85,7 +87,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		this.stereoscopy=stereoscopy=stereoscopy || Bivrost.STEREOSCOPY_AUTODETECT;
 		
 		if(!source || source === Bivrost.SOURCE_AUTODETECT) {
-			source=(/\.(jpe?g|png|bmp|tiff|gif)$/i.test(url))
+			source=(/\.(jpe?g|png|bmp|tiff|gif)$/i.test(Object.keys(url)[0]))
 				?Bivrost.SOURCE_STILL
 				:Bivrost.SOURCE_VIDEO;
 			log("detected source: "+Bivrost.reverseConstToName(source));
@@ -93,17 +95,17 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		
 		switch(source) {
 			case Bivrost.SOURCE_STILL:
-				this.title="still:"+url;
-				if(url.length !== 1)
+				if(Object.keys(url).length !== 1)
 					throw "still supports only one url at this time";
+				this.title="still:"+Object.keys(url)[0];
 				log("still loading", url);
 				
 				var loader=new THREE.TextureLoader();
 				loader.load(
-					url,
+					Object.keys(url)[0],
 					function(texture) {
 						log("still loaded", that);
-						texture.name="still:"+url;
+						texture.name=that.title;
 						that.gotTexture(texture);
 					},
 					function(xhr) {
@@ -114,7 +116,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				break;
 				
 			case Bivrost.SOURCE_VIDEO:
-				this.title="video:"+url;
+				this.title="video:"+Object.keys(url).join("/");
 				log("video loading", url);
 				
 				var video=document.createElement("video");
@@ -158,16 +160,18 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				video.addEventListener("loadeddata", function() {
 					log("video loaded", this, arguments);
 					var texture = new THREE.VideoTexture(video);
-					texture.name="video:"+url;
+					texture.name=that.title;
 					texture.minFilter = THREE.LinearFilter;
 					texture.magFilter = THREE.LinearFilter;
 					that.gotTexture(texture);
 				});
 
 				// last to prevent event before load
-				url.forEach(function(e) {
+				Object.keys(url).forEach(function(e) {
 					var sourceTag=document.createElement("source");
-					sourceTag.src=e;
+					sourceTag.setAttribute("src", e);
+					if(url[e])
+						sourceTag.setAttribute("type", url[e]);
 					video.appendChild(sourceTag);
 				});
 				
@@ -178,7 +182,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		}	
 		
 		
-		// phase one detect, by keywords
+		// phase one autodetect - by keywords
 		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
 			if(/\b(SbS|LR)\b/.test(url))
 				this.stereoscopy=Bivrost.STEREOSCOPY_SIDE_BY_SIDE;

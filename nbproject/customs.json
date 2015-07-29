@@ -2,7 +2,12 @@
 	"elements": {
 		"bivrost-player": {
 			"attributes": {
-				"bivrost-url": {},
+				"url": {}
+			}
+		},
+		"bivrost-media": {
+			"attributes": {
+				"type": {},
 				"url": {}
 			}
 		}
