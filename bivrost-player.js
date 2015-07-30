@@ -204,6 +204,12 @@
 		if(this.view)
 			this.view.aspect=this.aspect;
 //			this.renderer.setViewport(0, 0, width, height);
+
+		// TODO: find a better place for this
+		if(this.vrMode === Bivrost.VRMODE_NONE || !this.fullscreen)
+			this.container.classList.remove("no-ui");
+		else
+			this.container.classList.add("no-ui");
 	},
 
 
@@ -229,6 +235,9 @@
 	Object.defineProperty(Bivrost.Player.prototype, "vrMode", {
 		get: function() { return this._vrMode; },
 		set: function(value) {
+			if(value === this._vrMode)
+				return;
+			
 			this._vrMode=value;
 			this.resize();
 		}

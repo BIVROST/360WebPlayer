@@ -1,5 +1,7 @@
 <?php 
 
+header('Content-Type: application/javascript');
+
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
@@ -17,5 +19,5 @@ foreach(json_decode(file_get_contents('scripts.json')) as $f) {
 $contents=ob_get_flush();
 
 file_put_contents('bivrost-min.js', $contents);
-header('Content-Type: application/javascript');
+
 

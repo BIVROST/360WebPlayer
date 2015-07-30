@@ -4,53 +4,125 @@ $relative-assets: true;
 @import "bivrost-icon/*.png";
 @include all-bivrost-icon-sprites;
 
-
 $ui-height: 68px;
+$ui-background: rgba(0,0,0, 0.5);
+$range-size: 14px;
+$button-margin: 8px;
 
 .bivrost-player,
 bivrost-player {
+	
 	display: block;
-
+	overflow: hidden;
 	position: relative;
+	
+	font-family: 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+	
 	
 	canvas {
 		position:absolute;
 		top:0; left:0; right:0; bottom:0;
 	}
 	
+	&.no-ui .ui {
+		display: none !important;
+	}
+	
 	.ui {
 		position: absolute;
-		bottom: 0;
 		left: 0;
 		right: 0;
 		height: $ui-height;
-		background: rgba(0,0,0, 0.5);
+		background: $ui-background;
+
+		bottom: 0;
+		display: block;
 		
-		.bivrost-button {
-			cursor: pointer;
+		-webkit-transition: bottom 0.5s;
+		transition: bottom 0.5s;
+	
+		input[type="range"]::-webkit-slider-thumb { 
+			-webkit-transition: opacity 1s, background-size 1s; 
+			transition: opacity 1s, background-size 1s; 
+		}
+		input[type="range"]::-moz-range-thumb { transition: opacity 1s, background-size 1s; }
+		input[type="range"]::-ms-thumb { transition: opacity 1s, background-size 1s; }
+		
+		&.hidden {
+			bottom: - $ui-height;
+						
+			input[type="range"]::-webkit-slider-thumb { opacity: 0; background-size: 0 0; }
+			input[type="range"]::-moz-range-thumb { opacity: 0; background-size: 0 0;  }
+			input[type="range"]::-ms-thumb { opacity: 0; background-size: 0 0; }
+		}
+		
+		
+		.aligned {
+			position: absolute;
+			display: block;
+			top: 0px;
+			bottom: 0px;
+		}
+		.left-aligned { left: 0px; }
+		.right-aligned { right: $button-margin; }
+		
+		
+		.bivrost-button,
+		.status {
 			position: relative;
 			$h: bivrost-icon-sprite-height(back);
 			$w: bivrost-icon-sprite-width(back);
-			width: $w;
 			height: $h;
 			display: inline-block;
 			
-			margin: ($ui-height - $h)/2 0 0 8px;
+			margin: ($ui-height - $h)/2 0 0 $button-margin;
+			
+			line-height: $h;
+			vertical-align: middle;
 		}
+		
+		.bivrost-button {
+			cursor: pointer;
+			$w: bivrost-icon-sprite-width(back);
+			width: $w;
+		}
+		
+		
+		.range-background {			
+			position: absolute;
+			height: $range-size;
+			background: inline-image("bivrost-range-background.png") repeat-x;
+			top: -$range-size / 2;
+			left: 0px;
+			right: 0px;
+			
+			.range-foreground {
+				top: 0px;
+				left: 0px;
+				bottom: 0px;
+				height: 100%;
+				width: 0%;
+				background: inline-image("bivrost-range-foreground.png") repeat-x;
+			}
+		}
+		
 
 		input[type="range"] {
 			position: absolute;
-			top: 0px;
+			top: 0;
+			left: 0;
+			right: 0;
 			-webkit-appearance: none;
 			-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 			width: 100%;
-			height: 5px;
+			height: $range-size;
 			margin: 0;
 			border: none;
 			border-radius: 0px;
-			background: white;
-			box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
-			-webkit-box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
+			background: transparent;
+			/*box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;*/
+			/*-webkit-box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;*/
 			outline: none; /* no focus outline */
 			
 			&::-moz-range-track {
@@ -76,33 +148,26 @@ bivrost-player {
 		}
 
 		/* thumb */
-
 		input[type="range"]::-webkit-slider-thumb {
-		  -webkit-appearance: none;
-		  width: 10px;
-		  height: 10px;
-		  border: none;
-		  border-radius: 12px;
-		  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #00a6f4), color-stop(100%, #00a6f4)); /* android <= 2.2 */
-		  background-image: -webkit-linear-gradient(top , #529de1 0, #245e8f 100%); /* older mobile safari and android > 2.2 */;
-		  background-image: linear-gradient(to bottom, #529de1 0, #245e8f 100%); /* W3C */
+			-webkit-appearance: none;
+			width: $range-size;
+			height: $range-size;
+			border: none;
+			background: inline-image("bivrost-range-thumb.png") no-repeat center center;
 		}
 		input[type="range"]::-moz-range-thumb {
-		  width: 10px;
-		  height: 10px;
-		  border: none;
-		  border-radius: 12px;
-		  background-image: linear-gradient(to bottom, #00a6f4 0, #00a6f4 100%); /* W3C */
+			width: $range-size;
+			height: $range-size;
+			border: none;
+			background: inline-image("bivrost-range-thumb.png") no-repeat center center;
 		}
 
 		input[type="range"]::-ms-thumb {
-		  width: 10px;
-		  height: 10px;
-		  border-radius: 12px;
-		  border: 0;
-		  background-image: linear-gradient(to bottom, #00a6f4 0, #00a6f4 100%); /* W3C */
+			width: $range-size;
+			height: $range-size;
+			border: 0;
+			background: inline-image("bivrost-range-thumb.png") no-repeat center center;
 		}
-
 
 	}
 	
