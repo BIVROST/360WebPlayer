@@ -2,7 +2,12 @@
 	"elements": {
 		"bivrost-player": {
 			"attributes": {
-				"url": {}
+				"loop": {},
+				"stereoscopy": {},
+				"projection": {},
+				"source": {},
+				"url": {},
+				"autoplay": {}
 			}
 		},
 		"bivrost-media": {

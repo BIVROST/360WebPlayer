@@ -11,9 +11,6 @@ Bivrost.Loader=function(dom) {
 	 */
 	function log(/*vargs...*/) { Bivrost.log("Bivrost.Loader", arguments); };
 	
-	// not using document.registerElement - it's not it's time, yet. 
-	// TODO: Maybe polymer/x-tag?
-	
 	
 	/**
 	 * Helper returning an custom or data attribute 
@@ -29,35 +26,64 @@ Bivrost.Loader=function(dom) {
 			return element.getAttribute("data-bivrost-"+name);
 		if(throws)
 			throw throws;
-		return null;
+		return undefined;
 	};
 	
-	[].slice.call(document.querySelectorAll("bivrost-player, .bivrost-player")).forEach(function(e,i) {
+	/**
+	 * @param {string} value
+	 * @param {array<string>} allowed
+	 * @param {string} throws
+	 */
+	function assert(value, allowed, throws) {
+		if(allowed.indexOf(value) === -1)
+			throw throws;
+	}
+	
+	
+	[].slice.call(document.querySelectorAll("bivrost-player, [data-bivrost-player]")).forEach(function(container,i) {
 		var urls={};
 		
 		// root url+type configuration
-		var url=attr(e, "url");
-		var type=attr(e, "type");
+		var url=attr(container, "url");
+		var type=attr(container, "type");
 		if(url)
 			urls[url]=type;
 	
 		// additional media-source url+type
-		[].slice.call(e.querySelectorAll("[data-bivrost-url], [url]")).forEach(function(ee, ii) {
-			urls[attr(ee, "url")]=attr(ee, "type");
+		[].slice.call(container.querySelectorAll("bivrost-media, [data-bivrost-media]")).forEach(function(ee, ii) {
+			urls[attr(ee, "url", "url (or data-bivrost-url) attribute is required in the bivrost-media tag")]=attr(ee, "type");
 		});
 		
-		log("found media: ", e, urls);
+		log("found media: ", container, urls);
 		
-				
+
+		var stereoscopy=attr(container, "stereoscopy") || Bivrost.STEREOSCOPY_AUTODETECT;
+		assert(stereoscopy, Bivrost.AVAILABLE_STEREOSCOPIES, "stereoscopy must be "+Bivrost.AVAILABLE_STEREOSCOPIES.join(" or "));
+
+		var projection=attr(container, "projection") || Bivrost.PROJECTION_EQUIRECTANGULAR;
+		assert(projection, Bivrost.AVAILABLE_PROJECTIONS, "projection must be "+Bivrost.AVAILABLE_PROJECTIONS.join(" or "));
 		
-		var player=new Bivrost.Player(e, urls);
+		var source=attr(container, "source") || Bivrost.SOURCE_AUTODETECT;
+		assert(source, Bivrost.AVAILABLE_SOURCES, "source must be "+Bivrost.AVAILABLE_SOURCES.join(" or "));
 		
-		var autoplay=attr(e, "autoplay");
-		if(autoplay)
-			player.autoplay=JSON.parse(autoplay);
+		var loop=attr(container, loop) || "false";
+		assert(loop, ["true", "false"], "loop must be true or false");
+		
+		var autoplay=attr(container, loop) || "true";
+		assert(autoplay, ["true", "false"], "autoplay must be true or false");
+		
+		new Bivrost.Player(container, urls, projection, stereoscopy, source, JSON.parse(loop), JSON.parse(autoplay));
 	});
 	
 };
 
 
 document.addEventListener('DOMContentLoaded', Bivrost.Loader.bind(Bivrost, document.body));
+
+
+// not using document.registerElement - it's not it's time, yet we can always register the element for future use
+// TODO: Maybe polymer/x-tag?
+if(document.registerElement) {
+	document.registerElement('bivrost-player');
+	document.registerElement('bivrost-media');
+}

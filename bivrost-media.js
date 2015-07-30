@@ -1,26 +1,78 @@
-/* global Bivrost */
-
+/* global Bivrost, THREE */
 "use strict";
 
-Bivrost.PROJECTION_EQUIRECTANGULAR=101;
-Bivrost.PROJECTION_FRAME=102;
 
-Bivrost.SOURCE_AUTODETECT=200;
-Bivrost.SOURCE_VIDEO=201;
-Bivrost.SOURCE_STILL=202;
+/**
+ * Media will be projected on a sphere (also called equirectangular, spherical mercator)
+ * @type String
+ */
+Bivrost.PROJECTION_EQUIRECTANGULAR="equirectangular";
+
+
+// TODO:
+///**
+// * Media will be projected on a quad (resembling a picture frame)
+// * @type String
+// */
+//Bivrost.PROJECTION_FRAME="frame";
+
+
+/**
+ * All available projections
+ * @type Array
+ */
+Bivrost.AVAILABLE_PROJECTIONS=[
+	Bivrost.PROJECTION_EQUIRECTANGULAR
+//	Bivrost.PROJECTION_FRAME
+];
+
+
+/**
+ * Guess media source from file extension (video or picture)
+ * @type String
+ */
+Bivrost.SOURCE_AUTODETECT="autodetect";
+
+
+/**
+ * The source is a video
+ * @type String
+ */
+Bivrost.SOURCE_VIDEO="video";
+
+
+/**
+ * The source is a picture
+ * @type String
+ */
+Bivrost.SOURCE_PICTURE="picture";
+
+
+/**
+ * All available sources
+ * @type Array<string>
+ */
+Bivrost.AVAILABLE_SOURCES=[
+	Bivrost.SOURCE_AUTODETECT,
+	Bivrost.SOURCE_VIDEO,
+	Bivrost.SOURCE_PICTURE
+];
+
 
 /**
  * Autodetect stereoscopy by keywords and size
  * @type Number
  */
-Bivrost.STEREOSCOPY_AUTODETECT=300;
+Bivrost.STEREOSCOPY_AUTODETECT="autodetect";
+
 
 /**
- * None, no stereoscopy, default
+ * Mono, no stereoscopy, default
  * keyword: mono
  * @type Number
  */
-Bivrost.STEREOSCOPY_NONE=301;
+Bivrost.STEREOSCOPY_MONO="mono";
+
 
 /**
  * Top and Bottom stereoscopy
@@ -28,21 +80,37 @@ Bivrost.STEREOSCOPY_NONE=301;
  * keyword: TaB, TB
  * @type Number
  */
-Bivrost.STEREOSCOPY_TOP_AND_BOTTOM=302;
+Bivrost.STEREOSCOPY_TOP_AND_BOTTOM="top-and-bottom";
+
 
 /**
  * Side by side stereoscopy
  * keyword: SbS, LR
  * @type Number
  */
-Bivrost.STEREOSCOPY_SIDE_BY_SIDE=303;
+Bivrost.STEREOSCOPY_SIDE_BY_SIDE="side-by-side";
+
 
 /**
  * Top and Bottom stereoscopy, reversed
  * Right frame is top half, left is bottom
  * @type Number
  */
-Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
+Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED="top-and-bottom-reversed";
+
+
+/**
+ * All available stereoscopy types
+ * @type Array
+ */
+Bivrost.AVAILABLE_STEREOSCOPIES=[
+	Bivrost.STEREOSCOPY_AUTODETECT,
+	Bivrost.STEREOSCOPY_MONO,
+	Bivrost.STEREOSCOPY_SIDE_BY_SIDE,
+	Bivrost.STEREOSCOPY_TOP_AND_BOTTOM,
+	Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED
+];
+
 
 
 (function() {
@@ -69,11 +137,12 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 	 *		object with the key being the url and the value being the
 	 *		type or null.
 	 * @param {onloadCallback} onload
-	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
-	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
-	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
+	 * @param {string=} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
+	 * @param {string=} [stereoscopy=Bivrost.STEREOSCOPY_MONO]
+	 * @param {string=} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
+	 * @param {boolean} [loop=false]
 	 */
-	Bivrost.Media=function(url, onload, projection, stereoscopy, source) {
+	Bivrost.Media=function(url, onload, projection, stereoscopy, source, loop) {
 		var that=this;
 		
 		if(typeof url !== "object")
@@ -88,13 +157,13 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 		
 		if(!source || source === Bivrost.SOURCE_AUTODETECT) {
 			source=(/\.(jpe?g|png|bmp|tiff|gif)$/i.test(Object.keys(url)[0]))
-				?Bivrost.SOURCE_STILL
+				?Bivrost.SOURCE_PICTURE
 				:Bivrost.SOURCE_VIDEO;
 			log("detected source: "+Bivrost.reverseConstToName(source));
 		}
 		
 		switch(source) {
-			case Bivrost.SOURCE_STILL:
+			case Bivrost.SOURCE_PICTURE:
 				if(Object.keys(url).length !== 1)
 					throw "still supports only one url at this time";
 				this.title="still:"+Object.keys(url)[0];
@@ -119,13 +188,11 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				this.title="video:"+Object.keys(url).join("/");
 				log("video loading", url);
 				
-				var video=document.createElement("video");
-
-				this.video=video;
-
-				video.width=32;
-				video.height=32;
-				video.loop=false;	// TODO: config
+				var video=this.video=document.createElement("video");
+				video.setAttribute("width", "32");	// any number will be ok
+				video.setAttribute("height", "32");	// any number will be ok
+				video.setAttribute("loop", JSON.stringify(!!loop));
+				video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
 
 				this.play=function() {video.play();};
 				this.pause=function() {video.pause();};
@@ -179,7 +246,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 				
 			default:
 				throw "unknown source type: "+source;
-		}	
+		}
 		
 		
 		// phase one autodetect - by keywords
@@ -189,7 +256,7 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 			else if(/\b(TaB|TB)\b/.test(url))
 				this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
 			else if(/\bmono\b/.test(url))
-				this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
+				this.stereoscopy=Bivrost.STEREOSCOPY_MONO;
 			// else: detect in phase 2, by resolution
 			log("detected stereoscopy from uri: ", Bivrost.reverseConstToName(this.stereoscopy));
 		}
@@ -249,8 +316,10 @@ Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED=304;
 			var h=texture.image.videoHeight || texture.image.height;
 			if(w === h)
 				this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
+			if(w === h*4)
+				this.stereoscopy=Bivrost.STEREOSCOPY_SIDE_BY_SIDE;
 			else // if(w === 2*h)
-				this.stereoscopy=Bivrost.STEREOSCOPY_NONE;
+				this.stereoscopy=Bivrost.STEREOSCOPY_MONO;
 
 			// TODO: guess frame
 			log("guessed stereoscopy from ratio: ", Bivrost.reverseConstToName(this.stereoscopy));

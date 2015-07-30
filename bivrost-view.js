@@ -41,7 +41,7 @@
 		var left, right, center;
 		
 		switch(media.stereoscopy) {
-			case Bivrost.STEREOSCOPY_NONE:
+			case Bivrost.STEREOSCOPY_MONO:
 				left=right=center=[1,0, -1,1];
 				break;
 			case Bivrost.STEREOSCOPY_SIDE_BY_SIDE:

@@ -17,17 +17,19 @@
 	 * @constructor
 	 * @class Bivrost.Player
 	 * @param {HTMLElement} container
-	 * @param {string|array<string>|object} [url=null] url to the media, may be an array. If not used, call setMedia later.
-	 * @param {number} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR]
-	 * @param {number} [stereoscopy=Bivrost.STEREOSCOPY_NONE]
-	 * @param {number} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT]
+	 * @param {string|object=} [url=undefined] url to the media, may be an array. If not used, call setMedia later.
+	 * @param {string=} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR] shorthand to set projection in media
+	 * @param {string=} [stereoscopy=Bivrost.STEREOSCOPY_MONO] shorthand to set stereoscopy in media
+	 * @param {string=} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT] shorthand to set source type in media
+	 * @param {boolean=} [loop=false] shorthand to set looping in media
+	 * @param {boolean=} [autoplay=true] should the media play automaticly
 	 */
-	Bivrost.Player=function(container, url, projection, stereoscopy, source, autoplay, loop) {
+	Bivrost.Player=function(container, url, projection, stereoscopy, source, loop, autoplay) {
 		/**
 		 * @type Bivrost.Player
 		 */
 		var thisRef=this;
-		
+		this.autoplay=autoplay;
 
 		// container
 		this.container=container;
@@ -38,6 +40,7 @@
 		}
 		while(container.hasChildNodes())
 			container.removeChild(container.lastChild);
+		container.className+=" bivrost-player";
 		container.bivrost=this;
 			
 		
@@ -80,7 +83,7 @@
 			
 		// load media if provided
 		if(url) {
-			new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source);
+			new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source, loop);
 		}
 		
 		
@@ -148,9 +151,17 @@
 
 	
 	/**
+	 * @private
 	 * @type {THREE.OculusRiftEffect}
 	 */
 	Bivrost.Player.prototype.riftRenderer=null;
+
+	
+	/**
+	 * Should the media play automaticly
+	 * @type {boolean}
+	 */
+	Bivrost.Player.prototype.autoplay=true;
 
 
 	/**
@@ -163,7 +174,8 @@
 		this.view=new Bivrost.View(media);
 		this.view.aspect=this.aspect;
 		this.ui.setMedia(media);
-		media.play();
+		if(this.autoplay)
+			media.play();
 	},
 		
 		
@@ -288,7 +300,7 @@
 			document.msFullscreenElement
 		) === this.container;
 
-		if(!this.fullscreen) {
+		if(!this.fullscreen && this._sizeBeforeFullscreen) {
 			log("fullscreen exit, resize to", this._sizeBeforeFullscreen);
 			this.renderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
 		}

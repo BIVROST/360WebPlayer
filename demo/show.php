@@ -17,7 +17,7 @@
 			
 			<p>Nazwa pliku: <a href="<?=htmlspecialchars($_GET['file'])?>"><tt><?=htmlspecialchars($_GET['file'])?></tt></a></p>
 			
-			<div class="bivrost-player" id="bivrost_container"></div>
+			<div id="bivrost_container"></div>
 
 			<p>Skróty klawiszowe playera</p>
 			<ul>

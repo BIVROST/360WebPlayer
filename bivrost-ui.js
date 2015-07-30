@@ -91,6 +91,7 @@
 			range.setAttribute("type", "range");
 			range.setAttribute("min", 0);
 			range.setAttribute("max", media.duration || 1);
+			range.setAttribute("step", 0.025);
 			
 			video.addEventListener("timeupdate", function(e) {
 				currentTime.textContent=timeFormat(media.time);
