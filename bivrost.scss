@@ -25,8 +25,39 @@ bivrost-player {
 		top:0; left:0; right:0; bottom:0;
 	}
 	
-	&.no-ui .ui {
-		display: none !important;
+	&.no-ui .ui { display: none !important; }
+	&.no-ui .bivrost-loading { display: none !important; }
+	
+	.bivrost-loading {
+
+		position: absolute;
+		display: block;
+		width: 50%;
+		height: 50%;
+		top: 0;
+		left: 0;
+
+		opacity: 1;
+		-webkit-transition: opacity .5s; 
+		transition: opacity .5s; 
+		
+		div {
+			$frames: 32;
+			position: absolute;
+			display: block;
+			background: url("bivrost-loading-anim.png");
+			width: image-width("bivrost-loading-anim.png");
+			height: image-height("bivrost-loading-anim.png") / $frames;
+			bottom: - image-width("bivrost-loading-anim.png")/2;
+			right: - image-width("bivrost-loading-anim.png")/2;
+			animation: anim 1s steps($frames) infinite;
+		}
+		
+		&.hidden { display: none; opacity: 0; }
+	}
+	
+	@keyframes anim {
+		100% { background-position-y: image-height("bivrost-loading-anim.png")*-1; }
 	}
 	
 	.ui {

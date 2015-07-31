@@ -58,6 +58,12 @@
 		this.domElement=domElement;
 		this.player=player;
 		
+		var loading=this.loading=document.createElement("div");
+		loading.className="bivrost-loading";
+		loading.show=function(e) { log("show", e.type); loading.className="bivrost-loading"; }
+		loading.hide=function(e) { log("hide", e.type); loading.className="bivrost-loading hidden"; }
+		loading.appendChild(document.createElement("div"));
+		player.container.appendChild(loading);
 		
 		var cancel=function(e) { e.stopPropagation(); return false; };
 		domElement.addEventListener("mousedown", cancel, true);
@@ -173,6 +179,19 @@
 			// this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
 
 			rightAligned.appendChild(status);
+			
+			
+			// loading
+//			video.addEventListener("canplay", this.loading.hide);
+			video.addEventListener("playing", this.loading.hide);
+//			video.addEventListener("paused", this.loading.hide);
+//			video.addEventListener("seeked", this.loading.hide);
+//			video.addEventListener("seeking", this.loading.hide);
+			
+			video.addEventListener("waiting", this.loading.show);
+//			video.addEventListener("emptied", this.loading.show);
+//			video.addEventListener("stalled", this.loading.show);
+//			video.addEventListener("suspend", this.loading.show);
 		}
 
 
@@ -239,6 +258,6 @@
 	Bivrost.UI.prototype._hideTimeoutId=null;
 			
 
-	
+	Bivrost.UI.prototype.loading=null;
 	
 })();

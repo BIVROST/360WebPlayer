@@ -94,6 +94,37 @@ bivrost-player {
   .bivrost-player.no-ui .ui,
   bivrost-player.no-ui .ui {
     display: none !important; }
+  .bivrost-player.no-ui .bivrost-loading,
+  bivrost-player.no-ui .bivrost-loading {
+    display: none !important; }
+  .bivrost-player .bivrost-loading,
+  bivrost-player .bivrost-loading {
+    position: absolute;
+    display: block;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    -webkit-transition: opacity .5s;
+    transition: opacity .5s; }
+    .bivrost-player .bivrost-loading div,
+    bivrost-player .bivrost-loading div {
+      position: absolute;
+      display: block;
+      background: url("bivrost-loading-anim.png");
+      width: 64px;
+      height: 64px;
+      bottom: -32px;
+      right: -32px;
+      animation: anim 1s steps(32) infinite; }
+    .bivrost-player .bivrost-loading.hidden,
+    bivrost-player .bivrost-loading.hidden {
+      display: none;
+      opacity: 0; }
+@keyframes anim {
+  100% {
+    background-position-y: -2048px; } }
   .bivrost-player .ui,
   bivrost-player .ui {
     position: absolute;
