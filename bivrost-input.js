@@ -1,4 +1,4 @@
-/* global Bivrost, THREE */
+/* global Bivrost, THREE, PositionSensorVRDevice */
 "use strict";
 
 (function() {
@@ -68,6 +68,7 @@
 			window.removeEventListener("up", mouseup);
 			window.removeEventListener("move", mousemove);
 			window.removeEventListener("selectstart", selectstart);
+			thisRef._mouseLookInProgress=false;
 		}
 
 		function mousemove(e) {
@@ -79,6 +80,7 @@
 			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth)
 			thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
 			thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
+			thisRef._mouseLookInProgress=true;
 		}
 		
 		function mouseover(e) { isIn=true; }
@@ -247,7 +249,7 @@
 		this.lookEuler.y+=this.lookEulerDelta.y*dt;
 		this.lookEuler.z+=this.lookEulerDelta.z*dt;
 		
-		if(this.clampY) {
+		if(this.clampY && !this._mouseLookInProgress) {
 			var clamped=this.lookEuler.x;
 			var clamp=Math.PI/2;
 			var lerp=dt*3;
@@ -308,5 +310,13 @@
 	 * @type {number}
 	 */
 	Bivrost.Input.prototype.keyboardSpeed=Math.PI*0.5;
+	
+	
+	/**
+	 * Is the user using the mouse to look around at this moment?
+	 * @private
+	 * @type {boolean}
+	 */
+	Bivrost.Input.prototype._mouseLookInProgress=false;
 	
 })();
