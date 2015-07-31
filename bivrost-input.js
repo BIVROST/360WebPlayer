@@ -76,8 +76,9 @@
 			
 			var dx=~~(e.x || e.clientX)-originX;
 			var dy=~~(e.y || e.clientY)-originY;
-			thisRef.lookEuler.x=originEulerX+scale*dy/domElement.offsetHeight;
-			thisRef.lookEuler.y=originEulerY+scale*dx/domElement.offsetWidth;
+			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth)
+			thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
+			thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
 		}
 		
 		function mouseover(e) { isIn=true; }

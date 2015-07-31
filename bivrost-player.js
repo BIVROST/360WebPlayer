@@ -61,7 +61,7 @@
 		
 		// input
 		container.addEventListener("keypress", this._keyPress.bind(this));
-		this.input=new Bivrost.Input(container, 1);
+		this.input=new Bivrost.Input(container, Math.PI/2);
 		
 		
 		// fullscreen
