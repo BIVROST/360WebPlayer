@@ -1,5 +1,5 @@
-.bivrost-icon-sprite, .bivrost-icon-back, .bivrost-icon-check, .bivrost-icon-close, .bivrost-icon-display, .bivrost-icon-menu, .bivrost-icon-next, .bivrost-icon-oculus, .bivrost-icon-open, .bivrost-icon-pause, .bivrost-icon-play, .bivrost-icon-plus, .bivrost-icon-repeat, .bivrost-icon-settings, .bivrost-icon-speaker, .bivrost-icon-stop {
-  background-image: url('bivrost-icon-se0353b9cd4.png');
+.bivrost-icon-sprite, .bivrost-icon-back, .bivrost-icon-bivrost, .bivrost-icon-check, .bivrost-icon-close, .bivrost-icon-display, .bivrost-icon-fullscreen, .bivrost-icon-menu, .bivrost-icon-next, .bivrost-icon-oculus, .bivrost-icon-open, .bivrost-icon-pause, .bivrost-icon-play, .bivrost-icon-plus, .bivrost-icon-repeat, .bivrost-icon-settings, .bivrost-icon-speaker, .bivrost-icon-stop {
+  background-image: url('bivrost-icon-sb6083d3cb8.png');
   background-repeat: no-repeat; }
 
 .bivrost-icon-back {
@@ -7,75 +7,85 @@
   .bivrost-icon-back:hover, .bivrost-icon-back.back-hover {
     background-position: 0 -56px; }
 
-.bivrost-icon-check {
+.bivrost-icon-bivrost {
   background-position: 0 -112px; }
-  .bivrost-icon-check:hover, .bivrost-icon-check.check-hover {
+  .bivrost-icon-bivrost:hover, .bivrost-icon-bivrost.bivrost-hover {
     background-position: 0 -168px; }
 
-.bivrost-icon-close {
+.bivrost-icon-check {
   background-position: 0 -224px; }
-  .bivrost-icon-close:hover, .bivrost-icon-close.close-hover {
+  .bivrost-icon-check:hover, .bivrost-icon-check.check-hover {
     background-position: 0 -280px; }
 
-.bivrost-icon-display {
+.bivrost-icon-close {
   background-position: 0 -336px; }
-  .bivrost-icon-display:hover, .bivrost-icon-display.display-hover {
+  .bivrost-icon-close:hover, .bivrost-icon-close.close-hover {
     background-position: 0 -392px; }
 
-.bivrost-icon-menu {
+.bivrost-icon-display {
   background-position: 0 -448px; }
-  .bivrost-icon-menu:hover, .bivrost-icon-menu.menu-hover {
+  .bivrost-icon-display:hover, .bivrost-icon-display.display-hover {
     background-position: 0 -504px; }
 
-.bivrost-icon-next {
+.bivrost-icon-fullscreen {
   background-position: 0 -560px; }
-  .bivrost-icon-next:hover, .bivrost-icon-next.next-hover {
+  .bivrost-icon-fullscreen:hover, .bivrost-icon-fullscreen.fullscreen-hover {
     background-position: 0 -616px; }
 
-.bivrost-icon-oculus {
+.bivrost-icon-menu {
   background-position: 0 -672px; }
-  .bivrost-icon-oculus:hover, .bivrost-icon-oculus.oculus-hover {
+  .bivrost-icon-menu:hover, .bivrost-icon-menu.menu-hover {
     background-position: 0 -728px; }
 
-.bivrost-icon-open {
+.bivrost-icon-next {
   background-position: 0 -784px; }
-  .bivrost-icon-open:hover, .bivrost-icon-open.open-hover {
+  .bivrost-icon-next:hover, .bivrost-icon-next.next-hover {
     background-position: 0 -840px; }
 
-.bivrost-icon-pause {
+.bivrost-icon-oculus {
   background-position: 0 -896px; }
-  .bivrost-icon-pause:hover, .bivrost-icon-pause.pause-hover {
+  .bivrost-icon-oculus:hover, .bivrost-icon-oculus.oculus-hover {
     background-position: 0 -952px; }
 
-.bivrost-icon-play {
+.bivrost-icon-open {
   background-position: 0 -1008px; }
-  .bivrost-icon-play:hover, .bivrost-icon-play.play-hover {
+  .bivrost-icon-open:hover, .bivrost-icon-open.open-hover {
     background-position: 0 -1064px; }
 
-.bivrost-icon-plus {
+.bivrost-icon-pause {
   background-position: 0 -1120px; }
-  .bivrost-icon-plus:hover, .bivrost-icon-plus.plus-hover {
+  .bivrost-icon-pause:hover, .bivrost-icon-pause.pause-hover {
     background-position: 0 -1176px; }
 
-.bivrost-icon-repeat {
+.bivrost-icon-play {
   background-position: 0 -1232px; }
-  .bivrost-icon-repeat:hover, .bivrost-icon-repeat.repeat-hover {
+  .bivrost-icon-play:hover, .bivrost-icon-play.play-hover {
     background-position: 0 -1288px; }
 
-.bivrost-icon-settings {
+.bivrost-icon-plus {
   background-position: 0 -1344px; }
-  .bivrost-icon-settings:hover, .bivrost-icon-settings.settings-hover {
+  .bivrost-icon-plus:hover, .bivrost-icon-plus.plus-hover {
     background-position: 0 -1400px; }
 
-.bivrost-icon-speaker {
+.bivrost-icon-repeat {
   background-position: 0 -1456px; }
-  .bivrost-icon-speaker:hover, .bivrost-icon-speaker.speaker-hover {
+  .bivrost-icon-repeat:hover, .bivrost-icon-repeat.repeat-hover {
     background-position: 0 -1512px; }
 
-.bivrost-icon-stop {
+.bivrost-icon-settings {
   background-position: 0 -1568px; }
-  .bivrost-icon-stop:hover, .bivrost-icon-stop.stop-hover {
+  .bivrost-icon-settings:hover, .bivrost-icon-settings.settings-hover {
     background-position: 0 -1624px; }
+
+.bivrost-icon-speaker {
+  background-position: 0 -1680px; }
+  .bivrost-icon-speaker:hover, .bivrost-icon-speaker.speaker-hover {
+    background-position: 0 -1736px; }
+
+.bivrost-icon-stop {
+  background-position: 0 -1792px; }
+  .bivrost-icon-stop:hover, .bivrost-icon-stop.stop-hover {
+    background-position: 0 -1848px; }
 
 .bivrost-player,
 bivrost-player {

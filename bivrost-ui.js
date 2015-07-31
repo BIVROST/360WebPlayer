@@ -60,8 +60,8 @@
 		
 		var loading=this.loading=document.createElement("div");
 		loading.className="bivrost-loading";
-		loading.show=function(e) { log("show", e.type); loading.className="bivrost-loading"; }
-		loading.hide=function(e) { log("hide", e.type); loading.className="bivrost-loading hidden"; }
+		loading.show=function(e) { loading.className="bivrost-loading"; }
+		loading.hide=function(e) { loading.className="bivrost-loading hidden"; }
 		loading.appendChild(document.createElement("div"));
 		player.container.appendChild(loading);
 		
@@ -196,7 +196,7 @@
 
 
 
-		rightAligned.appendChild(makeButton("display", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
+		rightAligned.appendChild(makeButton("fullscreen", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
 
 		rightAligned.appendChild(makeButton("oculus", function() { 
 			if(!that.player.fullscreen) {
@@ -209,6 +209,11 @@
 				];
 			}
 		}, "VR" ));
+		
+		
+		rightAligned.appendChild(makeButton("bivrost", function() {
+			window.open("http://bivrost360.com", "_blank");
+		}), "powered by Bivrost");
 
 		
 		if(this.autoHide > 0) {
