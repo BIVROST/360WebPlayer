@@ -299,10 +299,12 @@ Roadmap
 [ ] Standalone web component
 [ ] Support built-in media galleries and switching media
 [ ] Overlays - add content on top of your media
+[ ] Interactive overlays
 [ ] More supported browsers
-[ ] More supported projections - frame, partial sphere mappings etc.
+[ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
 [ ] Better mobile support
-[ ] Smaller footprint (getting rid of THREEjs)
+[ ] Smaller footprint (getting rid of THREEjs?)
+[ ] Multi-resolution video (HD/non HD button)
 
 
 License
