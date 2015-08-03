@@ -60,8 +60,8 @@
 		
 		var loading=this.loading=document.createElement("div");
 		loading.className="bivrost-loading";
-		loading.show=function(e) { loading.className="bivrost-loading"; }
-		loading.hide=function(e) { loading.className="bivrost-loading hidden"; }
+		loading.show=function() { loading.className="bivrost-loading"; }
+		loading.hide=function() { loading.className="bivrost-loading hidden"; }
 		loading.appendChild(document.createElement("div"));
 		player.container.appendChild(loading);
 		
@@ -69,7 +69,7 @@
 		domElement.addEventListener("mousedown", cancel, true);
 		domElement.addEventListener("dblclick", cancel, true);
 		domElement.addEventListener("selectionstart", cancel, true);
-	}
+	};
 
 	
 	/**
@@ -79,11 +79,11 @@
 		var that=this;
 		
 		var leftAligned=document.createElement("div");
-		leftAligned.className="aligned left-aligned";
+		leftAligned.className="bivrost-aligned bivrost-left-aligned";
 		this.domElement.appendChild(leftAligned);
 		
 		var rightAligned=document.createElement("div");
-		rightAligned.className="aligned right-aligned";
+		rightAligned.className="bivrost-aligned bivrost-right-aligned";
 		this.domElement.appendChild(rightAligned);
 		
 		if(media.video) {
@@ -99,7 +99,7 @@
 			duration.textContent=timeFormat(media.duration);
 
 			var status=document.createElement("span");
-			status.className="status";
+			status.className="bivrost-status";
 			status.appendChild(currentTime);
 			status.appendChild(separator);
 			status.appendChild(duration);
@@ -111,11 +111,11 @@
 			range.setAttribute("step", 0.025);
 
 			var rangeBackground=document.createElement("div");
-			rangeBackground.className="range-background";
+			rangeBackground.className="bivrost-range-background";
 			this.domElement.appendChild(rangeBackground);
 
 			var rangeForeground=document.createElement("div");
-			rangeForeground.className="range-foreground";
+			rangeForeground.className="bivrost-range-foreground";
 			rangeBackground.appendChild(rangeForeground);
 			rangeForeground.setValue01=function(value01) {
 				var thumbWidth=15;
@@ -198,7 +198,7 @@
 
 		rightAligned.appendChild(makeButton("fullscreen", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
 
-		rightAligned.appendChild(makeButton("oculus", function() { 
+		rightAligned.appendChild(makeButton("oculus", function() {
 			if(!that.player.fullscreen) {
 				that.player.fullscreen=true; 
 				that.player.vrMode=Bivrost.VRMODE_OCULUS_RIFT_DK2;
@@ -213,7 +213,7 @@
 		
 		rightAligned.appendChild(makeButton("bivrost", function() {
 			window.open("http://bivrost360.com", "_blank");
-		}), "powered by Bivrost");
+		}, "powered by Bivrost"));
 
 		
 		if(this.autoHide > 0) {
@@ -248,7 +248,7 @@
 	
 	
 	Bivrost.UI.prototype.show=function() {
-		this.domElement.className="ui";
+		this.domElement.className="bivrost-ui";
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
 		this._hideTimeoutId=setTimeout(this.hide.bind(this), this.autoHide*1000);
@@ -256,7 +256,7 @@
 	
 	
 	Bivrost.UI.prototype.hide=function() {
-		this.domElement.className="ui hidden";
+		this.domElement.className="bivrost-ui hidden";
 		clearTimeout(this._hideTimeoutId);
 	};
 	

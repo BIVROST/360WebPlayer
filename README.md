@@ -293,6 +293,17 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 2. no other detection succeeded
 
 
+Keyboard shortcuts
+------------------
+
+* ` ↑ ` ` → ` ` ↓ ` ` ←` - look around
+* ` space ` - pause/play
+* ` F ` or doubleclick movie - fullscreen
+* ` V ` - enter/toggle VR mode
+* ` [ `, ` ] ` - scroll movie by 5 seconds
+* ` + `, ` - ` - zoom in/out (not available in VR mode)
+
+
 Roadmap
 -------
 

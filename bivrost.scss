@@ -41,6 +41,10 @@ bivrost-player {
 		-webkit-transition: opacity .5s; 
 		transition: opacity .5s; 
 		
+		@keyframes bivrost-logo-anim {
+			100% { background-position-y: image-height("bivrost-loading-anim.png")*-1; }
+		}
+
 		div {
 			$frames: 32;
 			position: absolute;
@@ -50,17 +54,14 @@ bivrost-player {
 			height: image-height("bivrost-loading-anim.png") / $frames;
 			bottom: - image-width("bivrost-loading-anim.png")/2;
 			right: - image-width("bivrost-loading-anim.png")/2;
-			animation: anim 1s steps($frames) infinite;
+			animation: bivrost-logo-anim 1s steps($frames) infinite;
 		}
 		
 		&.hidden { display: none; opacity: 0; }
 	}
 	
-	@keyframes anim {
-		100% { background-position-y: image-height("bivrost-loading-anim.png")*-1; }
-	}
 	
-	.ui {
+	.bivrost-ui {
 		position: absolute;
 		left: 0;
 		right: 0;
@@ -89,18 +90,18 @@ bivrost-player {
 		}
 		
 		
-		.aligned {
+		.bivrost-aligned {
 			position: absolute;
 			display: block;
 			top: 0px;
 			bottom: 0px;
 		}
-		.left-aligned { left: 0px; }
-		.right-aligned { right: $button-margin; }
+		.bivrost-left-aligned { left: 0px; }
+		.bivrost-right-aligned { right: $button-margin; }
 		
 		
 		.bivrost-button,
-		.status {
+		.bivrost-status {
 			position: relative;
 			$h: bivrost-icon-sprite-height(back);
 			$w: bivrost-icon-sprite-width(back);
@@ -120,7 +121,7 @@ bivrost-player {
 		}
 		
 		
-		.range-background {			
+		.bivrost-range-background {			
 			position: absolute;
 			height: $range-size;
 			background: inline-image("bivrost-range-background.png") repeat-x;
@@ -128,7 +129,7 @@ bivrost-player {
 			left: 0px;
 			right: 0px;
 			
-			.range-foreground {
+			.bivrost-range-foreground {
 				top: 0px;
 				left: 0px;
 				bottom: 0px;
@@ -202,13 +203,15 @@ bivrost-player {
 
 	}
 	
+	
+	&:-webkit-full-screen {
+		position: fixed;
+		width: 100% !important;
+		height: 100% !important;
+		top: 0;
+		background: none;
+	}
+	
 }
 
 
-:-webkit-full-screen {
-    position: fixed;
-    width: 100% !important;
-	height: 100% !important;
-    top: 0;
-    background: none;
-}
