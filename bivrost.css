@@ -101,10 +101,8 @@ bivrost-player {
     left: 0;
     right: 0;
     bottom: 0; }
-  .bivrost-player.no-ui .ui,
-  bivrost-player.no-ui .ui {
-    display: none !important; }
-  .bivrost-player.no-ui .bivrost-loading,
+  .bivrost-player.no-ui .bivrost-ui, .bivrost-player.no-ui .bivrost-loading,
+  bivrost-player.no-ui .bivrost-ui,
   bivrost-player.no-ui .bivrost-loading {
     display: none !important; }
   .bivrost-player .bivrost-loading,

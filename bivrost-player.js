@@ -60,8 +60,24 @@
 
 		
 		// input
-		container.addEventListener("keypress", this._keyPress.bind(this));
 		this.input=new Bivrost.Input(container, Math.PI/2);
+		this.input.registerShortcut(["+", "="], function() { thisRef.view.zoom/=0.95; });
+		this.input.registerShortcut("-", function() { thisRef.view.zoom*=0.95; });
+		this.input.registerShortcut("[", function() { thisRef.media.time-=5; });
+		this.input.registerShortcut("]", function() { thisRef.media.time+=5; });
+		this.input.registerShortcut(" ", function() { thisRef.media.pauseToggle(); });
+		this.input.registerShortcut(["f", "F"], function() { thisRef.fullscreen=!thisRef.fullscreen; });
+		this.input.registerShortcut(["v", "V"], function() { thisRef.vrModeEnterOrCycle(); });
+		// TODO: s - toggle stereoscopy mode
+		// TODO: i - show media info
+		// TODO: w: media.width--;
+		// TODO: W: media.width++;
+		// TODO: h: media.height--;
+		// TODO: H: media.height++;
+		// TODO: x: media.woffset--;
+		// TODO: X: media.woffset++;
+		// TODO: y: media.hoffset--;
+		// TODO: Y: media.hoffset++;
 		
 		
 		// fullscreen
@@ -77,10 +93,9 @@
 		// resize handling
 		// http://stackoverflow.com/a/14139497/785171
 		window.addEventListener("resize", this.resize.bind(this));
-		
 		this.resize();
+
 		
-			
 		// load media if provided
 		if(url) {
 			new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source, loop);
@@ -89,7 +104,7 @@
 		
 		// Main loop, executed every frame
 		var clock=new THREE.Clock();
-		function loop() {
+		function mainloop() {
 			var dt=clock.getDelta();
 			thisRef.input.update(dt);
 			var pos=0;
@@ -108,9 +123,9 @@
 				}
 			}
 
-			requestAnimationFrame(loop);
+			requestAnimationFrame(mainloop);
 		};
-		loop();
+		mainloop();
 	};
 
 	
@@ -242,6 +257,23 @@
 			this.resize();
 		}
 	});
+	
+	
+	/**
+	 * Turn on fullscreen+VR mode. If already in fullscreen switch between VR modes.
+	 */
+	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
+		if(this.fullscreen) {	// already in fullscreen - toggle modes					
+			this.vrMode=Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this.vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length];
+		}
+		else {	// not in fullscreen - start with default mode
+			// TODO: add default mode detection from getVRDevices
+			this.fullscreen=true;
+			this.vrMode=Bivrost.AVAILABLE_VRMODES[0];
+		}
+	}
+
+
 		
 
 	/// REGION: fullscreen 
@@ -319,82 +351,6 @@
 		
 	/// } END REGION
 	
-	
-	/**
-	 * Event handler for managing keyboard events
-	 * @private	
-	 * @param {KeyboardEvent} e
-	 */
-	Bivrost.Player.prototype._keyPress=function(e) {
-		var keyName=e.key || String.fromCharCode(e.which);
-		switch(keyName) {
-			// f - toggle fullscreen
-			case "f": case "F":
-				this.fullscreen=!this.fullscreen;
-				break;
-
-			// v - enable/toggle VR modes
-			case "v": case "V":
-				if(this.fullscreen) {	// already in fullscreen - toggle modes					
-					this.vrMode=Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this.vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length];
-				}
-				else {	// not in fullscreen - start with default mode
-					// TODO: add default mode detection
-					this.fullscreen=true;
-					this.vrMode=Bivrost.AVAILABLE_VRMODES[0];
-				}
-				break;
-
-//			case "s": case "S": break; // TODO: toggle stereoscopy mode
-//
-//			case "i": case "I": break; // TODO: show media info
-
-			// -/+ - zoom
-			case "+": case "=": 
-				this.view.zoom/=0.95; 
-				break;
-			case "-": 
-				this.view.zoom*=0.95; 
-				break;
-
-			// space - play/pause
-			case " ":
-				this.media.pauseToggle();
-				break;
-
-			// r - rewind
-			case "r": case "R":
-				this.media.rewind();
-				break;
-
-			// [/] - seek 5 sec
-			case "[":
-				this.media.time-=5;
-				break;
-			case "]":
-				this.media.time+=5;
-				break;
-
-//			case "w": break // TODO: media.width--;
-//			case "W": break // TODO: media.width++;
-//			case "h": break // TODO: media.height--;
-//			case "H": break // TODO: media.height++;
-//			case "x": break // TODO: media.woffset--;
-//			case "X": break // TODO: media.woffset++;
-//			case "y": break // TODO: media.hoffset--;
-//			case "Y": break // TODO: media.hoffset++;
-
-			default:
-				return true;
-		};
-
-		e.preventDefault();
-		e.stopPropagation();
-		return false;
-	};
-		
-
-	// TODO: cleanup
 //	Bivrost.Player.prototype.dispose=function() {
 //		// TODO: media.dispose
 //	};

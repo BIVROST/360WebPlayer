@@ -222,8 +222,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					}[(video.error || {code:-1}) && video.error.code];
 					console.error("error: ", description);
 					that.onerror(description);
-				});
-
+				})
+;
 				video.addEventListener("loadeddata", function() {
 					log("video loaded", this, arguments);
 					var texture = new THREE.VideoTexture(video);

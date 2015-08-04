@@ -138,6 +138,23 @@
 		domElement.addEventListener("keyup", keyup);
 		
 		
+		this._keyboardShortcuts={};
+		function keypress(e) {
+			var keyName=e.key || String.fromCharCode(e.which);
+			log("keypress", e);
+			if(thisRef._keyboardShortcuts[keyName]) {
+				log("recognised", keyName);
+				thisRef._keyboardShortcuts[keyName]();
+				e.preventDefault();
+				e.stopPropagation();
+			}
+			else
+				log("unrecognised", keyName, thisRef._keyboardShortcuts);
+
+		};
+		domElement.addEventListener("keypress", keypress);
+		
+		
 		this._unattach=function() {
 			domElement.removeEventListener("mousedown", mousedown);
 			window.removeEventListener("mousemove", mousemove);
@@ -147,6 +164,7 @@
 			domElement.removeEventListener("mouseover", mouseover);
 			domElement.removeEventListener("keydown", keydown);
 			domElement.removeEventListener("keyup", keyup);
+			domElement.removeEventListener("keypress", keypress);
 		}
 		
 		
@@ -209,6 +227,29 @@
 	 */
 	Bivrost.Input.prototype.dispose=null;
 	
+	
+	/**
+	 * Other keyboard shortcuts required by different modules.
+	 * @type {object(string, function())}
+	 * @private
+	 */
+	Bivrost.Input.prototype._keyboardShortcuts={};
+	
+	
+	/**
+	 * Maps a keyboard shortcut to an action
+	 * @param {string|array<string>} key
+	 * @param {function} action
+	 * @returns {Bivrost.Input}
+	 */
+	Bivrost.Input.prototype.registerShortcut=function(key, action) {
+		if(this._keyboardShortcuts[key])
+			log("remaping keyboard shortcut: ", key);
+		var keys=key.map && key || [key];
+		for(var i=keys.length-1; i >= 0; i--)
+			this._keyboardShortcuts[keys[i]]=action;
+		return this;
+	};
 	
 	
 	/**

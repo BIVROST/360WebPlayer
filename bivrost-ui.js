@@ -128,7 +128,7 @@
 				}, 0);
 			};
 			document.addEventListener("fullscreenchange", onFullscreenChange);
-			document.addEventListener("fullscreenchange", onFullscreenChange);
+			document.addEventListener("fullScreenchange", onFullscreenChange);
 			document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 			document.addEventListener("mozfullscreenchange", onFullscreenChange);
 			document.addEventListener("MSFullscreenChange", onFullscreenChange);
@@ -182,38 +182,17 @@
 			
 			
 			// loading
-//			video.addEventListener("canplay", this.loading.hide);
 			video.addEventListener("playing", this.loading.hide);
-//			video.addEventListener("paused", this.loading.hide);
-//			video.addEventListener("seeked", this.loading.hide);
-//			video.addEventListener("seeking", this.loading.hide);
-			
 			video.addEventListener("waiting", this.loading.show);
-//			video.addEventListener("emptied", this.loading.show);
-//			video.addEventListener("stalled", this.loading.show);
-//			video.addEventListener("suspend", this.loading.show);
 		}
 
 
 
 		rightAligned.appendChild(makeButton("fullscreen", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
 
-		rightAligned.appendChild(makeButton("oculus", function() {
-			if(!that.player.fullscreen) {
-				that.player.fullscreen=true; 
-				that.player.vrMode=Bivrost.VRMODE_OCULUS_RIFT_DK2;
-			}
-			else {
-				that.player.vrMode=Bivrost.AVAILABLE_VRMODES[
-					(Bivrost.AVAILABLE_VRMODES.indexOf(that.player.vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length
-				];
-			}
-		}, "VR" ));
+		rightAligned.appendChild(makeButton("oculus", function() { that.player.vrModeEnterOrCycle(); }, "VR" ));
 		
-		
-		rightAligned.appendChild(makeButton("bivrost", function() {
-			window.open("http://bivrost360.com", "_blank");
-		}, "powered by Bivrost"));
+		rightAligned.appendChild(makeButton("bivrost", function() { window.open("http://bivrost360.com", "_blank");	}, "powered by Bivrost"));
 
 		
 		if(this.autoHide > 0) {

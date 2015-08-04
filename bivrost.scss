@@ -19,14 +19,15 @@ bivrost-player {
 	font-family: 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
 	font-size: 12px;
 	
-	
 	canvas {
 		position:absolute;
 		top:0; left:0; right:0; bottom:0;
 	}
 	
-	&.no-ui .ui { display: none !important; }
-	&.no-ui .bivrost-loading { display: none !important; }
+	&.no-ui .bivrost-ui,
+	&.no-ui .bivrost-loading { 
+		display: none !important; 
+	}
 	
 	.bivrost-loading {
 
