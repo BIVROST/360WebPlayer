@@ -15,7 +15,17 @@ bivrost-player {
 	display: block;
 	overflow: hidden;
 	position: relative;
+		
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+	cursor: grab;
 	
+	&.grabbing {
+		cursor: -webkit-grabbing;
+		cursor: -moz-grabbing;
+		cursor: grabbing;
+	}
+		
 	font-family: 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
 	font-size: 12px;
 	
@@ -68,6 +78,7 @@ bivrost-player {
 		right: 0;
 		height: $ui-height;
 		background: $ui-background;
+		cursor: default;
 
 		bottom: 0;
 		display: block;
@@ -119,6 +130,38 @@ bivrost-player {
 			cursor: pointer;
 			$w: bivrost-icon-sprite-width(back);
 			width: $w;
+		}
+		
+		
+		.bivrost-volume {
+			height: 88+22px;
+			width: 36px;
+			background: inline-image("bivrost-volume-background.png") top left no-repeat;
+			position: absolute;
+			left: 0px;
+			bottom: 36px;
+			
+			.bivrost-volume-tick {
+				width: 36px;
+				height: 7px;
+				cursor: pointer;
+				
+				&.bivrost-volume-tick-on { background: inline-image("bivrost-volume-on.png") top left no-repeat; }
+				&.bivrost-volume-tick-off { background: inline-image("bivrost-volume-off.png") top left no-repeat; }
+				
+				&:first-child { margin-top: 17px; }
+			}
+			
+			
+			-webkit-transition: -webkit-transform 0.5s, opacity 0.5s;
+			-ms-transition: -ms-transform 0.5s, opacity 0.5s;
+			transition: transform 0.5s, opacity 0.5s;
+			
+			-ms-transform-origin: 50% 130%;
+			-webkit-transform-origin: 50% 130%;
+			transform-origin: 50% 130%;
+		
+			&.hidden { transform: scale(0); opacity: 0; }
 		}
 		
 		

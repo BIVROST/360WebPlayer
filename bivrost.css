@@ -1,5 +1,5 @@
-.bivrost-icon-sprite, .bivrost-icon-back, .bivrost-icon-bivrost, .bivrost-icon-check, .bivrost-icon-close, .bivrost-icon-display, .bivrost-icon-fullscreen, .bivrost-icon-menu, .bivrost-icon-next, .bivrost-icon-oculus, .bivrost-icon-open, .bivrost-icon-pause, .bivrost-icon-play, .bivrost-icon-plus, .bivrost-icon-repeat, .bivrost-icon-settings, .bivrost-icon-speaker, .bivrost-icon-stop {
-  background-image: url('bivrost-icon-sb6083d3cb8.png');
+.bivrost-icon-sprite, .bivrost-icon-back, .bivrost-icon-bivrost, .bivrost-icon-check, .bivrost-icon-close, .bivrost-icon-display, .bivrost-icon-fullscreen, .bivrost-icon-menu, .bivrost-icon-mute, .bivrost-icon-next, .bivrost-icon-oculus, .bivrost-icon-open, .bivrost-icon-pause, .bivrost-icon-play, .bivrost-icon-plus, .bivrost-icon-repeat, .bivrost-icon-settings, .bivrost-icon-speaker, .bivrost-icon-stop {
+  background-image: url('bivrost-icon-sae8dcb59cf.png');
   background-repeat: no-repeat; }
 
 .bivrost-icon-back {
@@ -37,63 +37,76 @@
   .bivrost-icon-menu:hover, .bivrost-icon-menu.menu-hover {
     background-position: 0 -728px; }
 
-.bivrost-icon-next {
+.bivrost-icon-mute {
   background-position: 0 -784px; }
-  .bivrost-icon-next:hover, .bivrost-icon-next.next-hover {
+  .bivrost-icon-mute:hover, .bivrost-icon-mute.mute-hover {
     background-position: 0 -840px; }
 
-.bivrost-icon-oculus {
+.bivrost-icon-next {
   background-position: 0 -896px; }
-  .bivrost-icon-oculus:hover, .bivrost-icon-oculus.oculus-hover {
+  .bivrost-icon-next:hover, .bivrost-icon-next.next-hover {
     background-position: 0 -952px; }
 
-.bivrost-icon-open {
+.bivrost-icon-oculus {
   background-position: 0 -1008px; }
-  .bivrost-icon-open:hover, .bivrost-icon-open.open-hover {
+  .bivrost-icon-oculus:hover, .bivrost-icon-oculus.oculus-hover {
     background-position: 0 -1064px; }
 
-.bivrost-icon-pause {
+.bivrost-icon-open {
   background-position: 0 -1120px; }
-  .bivrost-icon-pause:hover, .bivrost-icon-pause.pause-hover {
+  .bivrost-icon-open:hover, .bivrost-icon-open.open-hover {
     background-position: 0 -1176px; }
 
-.bivrost-icon-play {
+.bivrost-icon-pause {
   background-position: 0 -1232px; }
-  .bivrost-icon-play:hover, .bivrost-icon-play.play-hover {
+  .bivrost-icon-pause:hover, .bivrost-icon-pause.pause-hover {
     background-position: 0 -1288px; }
 
-.bivrost-icon-plus {
+.bivrost-icon-play {
   background-position: 0 -1344px; }
-  .bivrost-icon-plus:hover, .bivrost-icon-plus.plus-hover {
+  .bivrost-icon-play:hover, .bivrost-icon-play.play-hover {
     background-position: 0 -1400px; }
 
-.bivrost-icon-repeat {
+.bivrost-icon-plus {
   background-position: 0 -1456px; }
-  .bivrost-icon-repeat:hover, .bivrost-icon-repeat.repeat-hover {
+  .bivrost-icon-plus:hover, .bivrost-icon-plus.plus-hover {
     background-position: 0 -1512px; }
 
-.bivrost-icon-settings {
+.bivrost-icon-repeat {
   background-position: 0 -1568px; }
-  .bivrost-icon-settings:hover, .bivrost-icon-settings.settings-hover {
+  .bivrost-icon-repeat:hover, .bivrost-icon-repeat.repeat-hover {
     background-position: 0 -1624px; }
 
-.bivrost-icon-speaker {
+.bivrost-icon-settings {
   background-position: 0 -1680px; }
-  .bivrost-icon-speaker:hover, .bivrost-icon-speaker.speaker-hover {
+  .bivrost-icon-settings:hover, .bivrost-icon-settings.settings-hover {
     background-position: 0 -1736px; }
 
-.bivrost-icon-stop {
+.bivrost-icon-speaker {
   background-position: 0 -1792px; }
-  .bivrost-icon-stop:hover, .bivrost-icon-stop.stop-hover {
+  .bivrost-icon-speaker:hover, .bivrost-icon-speaker.speaker-hover {
     background-position: 0 -1848px; }
+
+.bivrost-icon-stop {
+  background-position: 0 -1904px; }
+  .bivrost-icon-stop:hover, .bivrost-icon-stop.stop-hover {
+    background-position: 0 -1960px; }
 
 .bivrost-player,
 bivrost-player {
   display: block;
   overflow: hidden;
   position: relative;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
   font-family: 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px; }
+  .bivrost-player.grabbing,
+  bivrost-player.grabbing {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing; }
   .bivrost-player canvas,
   bivrost-player canvas {
     position: absolute;
@@ -140,6 +153,7 @@ bivrost-player {
     right: 0;
     height: 68px;
     background: rgba(0, 0, 0, 0.5);
+    cursor: default;
     bottom: 0;
     display: block;
     -webkit-transition: bottom 0.5s;
@@ -196,6 +210,38 @@ bivrost-player {
     bivrost-player .bivrost-ui .bivrost-button {
       cursor: pointer;
       width: 36px; }
+    .bivrost-player .bivrost-ui .bivrost-volume,
+    bivrost-player .bivrost-ui .bivrost-volume {
+      height: 110px;
+      width: 36px;
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAABYCAYAAACd4FUiAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wgFEBcm47odsgAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAC3klEQVRo3u3aS0gVURzH8e+cmbkPtYwoKy1TQtC4QllBUSC4yqJN2aIwekllBS0KkTQjyhCx6CGV0YMeFNkuqRaBBGVPqTCViuyhFZohecur1+udaSEUZUYLdc7i/JaHc+DD+c+c/+avMVj23S1hUtIaTM9YhiJCNwiHeun49Jy3T09xJLvib9u0ASt7bu8lcWYerU0tVO6+RW1VK0OVuVlxpK9KZdrsFDxREby8V0RxZsngoPLXtZjuREqXnqfp8VeGM2mLJ5BTngVaG5sTUgeCjr2ro+ODTuGCSkYy2y5lkDx/PLlTpwMIAEqfHKfHP2rEMQCHV1bT+dlg/4ODv27oTPs3ciYewArbOJHRMS6OvtrO6jEeQcmjQ7yoqXcMA+D/3Etn2xcKbuYLxk9dweWCGpxOzZWHxPs2CjTNS0vDN8dBVWWNRERPFoT7bGRIwN+HZVmC3u5uZEnP94DAsixpQMGuLoEtESjgDwissDwgq69PMlDYFmDb0oBs2xbIFNuSDATSgZALJHRdLpBuygYydFWyf4OEpv4yBVIgBVIgBVIgBVIgBVIgBVIgBVIgBVIgBVIgBVIgBVIgBVIgBVIgBRokmi4Emq5LA9JNQ2C4DGlAhmEIdNOU5wMydIHpckkDcnm9AnekVxqQ6XYLNE1D6Jrz5eo3CLr9rWRuTXIclLXLR6CzRdDccIKMdfMcB83LmkNzfUV/qc5++c76CWWOzcMKXeN02w7Wjovqf6nbmy+w88YSx24n/9oi2t+f+9U68tJyiUv2sKzQN+KY5UWpTPFFkTdrC/w5An/8fSMtDV2ULLk+7OUTukZ+1WLifVFsik/52c4GbCx7dpKxsStorm/i/tU6qs+8JRQcmlnH0TEuMrcmM3Ohj5jEWDo+XmbHjA2/9ddBD++9U0xMQjYR0bFY4TChYIhQMEhvoAf7P2cfTbeJ4TIRuoE70oumCQKdH2h7c5Gi9MK/HfkBNaHjhysGkUUAAAAASUVORK5CYII=') top left no-repeat;
+      position: absolute;
+      left: 0px;
+      bottom: 36px;
+      -webkit-transition: -webkit-transform 0.5s, opacity 0.5s;
+      -ms-transition: -ms-transform 0.5s, opacity 0.5s;
+      transition: transform 0.5s, opacity 0.5s;
+      -ms-transform-origin: 50% 130%;
+      -webkit-transform-origin: 50% 130%;
+      transform-origin: 50% 130%; }
+      .bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick,
+      bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick {
+        width: 36px;
+        height: 7px;
+        cursor: pointer; }
+        .bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-on,
+        bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-on {
+          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAHCAYAAABgOO8AAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wgFDyEjDbacBQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAh0lEQVQoz93SMQ4BARSE4W/ZUKq0KhoXoHIAF3QTZ9CqNCqthkKCkNFsvXYTETHJ37y8l5lMHj+mos1ykhJTzHDD5c3JGduiKI4fT56kTLJIskvyqLjVcE1ySrJKMmzq02mRqYc5xuhW9GroY4AlRk1NyhaB7thgj0k1e9aViivWOPz/D31LLw6mVKyBH1lVAAAAAElFTkSuQmCC') top left no-repeat; }
+        .bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-off,
+        bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-off {
+          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAHCAYAAABgOO8AAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wgFDyEp7WN1GwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAhklEQVQoz9XSMQ4BYRDF8R8REgoHEGqFO+i3V7mLxGHEDfSO4AqUqi0kVjYoTP3ZL1Gsl7xmMv/My8zQMnWyune3IRaYo0b1hShxsh5dfx/oE2aFLSZRfSaIF+7YY9M0VDdjP2MsMUUv3E94EEyBWdMhOYFKHHGJc9V4JFwFc8D5b3+odXoDIGYmCIKULyIAAAAASUVORK5CYII=') top left no-repeat; }
+        .bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick:first-child,
+        bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick:first-child {
+          margin-top: 17px; }
+      .bivrost-player .bivrost-ui .bivrost-volume.hidden,
+      bivrost-player .bivrost-ui .bivrost-volume.hidden {
+        transform: scale(0);
+        opacity: 0; }
     .bivrost-player .bivrost-ui .bivrost-range-background,
     bivrost-player .bivrost-ui .bivrost-range-background {
       position: absolute;

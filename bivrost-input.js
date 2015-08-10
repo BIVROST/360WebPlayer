@@ -59,6 +59,8 @@
 			window.addEventListener("mousemove", mousemove);
 			window.addEventListener("selectstart", selectstart);
 			
+			domElement.classList.add("grabbing");
+			
 			return false;
 		}
 
@@ -69,6 +71,7 @@
 			window.removeEventListener("move", mousemove);
 			window.removeEventListener("selectstart", selectstart);
 			thisRef._mouseLookInProgress=false;
+			domElement.classList.remove("grabbing");
 		}
 
 		function mousemove(e) {
