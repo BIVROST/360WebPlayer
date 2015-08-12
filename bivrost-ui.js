@@ -59,7 +59,7 @@
 		this.player=player;
 		
 		var loading=this.loading=document.createElement("div");
-		loading.className="bivrost-loading hidden";
+		loading.className="bivrost-loading";
 		loading.show=function() { loading.className="bivrost-loading"; }
 		loading.hide=function() { loading.className="bivrost-loading hidden"; }
 		loading.appendChild(document.createElement("div"));
@@ -78,13 +78,17 @@
 	Bivrost.UI.prototype.setMedia=function(media) {
 		var that=this;
 		
+		var bivrostButtonLink="player-jump.html";
+		
 		var leftAligned=document.createElement("div");
 		leftAligned.className="bivrost-aligned bivrost-left-aligned";
 		
 		var rightAligned=document.createElement("div");
 		rightAligned.className="bivrost-aligned bivrost-right-aligned";
 		
-		rightAligned.appendChild(makeButton("bivrost", function() { window.open("http://bivrost360.com", "_blank");	}, "powered by Bivrost"));
+		rightAligned.appendChild(makeButton("bivrost", function() { 
+			window.open(bivrostButtonLink, "_blank", "width=600, height=400, toolbar=no, scrollbars=no, resizable=yes");	
+		}, "powered by Bivrost"));
 		
 		rightAligned.appendChild(makeButton("oculus", function() { that.player.vrModeEnterOrCycle(); }, "VR" ));
 		
@@ -193,7 +197,7 @@
 			// volume
 			var volumebar=document.createElement("div");
 			volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; })
-			volumebar.className="bivrost-volume";
+			volumebar.className="bivrost-volume hidden";
 			var ticks=[];
 			for(var i=8; i--; ) {
 				var tick=document.createElement("div");
@@ -230,12 +234,46 @@
 			volumebutton.appendChild(volumebar);
 			rightAligned.appendChild(volumebutton);
 		}
+		else 
+			this.loading.hide();	// picture
 
 
 		rightAligned.appendChild(makeButton("fullscreen", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
 
 		this.domElement.appendChild(leftAligned);
 		this.domElement.appendChild(rightAligned);
+
+
+
+		// protocol
+		var urls=[];
+		for(var url in media.url)	if(media.url.hasOwnProperty(url)) {
+			var a = document.createElement('a');
+			a.href=url;
+			if(a.href)
+				urls.push(a.href);
+			else {	// ie fix
+				var img = document.createElement('img');
+				img.src = url;
+				url = img.src;
+				img.src = null;
+				urls.push(url);
+			}
+		}
+
+		var protocol="bivrost:"+encodeURIComponent(urls.pop(url));
+		var args="";
+		var arg=function(name, value) { 
+			args+=(args === "") ? "?" : "&";
+			args+=encodeURIComponent(name)+"="+encodeURIComponent(value);
+		};
+		urls.forEach(function(e,i) { arg("alt"+(i || ""), e); });
+		arg("version", Bivrost.version);
+		arg("stereoscopy", media.stereoscopy);
+		arg("projection", media.projection);
+		arg("autoplay", this.player.autoplay);
+		arg("loop", media.loop);
+		bivrostButtonLink+="#"+encodeURI(protocol+args);
 
 		if(this.autoHide > 0) {
 			this.player.container.addEventListener("mousemove", this.show.bind(this));

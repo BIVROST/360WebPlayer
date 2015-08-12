@@ -29,6 +29,7 @@
 		 * @type Bivrost.Player
 		 */
 		var thisRef=this;
+		autoplay=autoplay || true;
 		this.autoplay=autoplay;
 
 		// container

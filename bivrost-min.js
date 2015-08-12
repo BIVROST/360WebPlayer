@@ -34906,6 +34906,7 @@ Bivrost.AVAILABLE_VRMODES=[
 		 * @type Bivrost.Player
 		 */
 		var thisRef=this;
+		autoplay=autoplay || true;
 		this.autoplay=autoplay;
 
 		// container
@@ -34937,8 +34938,24 @@ Bivrost.AVAILABLE_VRMODES=[
 
 		
 		// input
-		container.addEventListener("keypress", this._keyPress.bind(this));
-		this.input=new Bivrost.Input(container, 1);
+		this.input=new Bivrost.Input(container, Math.PI/2);
+		this.input.registerShortcut(["+", "="], function() { thisRef.view.zoom/=0.95; });
+		this.input.registerShortcut("-", function() { thisRef.view.zoom*=0.95; });
+		this.input.registerShortcut("[", function() { thisRef.media.time-=5; });
+		this.input.registerShortcut("]", function() { thisRef.media.time+=5; });
+		this.input.registerShortcut(" ", function() { thisRef.media.pauseToggle(); });
+		this.input.registerShortcut(["f", "F"], function() { thisRef.fullscreen=!thisRef.fullscreen; });
+		this.input.registerShortcut(["v", "V"], function() { thisRef.vrModeEnterOrCycle(); });
+		// TODO: s - toggle stereoscopy mode
+		// TODO: i - show media info
+		// TODO: w: media.width--;
+		// TODO: W: media.width++;
+		// TODO: h: media.height--;
+		// TODO: H: media.height++;
+		// TODO: x: media.woffset--;
+		// TODO: X: media.woffset++;
+		// TODO: y: media.hoffset--;
+		// TODO: Y: media.hoffset++;
 		
 		
 		// fullscreen
@@ -34954,10 +34971,9 @@ Bivrost.AVAILABLE_VRMODES=[
 		// resize handling
 		// http://stackoverflow.com/a/14139497/785171
 		window.addEventListener("resize", this.resize.bind(this));
-		
 		this.resize();
+
 		
-			
 		// load media if provided
 		if(url) {
 			new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source, loop);
@@ -34966,7 +34982,7 @@ Bivrost.AVAILABLE_VRMODES=[
 		
 		// Main loop, executed every frame
 		var clock=new THREE.Clock();
-		function loop() {
+		function mainloop() {
 			var dt=clock.getDelta();
 			thisRef.input.update(dt);
 			var pos=0;
@@ -34985,9 +35001,9 @@ Bivrost.AVAILABLE_VRMODES=[
 				}
 			}
 
-			requestAnimationFrame(loop);
+			requestAnimationFrame(mainloop);
 		};
-		loop();
+		mainloop();
 	};
 
 	
@@ -35081,6 +35097,12 @@ Bivrost.AVAILABLE_VRMODES=[
 		if(this.view)
 			this.view.aspect=this.aspect;
 //			this.renderer.setViewport(0, 0, width, height);
+
+		// TODO: find a better place for this
+		if(this.vrMode === Bivrost.VRMODE_NONE || !this.fullscreen)
+			this.container.classList.remove("no-ui");
+		else
+			this.container.classList.add("no-ui");
 	},
 
 
@@ -35106,10 +35128,30 @@ Bivrost.AVAILABLE_VRMODES=[
 	Object.defineProperty(Bivrost.Player.prototype, "vrMode", {
 		get: function() { return this._vrMode; },
 		set: function(value) {
+			if(value === this._vrMode)
+				return;
+			
 			this._vrMode=value;
 			this.resize();
 		}
 	});
+	
+	
+	/**
+	 * Turn on fullscreen+VR mode. If already in fullscreen switch between VR modes.
+	 */
+	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
+		if(this.fullscreen) {	// already in fullscreen - toggle modes					
+			this.vrMode=Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this.vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length];
+		}
+		else {	// not in fullscreen - start with default mode
+			// TODO: add default mode detection from getVRDevices
+			this.fullscreen=true;
+			this.vrMode=Bivrost.AVAILABLE_VRMODES[0];
+		}
+	}
+
+
 		
 
 	/// REGION: fullscreen 
@@ -35187,82 +35229,6 @@ Bivrost.AVAILABLE_VRMODES=[
 		
 	/// } END REGION
 	
-	
-	/**
-	 * Event handler for managing keyboard events
-	 * @private	
-	 * @param {KeyboardEvent} e
-	 */
-	Bivrost.Player.prototype._keyPress=function(e) {
-		var keyName=e.key || String.fromCharCode(e.which);
-		switch(keyName) {
-			// f - toggle fullscreen
-			case "f": case "F":
-				this.fullscreen=!this.fullscreen;
-				break;
-
-			// v - enable/toggle VR modes
-			case "v": case "V":
-				if(this.fullscreen) {	// already in fullscreen - toggle modes					
-					this.vrMode=Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this.vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length];
-				}
-				else {	// not in fullscreen - start with default mode
-					// TODO: add default mode detection
-					this.fullscreen=true;
-					this.vrMode=Bivrost.AVAILABLE_VRMODES[0];
-				}
-				break;
-
-//			case "s": case "S": break; // TODO: toggle stereoscopy mode
-//
-//			case "i": case "I": break; // TODO: show media info
-
-			// -/+ - zoom
-			case "+": case "=": 
-				this.view.zoom/=0.95; 
-				break;
-			case "-": 
-				this.view.zoom*=0.95; 
-				break;
-
-			// space - play/pause
-			case " ":
-				this.media.pauseToggle();
-				break;
-
-			// r - rewind
-			case "r": case "R":
-				this.media.rewind();
-				break;
-
-			// [/] - seek 5 sec
-			case "[":
-				this.media.time-=5;
-				break;
-			case "]":
-				this.media.time+=5;
-				break;
-
-//			case "w": break // TODO: media.width--;
-//			case "W": break // TODO: media.width++;
-//			case "h": break // TODO: media.height--;
-//			case "H": break // TODO: media.height++;
-//			case "x": break // TODO: media.woffset--;
-//			case "X": break // TODO: media.woffset++;
-//			case "y": break // TODO: media.hoffset--;
-//			case "Y": break // TODO: media.hoffset++;
-
-			default:
-				return true;
-		};
-
-		e.preventDefault();
-		e.stopPropagation();
-		return false;
-	};
-		
-
-	// TODO: cleanup
 //	Bivrost.Player.prototype.dispose=function() {
 //		// TODO: media.dispose
 //	};
@@ -35578,6 +35544,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		
 		if(typeof url !== "object")
 			url={url:null};
+		this.url=url;
 		
 		if(arguments.length < 2)
 			throw "url and onload required";
@@ -35624,6 +35591,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				video.setAttribute("height", "32");	// any number will be ok
 				video.setAttribute("loop", JSON.stringify(!!loop));
 				video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+				this._setLoop=function(value) { video.setAttribute("loop", JSON.stringify(!!value)); };
 
 				this.play=function() {video.play();};
 				this.pause=function() {video.pause();};
@@ -35653,8 +35621,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					}[(video.error || {code:-1}) && video.error.code];
 					console.error("error: ", description);
 					that.onerror(description);
-				});
-
+				})
+;
 				video.addEventListener("loadeddata", function() {
 					log("video loaded", this, arguments);
 					var texture = new THREE.VideoTexture(video);
@@ -35772,14 +35740,23 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		set: function(value) {this._setTime(value);},
 	});
 
+	Bivrost.Media.prototype._getLoop=function() { return false; };
+	Bivrost.Media.prototype._setLoop=function() {};
+	Object.defineProperty(Bivrost.Media.prototype, "loop", {
+		get: function() {return this._getLoop();},
+		set: function(value) {this._setLoop(value);},
+	});
+
 	Bivrost.Media.prototype._getDuration=function() { return 0; },
 	Object.defineProperty(Bivrost.Media.prototype, "duration", {
 		get: function() { return this._getDuration(); }
 	});
 	
+	Bivrost.Media.prototype.url=null;
+	
 })();
 // file: bivrost-input.js
-/* global Bivrost, THREE */
+/* global Bivrost, THREE, PositionSensorVRDevice */
 "use strict";
 
 (function() {
@@ -35840,6 +35817,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			window.addEventListener("mousemove", mousemove);
 			window.addEventListener("selectstart", selectstart);
 			
+			domElement.classList.add("grabbing");
+			
 			return false;
 		}
 
@@ -35849,6 +35828,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			window.removeEventListener("up", mouseup);
 			window.removeEventListener("move", mousemove);
 			window.removeEventListener("selectstart", selectstart);
+			thisRef._mouseLookInProgress=false;
+			domElement.classList.remove("grabbing");
 		}
 
 		function mousemove(e) {
@@ -35857,8 +35838,10 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			
 			var dx=~~(e.x || e.clientX)-originX;
 			var dy=~~(e.y || e.clientY)-originY;
-			thisRef.lookEuler.x=originEulerX+scale*dy/domElement.offsetHeight;
-			thisRef.lookEuler.y=originEulerY+scale*dx/domElement.offsetWidth;
+			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth)
+			thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
+			thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
+			thisRef._mouseLookInProgress=true;
 		}
 		
 		function mouseover(e) { isIn=true; }
@@ -35916,6 +35899,23 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		domElement.addEventListener("keyup", keyup);
 		
 		
+		this._keyboardShortcuts={};
+		function keypress(e) {
+			var keyName=e.key || String.fromCharCode(e.which);
+			log("keypress", e);
+			if(thisRef._keyboardShortcuts[keyName]) {
+				log("recognised", keyName);
+				thisRef._keyboardShortcuts[keyName]();
+				e.preventDefault();
+				e.stopPropagation();
+			}
+			else
+				log("unrecognised", keyName, thisRef._keyboardShortcuts);
+
+		};
+		domElement.addEventListener("keypress", keypress);
+		
+		
 		this._unattach=function() {
 			domElement.removeEventListener("mousedown", mousedown);
 			window.removeEventListener("mousemove", mousemove);
@@ -35925,6 +35925,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			domElement.removeEventListener("mouseover", mouseover);
 			domElement.removeEventListener("keydown", keydown);
 			domElement.removeEventListener("keyup", keyup);
+			domElement.removeEventListener("keypress", keypress);
 		}
 		
 		
@@ -35988,6 +35989,29 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	Bivrost.Input.prototype.dispose=null;
 	
 	
+	/**
+	 * Other keyboard shortcuts required by different modules.
+	 * @type {object(string, function())}
+	 * @private
+	 */
+	Bivrost.Input.prototype._keyboardShortcuts={};
+	
+	
+	/**
+	 * Maps a keyboard shortcut to an action
+	 * @param {string|array<string>} key
+	 * @param {function} action
+	 * @returns {Bivrost.Input}
+	 */
+	Bivrost.Input.prototype.registerShortcut=function(key, action) {
+		if(this._keyboardShortcuts[key])
+			log("remaping keyboard shortcut: ", key);
+		var keys=key.map && key || [key];
+		for(var i=keys.length-1; i >= 0; i--)
+			this._keyboardShortcuts[keys[i]]=action;
+		return this;
+	};
+	
 	
 	/**
 	 * Currently used position sensor
@@ -36027,7 +36051,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		this.lookEuler.y+=this.lookEulerDelta.y*dt;
 		this.lookEuler.z+=this.lookEulerDelta.z*dt;
 		
-		if(this.clampY) {
+		if(this.clampY && !this._mouseLookInProgress) {
 			var clamped=this.lookEuler.x;
 			var clamp=Math.PI/2;
 			var lerp=dt*3;
@@ -36089,6 +36113,14 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	 */
 	Bivrost.Input.prototype.keyboardSpeed=Math.PI*0.5;
 	
+	
+	/**
+	 * Is the user using the mouse to look around at this moment?
+	 * @private
+	 * @type {boolean}
+	 */
+	Bivrost.Input.prototype._mouseLookInProgress=false;
+	
 })();
 
 // file: bivrost-ui.js
@@ -36125,6 +36157,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		
 		button.addEventListener("click", function() { button.action(); });
 		
+		button.title=alt;
+		
 		return button;
 	}
 	
@@ -36150,11 +36184,18 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		this.domElement=domElement;
 		this.player=player;
 		
+		var loading=this.loading=document.createElement("div");
+		loading.className="bivrost-loading";
+		loading.show=function() { loading.className="bivrost-loading"; }
+		loading.hide=function() { loading.className="bivrost-loading hidden"; }
+		loading.appendChild(document.createElement("div"));
+		player.container.appendChild(loading);
 		
 		var cancel=function(e) { e.stopPropagation(); return false; };
-		domElement.addEventListener("mousedown", cancel);
-		domElement.addEventListener("dblclick", cancel);
-	}
+		domElement.addEventListener("mousedown", cancel, true);
+		domElement.addEventListener("dblclick", cancel, true);
+		domElement.addEventListener("selectionstart", cancel, true);
+	};
 
 	
 	/**
@@ -36163,20 +36204,36 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	Bivrost.UI.prototype.setMedia=function(media) {
 		var that=this;
 		
-		var status=document.createElement("span");
-		status.className="status";
+		var bivrostButtonLink="player-jump.html";
+		
+		var leftAligned=document.createElement("div");
+		leftAligned.className="bivrost-aligned bivrost-left-aligned";
+		
+		var rightAligned=document.createElement("div");
+		rightAligned.className="bivrost-aligned bivrost-right-aligned";
+		
+		rightAligned.appendChild(makeButton("bivrost", function() { 
+			window.open(bivrostButtonLink, "_blank", "width=600, height=400, toolbar=no, scrollbars=no, resizable=yes");	
+		}, "powered by Bivrost"));
+		
+		rightAligned.appendChild(makeButton("oculus", function() { that.player.vrModeEnterOrCycle(); }, "VR" ));
 		
 		if(media.video) {
-			var video=media.video;
+			this.loading.show();
 			
+			var video=media.video;
+
 			var currentTime=document.createElement("span");
 			currentTime.textContent=timeFormat(media.time);
-			
+
 			var separator=document.createElement("span");
-			separator.textContent="/";
-			
+			separator.textContent=" / ";
+
 			var duration=document.createElement("span");
 			duration.textContent=timeFormat(media.duration);
+
+			var status=document.createElement("span");
+			status.className="bivrost-status";
 			status.appendChild(currentTime);
 			status.appendChild(separator);
 			status.appendChild(duration);
@@ -36186,30 +36243,62 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			range.setAttribute("min", 0);
 			range.setAttribute("max", media.duration || 1);
 			range.setAttribute("step", 0.025);
-			
+
+			var rangeBackground=document.createElement("div");
+			rangeBackground.className="bivrost-range-background";
+			this.domElement.appendChild(rangeBackground);
+
+			var rangeForeground=document.createElement("div");
+			rangeForeground.className="bivrost-range-foreground";
+			rangeBackground.appendChild(rangeForeground);
+			rangeForeground.setValue01=function(value01) {
+				var thumbWidth=15;
+				rangeForeground.style.width=Math.round(value01 * (rangeBackground.offsetWidth-thumbWidth) + thumbWidth/2)+"px";
+			};
+
+			var onFullscreenChange=function() {
+				setTimeout(function() {
+					rangeForeground.setValue01(media.time/media.duration);
+				}, 0);
+			};
+			document.addEventListener("fullscreenchange", onFullscreenChange);
+			document.addEventListener("fullScreenchange", onFullscreenChange);
+			document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+			document.addEventListener("mozfullscreenchange", onFullscreenChange);
+			document.addEventListener("MSFullscreenChange", onFullscreenChange);
+
+			rangeBackground.appendChild(range);
+
+
 			video.addEventListener("timeupdate", function(e) {
 				currentTime.textContent=timeFormat(media.time);
 				range.value=media.time;
+				rangeForeground.setValue01(media.time/media.duration);
 			});
-			
+
 			video.addEventListener("durationchange", function(e) {
 				duration.textContent=timeFormat(media.duration);
 				range.setAttribute("max", media.duration || 1);
 			});
-			
-			var rangeChange=function() { media.time=range.value; };
+
+			var rangeChange=function() {
+				rangeForeground.setValue01(range.value/media.duration)+"px";
+				media.time=range.value; 
+			};
 			range.addEventListener("change", rangeChange);
 			range.addEventListener("input", rangeChange);
-			
+
 			var playButton=makeButton("play", media.play.bind(media), "play");
-			
+
 			var pauseCheck=function() {
 				if(video.paused || video.ended) {
 					playButton.changeIcons("play");
+					playButton.title="play";
 					playButton.action=video.play.bind(video);
 				}
 				else {
 					playButton.changeIcons("pause");
+					playButton.title="pause";
 					playButton.action=video.pause.bind(video);
 				}
 			};
@@ -36217,22 +36306,107 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			video.addEventListener("stalled", pauseCheck);
 			video.addEventListener("play", pauseCheck);
 			video.addEventListener("pause", pauseCheck);
+
+
+			// this.domElement.appendChild(makeButton("back", function() { media.time-=5; }, "<<"));
+			leftAligned.appendChild(playButton);
+			// this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
+
+			rightAligned.insertBefore(status, rightAligned.childNodes[0]);
 			
 			
-			this.domElement.appendChild(range);
+			// loading
+			video.addEventListener("playing", this.loading.hide);
+			video.addEventListener("waiting", this.loading.show);
 			
-			this.domElement.appendChild(makeButton("back", function() { media.time-=5; }, "<<"));
-			this.domElement.appendChild(playButton);
-			this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
 			
-			this.domElement.appendChild(makeButton("display", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
+			// volume
+			var volumebar=document.createElement("div");
+			volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; })
+			volumebar.className="bivrost-volume hidden";
+			var ticks=[];
+			for(var i=8; i--; ) {
+				var tick=document.createElement("div");
+				tick.className="bivrost-volume-tick bivrost-volume-tick-on";
+				tick.addEventListener("click", (function(vol) { return function() { log(vol); video.volume=vol; }; })( (i+1)/8) );
+				ticks.push(tick);
+				volumebar.appendChild(tick);
+			}
+				
+
+			var lastVolume=video.volume;
+			var volumebutton=makeButton("speaker", function () {
+				if(video.volume === 0) {
+					if(lastVolume < 1/8)
+						lastVolume=1/8;
+					video.volume=lastVolume;
+				}
+				else {
+					lastVolume=video.volume;
+					video.volume=0;
+				}
+			}, Math.round(video.volume*100)+"%");
+			
+			volumebutton.addEventListener("mouseover", function() { volumebar.className="bivrost-volume"; });
+			volumebutton.addEventListener("mouseout", function() { volumebar.className="bivrost-volume hidden"; });
+			
+			video.addEventListener("volumechange", function() {
+				log(volumebutton.title=Math.round(video.volume*100)+"%");
+				volumebutton.changeIcons(video.volume > 0 ? "speaker" : "mute");
+				for(var i=0; i < ticks.length; i++)
+					ticks[i].className="bivrost-volume-tick bivrost-volume-tick-"+((video.volume >= (8-i)/8)?"on":"off");
+			});
+			
+			volumebutton.appendChild(volumebar);
+			rightAligned.appendChild(volumebutton);
 		}
-		else {
-			status.textContent="";
+		else 
+			this.loading.hide();	// picture
+
+
+		rightAligned.appendChild(makeButton("fullscreen", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
+
+		this.domElement.appendChild(leftAligned);
+		this.domElement.appendChild(rightAligned);
+
+
+
+		// protocol
+		var urls=[];
+		for(var url in media.url)	if(media.url.hasOwnProperty(url)) {
+			var a = document.createElement('a');
+			a.href=url;
+			if(a.href)
+				urls.push(a.href);
+			else {	// ie fix
+				var img = document.createElement('img');
+				img.src = url;
+				url = img.src;
+				img.src = null;
+				urls.push(url);
+			}
+		}
+
+		var protocol="bivrost:"+encodeURIComponent(urls.pop(url));
+		var args="";
+		var arg=function(name, value) { 
+			args+=(args === "") ? "?" : "&";
+			args+=encodeURIComponent(name)+"="+encodeURIComponent(value);
+		};
+		urls.forEach(function(e,i) { arg("alt"+(i || ""), e); });
+		arg("version", Bivrost.version);
+		arg("stereoscopy", media.stereoscopy);
+		arg("projection", media.projection);
+		arg("autoplay", this.player.autoplay);
+		arg("loop", media.loop);
+		bivrostButtonLink+="#"+encodeURI(protocol+args);
+
+		if(this.autoHide > 0) {
+			this.player.container.addEventListener("mousemove", this.show.bind(this));
+			this.show();
 		}
 		
 		
-		this.domElement.appendChild(status);
 	};
 	
 	
@@ -36245,8 +36419,36 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	
 	/**
 	 * Reference to the Bivrost player instance
+	 * @type {Bivrost.Player}
 	 */
 	Bivrost.UI.prototype.player=null;
+	
+	
+	/**
+	 * After how many seconds will the UI hide.
+	 * Set to 0 to disable
+	 * @type {number}
+	 */
+	Bivrost.UI.prototype.autoHide=2;
+	
+	
+	Bivrost.UI.prototype.show=function() {
+		this.domElement.className="bivrost-ui";
+		if(this._hideTimeoutId)
+			clearTimeout(this._hideTimeoutId);
+		this._hideTimeoutId=setTimeout(this.hide.bind(this), this.autoHide*1000);
+	};
+	
+	
+	Bivrost.UI.prototype.hide=function() {
+		this.domElement.className="bivrost-ui hidden";
+		clearTimeout(this._hideTimeoutId);
+	};
+	
+	Bivrost.UI.prototype._hideTimeoutId=null;
+			
+
+	Bivrost.UI.prototype.loading=null;
 	
 })();
 // file: bivrost-loader.js

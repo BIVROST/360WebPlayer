@@ -147,6 +147,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		
 		if(typeof url !== "object")
 			url={url:null};
+		this.url=url;
 		
 		if(arguments.length < 2)
 			throw "url and onload required";
@@ -193,6 +194,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				video.setAttribute("height", "32");	// any number will be ok
 				video.setAttribute("loop", JSON.stringify(!!loop));
 				video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+				this._setLoop=function(value) { video.setAttribute("loop", JSON.stringify(!!value)); };
 
 				this.play=function() {video.play();};
 				this.pause=function() {video.pause();};
@@ -341,9 +343,18 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		set: function(value) {this._setTime(value);},
 	});
 
+	Bivrost.Media.prototype._getLoop=function() { return false; };
+	Bivrost.Media.prototype._setLoop=function() {};
+	Object.defineProperty(Bivrost.Media.prototype, "loop", {
+		get: function() {return this._getLoop();},
+		set: function(value) {this._setLoop(value);},
+	});
+
 	Bivrost.Media.prototype._getDuration=function() { return 0; },
 	Object.defineProperty(Bivrost.Media.prototype, "duration", {
 		get: function() { return this._getDuration(); }
 	});
+	
+	Bivrost.Media.prototype.url=null;
 	
 })();
