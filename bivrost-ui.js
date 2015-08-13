@@ -60,8 +60,8 @@
 		
 		var loading=this.loading=document.createElement("div");
 		loading.className="bivrost-loading";
-		loading.show=function() { loading.className="bivrost-loading"; }
-		loading.hide=function() { loading.className="bivrost-loading hidden"; }
+		loading.show=function() { loading.classList.remove("hidden"); }
+		loading.hide=function() { loading.classList.add("hidden"); }
 		loading.appendChild(document.createElement("div"));
 		player.container.appendChild(loading);
 		
@@ -221,8 +221,8 @@
 				}
 			}, Math.round(video.volume*100)+"%");
 			
-			volumebutton.addEventListener("mouseover", function() { volumebar.className="bivrost-volume"; });
-			volumebutton.addEventListener("mouseout", function() { volumebar.className="bivrost-volume hidden"; });
+			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); });
+			volumebutton.addEventListener("mouseout", function() { volumebar.classList.add("hidden"); });
 			
 			video.addEventListener("volumechange", function() {
 				log(volumebutton.title=Math.round(video.volume*100)+"%");
@@ -307,7 +307,7 @@
 	
 	
 	Bivrost.UI.prototype.show=function() {
-		this.domElement.className="bivrost-ui";
+		this.domElement.classList.remove("hidden");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
 		this._hideTimeoutId=setTimeout(this.hide.bind(this), this.autoHide*1000);
@@ -315,7 +315,7 @@
 	
 	
 	Bivrost.UI.prototype.hide=function() {
-		this.domElement.className="bivrost-ui hidden";
+		this.domElement.classList.add("hidden");
 		clearTimeout(this._hideTimeoutId);
 	};
 	

@@ -41,7 +41,7 @@
 		}
 		while(container.hasChildNodes())
 			container.removeChild(container.lastChild);
-		container.className+=" bivrost-player";
+		container.classList.add("bivrost-player");
 		container.bivrost=this;
 			
 		
@@ -55,7 +55,7 @@
 
 		// UI
 		var uiDiv=document.createElement("div");
-		uiDiv.className="ui";
+		uiDiv.className="bivrost-ui";
 		container.appendChild(uiDiv);
 		this.ui=new Bivrost.UI(uiDiv, this);
 

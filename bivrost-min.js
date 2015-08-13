@@ -34918,7 +34918,7 @@ Bivrost.AVAILABLE_VRMODES=[
 		}
 		while(container.hasChildNodes())
 			container.removeChild(container.lastChild);
-		container.className+=" bivrost-player";
+		container.classlist.add("bivrost-player");
 		container.bivrost=this;
 			
 		
@@ -36186,8 +36186,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		
 		var loading=this.loading=document.createElement("div");
 		loading.className="bivrost-loading";
-		loading.show=function() { loading.className="bivrost-loading"; }
-		loading.hide=function() { loading.className="bivrost-loading hidden"; }
+		loading.show=function() { loading.classlist.remove("hidden"); }
+		loading.hide=function() { loading.classlist.add("hidden"); }
 		loading.appendChild(document.createElement("div"));
 		player.container.appendChild(loading);
 		
@@ -36347,8 +36347,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				}
 			}, Math.round(video.volume*100)+"%");
 			
-			volumebutton.addEventListener("mouseover", function() { volumebar.className="bivrost-volume"; });
-			volumebutton.addEventListener("mouseout", function() { volumebar.className="bivrost-volume hidden"; });
+			volumebutton.addEventListener("mouseover", function() { volumebar.classlist.remove("hidden"); });
+			volumebutton.addEventListener("mouseout", function() { volumebar.classlist.add("hidden"); });
 			
 			video.addEventListener("volumechange", function() {
 				log(volumebutton.title=Math.round(video.volume*100)+"%");
@@ -36433,7 +36433,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	
 	
 	Bivrost.UI.prototype.show=function() {
-		this.domElement.className="bivrost-ui";
+		this.domElement.classlist.remove("hidden");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
 		this._hideTimeoutId=setTimeout(this.hide.bind(this), this.autoHide*1000);
@@ -36441,7 +36441,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	
 	
 	Bivrost.UI.prototype.hide=function() {
-		this.domElement.className="bivrost-ui hidden";
+		this.domElement.classlist.add("hidden");
 		clearTimeout(this._hideTimeoutId);
 	};
 	
