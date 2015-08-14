@@ -193,11 +193,11 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				video.setAttribute("width", "32");	// any number will be ok
 				video.setAttribute("height", "32");	// any number will be ok
 				video.setAttribute("loop", JSON.stringify(!!loop));
-				video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
 				this._setLoop=function(value) { video.setAttribute("loop", JSON.stringify(!!value)); };
 
-				this.play=function() {video.play();};
-				this.pause=function() {video.pause();};
+				this.play=function() { video.play(); };
+				this.pause=function() { video.pause(); };
 				this.pauseToggle=function() {
 					if(video.paused)
 						video.play();
@@ -234,6 +234,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					texture.magFilter = THREE.LinearFilter;
 					that.gotTexture(texture);
 				});
+				
+				console.log("video.readyState", video.readyState);
 
 				// last to prevent event before load
 				Object.keys(url).forEach(function(e) {
@@ -243,6 +245,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 						sourceTag.setAttribute("type", url[e]);
 					video.appendChild(sourceTag);
 				});
+				
+				video.load();
 				
 				break;
 				

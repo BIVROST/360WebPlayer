@@ -3,7 +3,7 @@
 var Bivrost={
 	
 	
-	version: 0,
+	version: "1.00",
 	
 	
 	/**

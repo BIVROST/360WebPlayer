@@ -17,7 +17,8 @@
 	 * @constructor
 	 * @class Bivrost.Player
 	 * @param {HTMLElement} container
-	 * @param {string|object=} [url=undefined] url to the media, may be an array. If not used, call setMedia later.
+	 * @param {string|object=} [url=undefined] url to the media, may be an object 
+	 *			whose keys are urls, values are codecs or null. If not used, call setMedia later.
 	 * @param {string=} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR] shorthand to set projection in media
 	 * @param {string=} [stereoscopy=Bivrost.STEREOSCOPY_MONO] shorthand to set stereoscopy in media
 	 * @param {string=} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT] shorthand to set source type in media
@@ -29,7 +30,7 @@
 		 * @type Bivrost.Player
 		 */
 		var thisRef=this;
-		autoplay=autoplay || true;
+		autoplay=typeof(autoplay) === "undefined" ? true : autoplay;
 		this.autoplay=autoplay;
 
 		// container
@@ -43,12 +44,12 @@
 			container.removeChild(container.lastChild);
 		container.classList.add("bivrost-player");
 		container.bivrost=this;
+		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 			
 		
 		// renderer
 		this.renderer=new THREE.WebGLRenderer();		
 		container.appendChild(this.renderer.domElement);
-		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 		
 		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
 
@@ -190,8 +191,9 @@
 		this.view=new Bivrost.View(media);
 		this.view.aspect=this.aspect;
 		this.ui.setMedia(media);
-		if(this.autoplay)
+		if(this.autoplay) {
 			media.play();
+		}
 	},
 		
 		

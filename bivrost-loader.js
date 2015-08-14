@@ -66,11 +66,15 @@ Bivrost.Loader=function(dom) {
 		var source=attr(container, "source") || Bivrost.SOURCE_AUTODETECT;
 		assert(source, Bivrost.AVAILABLE_SOURCES, "source must be "+Bivrost.AVAILABLE_SOURCES.join(" or "));
 		
-		var loop=attr(container, loop) || "false";
+		var loop=attr(container, "loop") || "false";
 		assert(loop, ["true", "false"], "loop must be true or false");
+		loop=loop === "true";
 		
-		var autoplay=attr(container, loop) || "true";
+		var autoplay=attr(container, "autoplay") || "true";
 		assert(autoplay, ["true", "false"], "autoplay must be true or false");
+		autoplay=autoplay === "true";
+		
+		console.log("autoplay", autoplay);
 		
 		new Bivrost.Player(container, urls, projection, stereoscopy, source, JSON.parse(loop), JSON.parse(autoplay));
 	});

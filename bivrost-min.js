@@ -34823,7 +34823,7 @@ THREE.OculusRiftEffect = function ( renderer, options ) {
 var Bivrost={
 	
 	
-	version: 0,
+	version: "1.00",
 	
 	
 	/**
@@ -34894,7 +34894,8 @@ Bivrost.AVAILABLE_VRMODES=[
 	 * @constructor
 	 * @class Bivrost.Player
 	 * @param {HTMLElement} container
-	 * @param {string|object=} [url=undefined] url to the media, may be an array. If not used, call setMedia later.
+	 * @param {string|object=} [url=undefined] url to the media, may be an object 
+	 *			whose keys are urls, values are codecs or null. If not used, call setMedia later.
 	 * @param {string=} [projection=Bivrost.PROJECTION_EQUIRECTANGULAR] shorthand to set projection in media
 	 * @param {string=} [stereoscopy=Bivrost.STEREOSCOPY_MONO] shorthand to set stereoscopy in media
 	 * @param {string=} [source=Bivrost.SOURCE_AUTODETECT_FROM_EXT] shorthand to set source type in media
@@ -34906,7 +34907,7 @@ Bivrost.AVAILABLE_VRMODES=[
 		 * @type Bivrost.Player
 		 */
 		var thisRef=this;
-		autoplay=autoplay || true;
+		autoplay=typeof(autoplay) === "undefined" ? true : autoplay;
 		this.autoplay=autoplay;
 
 		// container
@@ -34918,21 +34919,21 @@ Bivrost.AVAILABLE_VRMODES=[
 		}
 		while(container.hasChildNodes())
 			container.removeChild(container.lastChild);
-		container.classlist.add("bivrost-player");
+		container.classList.add("bivrost-player");
 		container.bivrost=this;
+		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 			
 		
 		// renderer
 		this.renderer=new THREE.WebGLRenderer();		
 		container.appendChild(this.renderer.domElement);
-		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 		
 		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
 
 
 		// UI
 		var uiDiv=document.createElement("div");
-		uiDiv.className="ui";
+		uiDiv.className="bivrost-ui";
 		container.appendChild(uiDiv);
 		this.ui=new Bivrost.UI(uiDiv, this);
 
@@ -35067,8 +35068,9 @@ Bivrost.AVAILABLE_VRMODES=[
 		this.view=new Bivrost.View(media);
 		this.view.aspect=this.aspect;
 		this.ui.setMedia(media);
-		if(this.autoplay)
+		if(this.autoplay) {
 			media.play();
+		}
 	},
 		
 		
@@ -35590,11 +35592,11 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				video.setAttribute("width", "32");	// any number will be ok
 				video.setAttribute("height", "32");	// any number will be ok
 				video.setAttribute("loop", JSON.stringify(!!loop));
-				video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
 				this._setLoop=function(value) { video.setAttribute("loop", JSON.stringify(!!value)); };
 
-				this.play=function() {video.play();};
-				this.pause=function() {video.pause();};
+				this.play=function() { video.play(); };
+				this.pause=function() { video.pause(); };
 				this.pauseToggle=function() {
 					if(video.paused)
 						video.play();
@@ -35631,6 +35633,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					texture.magFilter = THREE.LinearFilter;
 					that.gotTexture(texture);
 				});
+				
+				console.log("video.readyState", video.readyState);
 
 				// last to prevent event before load
 				Object.keys(url).forEach(function(e) {
@@ -36186,8 +36190,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		
 		var loading=this.loading=document.createElement("div");
 		loading.className="bivrost-loading";
-		loading.show=function() { loading.classlist.remove("hidden"); }
-		loading.hide=function() { loading.classlist.add("hidden"); }
+		loading.show=function() { loading.classList.remove("hidden"); }
+		loading.hide=function() { loading.classList.add("hidden"); }
 		loading.appendChild(document.createElement("div"));
 		player.container.appendChild(loading);
 		
@@ -36203,6 +36207,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	 */
 	Bivrost.UI.prototype.setMedia=function(media) {
 		var that=this;
+		this.media=media;
 		
 		var bivrostButtonLink="player-jump.html";
 		
@@ -36243,6 +36248,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			range.setAttribute("min", 0);
 			range.setAttribute("max", media.duration || 1);
 			range.setAttribute("step", 0.025);
+			range.setAttribute("value", 0);
 
 			var rangeBackground=document.createElement("div");
 			rangeBackground.className="bivrost-range-background";
@@ -36295,6 +36301,11 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					playButton.changeIcons("play");
 					playButton.title="play";
 					playButton.action=video.play.bind(video);
+
+					if(this.autoHide > 0) {
+						this.player.container.addEventListener("mousemove", this.show.bind(this));
+			//			this.show();
+					}
 				}
 				else {
 					playButton.changeIcons("pause");
@@ -36316,9 +36327,11 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			
 			
 			// loading
+			if(video.readyState >= video.HAVE_FUTURE_DATA)
+				this.loading.hide();
+			video.addEventListener("canplay", this.loading.hide);
 			video.addEventListener("playing", this.loading.hide);
 			video.addEventListener("waiting", this.loading.show);
-			
 			
 			// volume
 			var volumebar=document.createElement("div");
@@ -36347,8 +36360,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				}
 			}, Math.round(video.volume*100)+"%");
 			
-			volumebutton.addEventListener("mouseover", function() { volumebar.classlist.remove("hidden"); });
-			volumebutton.addEventListener("mouseout", function() { volumebar.classlist.add("hidden"); });
+			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); });
+			volumebutton.addEventListener("mouseout", function() { volumebar.classList.add("hidden"); });
 			
 			video.addEventListener("volumechange", function() {
 				log(volumebutton.title=Math.round(video.volume*100)+"%");
@@ -36400,13 +36413,6 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		arg("autoplay", this.player.autoplay);
 		arg("loop", media.loop);
 		bivrostButtonLink+="#"+encodeURI(protocol+args);
-
-		if(this.autoHide > 0) {
-			this.player.container.addEventListener("mousemove", this.show.bind(this));
-			this.show();
-		}
-		
-		
 	};
 	
 	
@@ -36433,15 +36439,23 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	
 	
 	Bivrost.UI.prototype.show=function() {
-		this.domElement.classlist.remove("hidden");
+		var thisRef=this;
+		this.domElement.classList.remove("hidden");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
-		this._hideTimeoutId=setTimeout(this.hide.bind(this), this.autoHide*1000);
+		log("shown, paused=", thisRef._paused);
+		this._hideTimeoutId=setTimeout(function() {
+			if(!thisRef._paused)
+				thisRef.hide();
+		} , this.autoHide*1000);
 	};
 	
 	
+	Bivrost.UI.prototype._paused=null;
+	
+	
 	Bivrost.UI.prototype.hide=function() {
-		this.domElement.classlist.add("hidden");
+		this.domElement.classList.add("hidden");
 		clearTimeout(this._hideTimeoutId);
 	};
 	
@@ -36520,11 +36534,15 @@ Bivrost.Loader=function(dom) {
 		var source=attr(container, "source") || Bivrost.SOURCE_AUTODETECT;
 		assert(source, Bivrost.AVAILABLE_SOURCES, "source must be "+Bivrost.AVAILABLE_SOURCES.join(" or "));
 		
-		var loop=attr(container, loop) || "false";
+		var loop=attr(container, "loop") || "false";
 		assert(loop, ["true", "false"], "loop must be true or false");
+		loop=loop === "true";
 		
-		var autoplay=attr(container, loop) || "true";
+		var autoplay=attr(container, "autoplay") || "true";
 		assert(autoplay, ["true", "false"], "autoplay must be true or false");
+		autoplay=autoplay === "true";
+		
+		console.log("autoplay", autoplay);
 		
 		new Bivrost.Player(container, urls, projection, stereoscopy, source, JSON.parse(loop), JSON.parse(autoplay));
 	});

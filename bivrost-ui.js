@@ -77,6 +77,7 @@
 	 */
 	Bivrost.UI.prototype.setMedia=function(media) {
 		var that=this;
+		this.media=media;
 		
 		var bivrostButtonLink="player-jump.html";
 		
@@ -117,6 +118,7 @@
 			range.setAttribute("min", 0);
 			range.setAttribute("max", media.duration || 1);
 			range.setAttribute("step", 0.025);
+			range.setAttribute("value", 0);
 
 			var rangeBackground=document.createElement("div");
 			rangeBackground.className="bivrost-range-background";
@@ -169,6 +171,11 @@
 					playButton.changeIcons("play");
 					playButton.title="play";
 					playButton.action=video.play.bind(video);
+
+					if(this.autoHide > 0) {
+						this.player.container.addEventListener("mousemove", this.show.bind(this));
+			//			this.show();
+					}
 				}
 				else {
 					playButton.changeIcons("pause");
@@ -190,9 +197,11 @@
 			
 			
 			// loading
+			if(video.readyState >= video.HAVE_FUTURE_DATA)
+				this.loading.hide();
+			video.addEventListener("canplay", this.loading.hide);
 			video.addEventListener("playing", this.loading.hide);
 			video.addEventListener("waiting", this.loading.show);
-			
 			
 			// volume
 			var volumebar=document.createElement("div");
@@ -274,13 +283,6 @@
 		arg("autoplay", this.player.autoplay);
 		arg("loop", media.loop);
 		bivrostButtonLink+="#"+encodeURI(protocol+args);
-
-		if(this.autoHide > 0) {
-			this.player.container.addEventListener("mousemove", this.show.bind(this));
-			this.show();
-		}
-		
-		
 	};
 	
 	
@@ -307,11 +309,19 @@
 	
 	
 	Bivrost.UI.prototype.show=function() {
+		var thisRef=this;
 		this.domElement.classList.remove("hidden");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
-		this._hideTimeoutId=setTimeout(this.hide.bind(this), this.autoHide*1000);
+		log("shown, paused=", thisRef._paused);
+		this._hideTimeoutId=setTimeout(function() {
+			if(!thisRef._paused)
+				thisRef.hide();
+		} , this.autoHide*1000);
 	};
+	
+	
+	Bivrost.UI.prototype._paused=null;
 	
 	
 	Bivrost.UI.prototype.hide=function() {
