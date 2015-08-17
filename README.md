@@ -4,6 +4,8 @@ Bivrost Web Player
 The Bivrost Web Player is a part of the family of [immersive video players][1] made by [Bivrost][2] to supplement our [360 stereoscopic camera][3] and [software suite][4].
 
 
+TODO: player screenshot linking to demo page
+
 [1]: TODO: player-windows
 [2]: http://bivrost360.com
 [3]: TODO: camera
@@ -16,13 +18,14 @@ Features
 
 * Easy integration into any website
 * Simple for the end user
-* Free (see the [license][12] for details)
+* Free for personal use (see the [license][12] for details)
 * Works on major browsers
 * Possible to embed more than one on the same page
 * Themable
 * Supports mono and stereoscopic pictures and video
 * [MozVR][11] support - working with Oculus Rift DK1, DK2, cardboard and more
 * Lots of configuration options
+* Supports viewing media in native players (also [supplied by Bivrost][1])
 * Accepting feature requests - tell us what you want in the player!
 
 [11]: http://mozvr.com/
@@ -72,7 +75,7 @@ Following configuration options are allowed:
 	Allowed values: "true", "false";  
 	optional, default: "false".
 
-*	`autoplay`: should the media be played on load?  
+*	`autoplay`: should the media be played on load? This might fail on mobile platforms.
 	Allowed values: "true", "false";  
 	optional, default: "true".
 
@@ -132,13 +135,15 @@ Or with some more configuration:
 
 The `url` can be placed on the top `bivrost-player` tag and/or in children `bivrost-media` tags. This allows providing the browser with alternative video format. The `type` attribute is optional.
 
+All contents of the `bivrost-player` tag will be removed and future changes in attributes of the tag will be ignored (you have to use the JavaScript API to modify them in runtime).
+
 **NOTE:** if for some reason you cannot use a custom tag, there is an alternative notation using HTML5 data attributes:
 
 ```html
 <div data-bivrost-player data-bivrost-url="stereoscopic-media_LR.mp4"></div>
 ```
 
-or
+or for a full example:
 
 ```html
 <div	data-bivrost-player
@@ -200,7 +205,7 @@ var player=new Bivrost.Player(
 	// Optional, available choices are:
 	//  Bivrost.SOURCE_AUTODETECT,
 	//  Bivrost.SOURCE_VIDEO,
-	//  Bivrost.SOURCE_PICTURE	
+	//  Bivrost.SOURCE_PICTURE
 	// or ommit/provide undefined for autodetect
 	Bivrost.SOURCE_AUTODETECT,
 
@@ -214,10 +219,80 @@ var player=new Bivrost.Player(
 );
 ```
 
+### Player API
+
+You can control the Bivrost Player using the `Bivrost.Player` instance. There are two ways to get the object:
+
+1.	From the DOM node:
+	```
+	var player=document.getElementById("bivrost-container").bivrost;
+	```
+
+2.	Returned from the `new Bivrost.Player(...)` statement:
+	```
+	var player=new Bivrost.Player(url);
+	```
+
+Some interesting API methods:
+
+`player.view.zoom` (number): property allowing to set or get the current zoom, default value is `1`, higher values zoom in, lower zoom out.
+
+`player.ui.show()`, `player.ui.hide()`: show or hide the UI.
+
+`player.ui.autohide` (number): number of seconds of user inactivity after which the UI hides, set to `0` to never hide.
+
+`player.media.play()`: plays the video
+
+`player.media.pause()`: pauses the video
+
+`player.media.pauseToggle()`: toggles the pause button
+
+`player.media.rewind()`: resets the movie
+
+`player.media.time` (number): get or set the current time of the movie (in seconds).
+
+`player.media.duration` (number): get the total time of the movie (in seconds).
+
+`player.media.loop` (boolean): get or set if the movie should loop.
+
+`player.input.clampY` (boolean): should user movement be constrained if he looks too far up or down, default true (does not restrict VR headset movement).
+
+`player.input.lookEuler` ([THREE.Euler][51]): get or set the direction that the user is looking towards, does include VR headset movement (`vrLookQuaternion` if for that). The values are in radians.
+
+`player.input.keyboardSpeed` (number): get or set the speed in which the keyboard rotates the camera, value in radians per second. Default PI/2. 
+
+`player.fullscreen` (boolean): get or set if the player is displayed in fullscreen. Browsers require this to be called in a user event handler.
+
+`Bivrost.Loader(domNode)`: if you have changed a part of HTML code and want it parsed for `bivrost-player` tags, you can call this static function on a dom node or `document.body`. Already parsed tags will not be parsed again.
+
+`Bivrost.verbose` (boolean): set to false to suppress log output.
+
+`Bivrost.version` (string): the current player version.
+
+TODO: aspect ratio
+TODO: vrMode
+
+[51]: TODO: link three.euler
+
+Standalone players
+------------------
+
+TODO
+
+
+Themes
+------
+
+TODO: preset colors, diy sass
+
 
 
 Media preparation guide
 -----------------------
+TODO
+
+TODO scripts
+
 https://wiki.whatwg.org/wiki/Video_type_parameters
 http://linux.goeszen.com/html5-video-tag-and-codecs.html
 #t=10,20
@@ -230,17 +305,17 @@ https://trac.ffmpeg.org/wiki/Encode/VP8
 Stereoscopy types
 -----------------
 
-Stereoscopy is deciding which part of the media should go to which eye. It is done before projection.
+Stereoscopy is deciding what part of the media should go to which eye. It is done before projection.
 
 When stereoscopy is set to "autodetect", it guesses based on parts of the filename and (if that failed) the image ratio.
 
-Parts of the filename are separated by "_", "-" or other non-word characters. For example "stereoscopy-video_LR.mp4" has parts: "stereoscopy", "video", "LR" of which only "LR" is recognized and parsed.
+Parts of the filename are separated by "_", "-" or other non-word characters. For example "stereoscopic-video_LR.mp4" has parts: "stereoscopic", "video", "LR" of which only "LR" is recognized and parsed.
 
 
 #### Side By Side
 
 ```
-[      |       ]    
+[      |       ]
 [ left | right ]
 [ eye  | eye   ]
 [      |       ]
@@ -254,11 +329,11 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 #### Top And Bottom
 
 ```
-[   left   ]
-[   eye    ]
-------------
-[   right  ]
-[   eye    ]
+[     left     ]
+[     eye      ]
+----------------
+[     right    ]
+[     eye      ]
 ```
 
 1. stereoscopy is set to "top-and-bottom" (or `Bivrost.STEREOSCOPY_TOP_AND_BOTTOM`)
@@ -270,11 +345,11 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 #### Top And Bottom Reversed
 
 ```
-[   right  ]
-[   eye    ]
-------------
-[   left   ]
-[   eye    ]
+[     right    ]
+[     eye      ]
+----------------
+[     left     ]
+[     eye      ]
 ```
 
 1. stereoscopy is set to "top-and-bottom-reversed" (or `Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED`)
@@ -283,10 +358,10 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 #### Mono
 
 ```
-[             ]
-[  left and   ]
-[  right eye  ]
-[             ]
+[              ]
+[  left and    ]
+[  right eye   ]
+[              ]
 ```
 
 1. stereoscopy is set to "mono" (or `Bivrost.STEREOSCOPY_MONO`)
@@ -296,7 +371,7 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 Keyboard shortcuts
 ------------------
 
-* ` ↑ ` ` → ` ` ↓ ` ` ←` - look around
+* ` ↑ ` ` → ` ` ↓ ` ` ← ` - look around
 * ` space ` - pause/play
 * ` F ` or doubleclick movie - fullscreen
 * ` V ` - enter/toggle VR mode
@@ -307,12 +382,13 @@ Keyboard shortcuts
 Roadmap
 -------
 
-[ ] Standalone web component
+[x] Standalone web component
 [ ] Support built-in media galleries and switching media
 [ ] Overlays - add content on top of your media
 [ ] Interactive overlays
 [ ] More supported browsers
 [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
+[ ] More supported headsets
 [ ] Better mobile support
 [ ] Smaller footprint (getting rid of THREEjs?)
 [ ] Multi-resolution video (HD/non HD button)
@@ -321,8 +397,13 @@ Roadmap
 License
 -------
 
-TODO
+TODO: DRAFT
 
+You can use this software in your private or company website for free, including modifying it to suit your needs  provided you keep our logo and the Bivrost button.
+
+If you want to remove or replace our branding or embed the player on a customers site, please [contact us for licensing][91].
+
+[91]:	TODO mailto:licensing
 
 Changelog
 ---------
