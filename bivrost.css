@@ -231,10 +231,10 @@ bivrost-player {
         cursor: pointer; }
         .bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-on,
         bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-on {
-          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAHCAYAAABgOO8AAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wgFDyEjDbacBQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAh0lEQVQoz93SMQ4BARSE4W/ZUKq0KhoXoHIAF3QTZ9CqNCqthkKCkNFsvXYTETHJ37y8l5lMHj+mos1ykhJTzHDD5c3JGduiKI4fT56kTLJIskvyqLjVcE1ySrJKMmzq02mRqYc5xuhW9GroY4AlRk1NyhaB7thgj0k1e9aViivWOPz/D31LLw6mVKyBH1lVAAAAAElFTkSuQmCC') top left no-repeat; }
+          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAHCAYAAABgOO8AAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wgFDyEp7WN1GwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAhklEQVQoz9XSMQ4BYRDF8R8REgoHEGqFO+i3V7mLxGHEDfSO4AqUqi0kVjYoTP3ZL1Gsl7xmMv/My8zQMnWyune3IRaYo0b1hShxsh5dfx/oE2aFLSZRfSaIF+7YY9M0VDdjP2MsMUUv3E94EEyBWdMhOYFKHHGJc9V4JFwFc8D5b3+odXoDIGYmCIKULyIAAAAASUVORK5CYII=') top left no-repeat; }
         .bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-off,
         bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick.bivrost-volume-tick-off {
-          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAHCAYAAABgOO8AAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wgFDyEp7WN1GwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAhklEQVQoz9XSMQ4BYRDF8R8REgoHEGqFO+i3V7mLxGHEDfSO4AqUqi0kVjYoTP3ZL1Gsl7xmMv/My8zQMnWyune3IRaYo0b1hShxsh5dfx/oE2aFLSZRfSaIF+7YY9M0VDdjP2MsMUUv3E94EEyBWdMhOYFKHHGJc9V4JFwFc8D5b3+odXoDIGYmCIKULyIAAAAASUVORK5CYII=') top left no-repeat; }
+          background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAHCAYAAABgOO8AAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wgFDyEjDbacBQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAh0lEQVQoz93SMQ4BARSE4W/ZUKq0KhoXoHIAF3QTZ9CqNCqthkKCkNFsvXYTETHJ37y8l5lMHj+mos1ykhJTzHDD5c3JGduiKI4fT56kTLJIskvyqLjVcE1ySrJKMmzq02mRqYc5xuhW9GroY4AlRk1NyhaB7thgj0k1e9aViivWOPz/D31LLw6mVKyBH1lVAAAAAElFTkSuQmCC') top left no-repeat; }
         .bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick:first-child,
         bivrost-player .bivrost-ui .bivrost-volume .bivrost-volume-tick:first-child {
           margin-top: 17px; }

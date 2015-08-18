@@ -76,7 +76,7 @@
 	 * @param {Bivrost.Media} media
 	 */
 	Bivrost.UI.prototype.setMedia=function(media) {
-		var that=this;
+		var thisRef=this;
 		this.media=media;
 		
 		var bivrostButtonLink="player-jump.html";
@@ -91,7 +91,7 @@
 			window.open(bivrostButtonLink, "_blank", "width=600, height=400, toolbar=no, scrollbars=no, resizable=yes");	
 		}, "powered by Bivrost"));
 		
-		rightAligned.appendChild(makeButton("oculus", function() { that.player.vrModeEnterOrCycle(); }, "VR" ));
+		rightAligned.appendChild(makeButton("oculus", function() { thisRef.player.vrModeEnterOrCycle(); }, "VR" ));
 		
 		if(media.video) {
 			this.loading.show();
@@ -171,16 +171,14 @@
 					playButton.changeIcons("play");
 					playButton.title="play";
 					playButton.action=video.play.bind(video);
-
-					if(this.autoHide > 0) {
-						this.player.container.addEventListener("mousemove", this.show.bind(this));
-			//			this.show();
-					}
+					thisRef.show();
+					thisRef._paused=true;
 				}
 				else {
 					playButton.changeIcons("pause");
 					playButton.title="pause";
 					playButton.action=video.pause.bind(video);
+					thisRef._paused=false;
 				}
 			};
 			video.addEventListener("playing", pauseCheck);
@@ -242,12 +240,18 @@
 			
 			volumebutton.appendChild(volumebar);
 			rightAligned.appendChild(volumebutton);
+			
 		}
 		else 
 			this.loading.hide();	// picture
+		
+		if(media.video) {
+			this.player.container.addEventListener("mousemove", this.show.bind(this));
+			this.show();
+		}
 
 
-		rightAligned.appendChild(makeButton("fullscreen", function() { that.player.fullscreen=!that.player.fullscreen; }, "fullscreen" ));
+		rightAligned.appendChild(makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, "fullscreen" ));
 
 		this.domElement.appendChild(leftAligned);
 		this.domElement.appendChild(rightAligned);
@@ -313,11 +317,14 @@
 		this.domElement.classList.remove("hidden");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
-		log("shown, paused=", thisRef._paused);
-		this._hideTimeoutId=setTimeout(function() {
-			if(!thisRef._paused)
-				thisRef.hide();
-		} , this.autoHide*1000);
+		log("shown pause timeout, paused=", this._paused);
+		if(this.autoHide > 0) {
+			this._hideTimeoutId=setTimeout(function() {
+				log("pause, paused=", thisRef._paused);
+				if(!thisRef._paused && thisRef.autoHide > 0)
+					thisRef.hide();
+			} , this.autoHide*1000);
+		}
 	};
 	
 	
@@ -326,6 +333,7 @@
 	
 	Bivrost.UI.prototype.hide=function() {
 		this.domElement.classList.add("hidden");
+		log("hidden, paused=", this._paused);
 		clearTimeout(this._hideTimeoutId);
 	};
 	
