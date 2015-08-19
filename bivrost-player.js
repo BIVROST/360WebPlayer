@@ -44,7 +44,6 @@
 			container.removeChild(container.lastChild);
 		container.classList.add("bivrost-player");
 		container.bivrost=this;
-		container.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 			
 		
 		// renderer
@@ -62,7 +61,7 @@
 
 		
 		// input
-		this.input=new Bivrost.Input(container, Math.PI/2);
+		this.input=new Bivrost.Input(this, container, Math.PI/2);
 		this.input.registerShortcut(["+", "="], function() { thisRef.view.zoom/=0.95; });
 		this.input.registerShortcut("-", function() { thisRef.view.zoom*=0.95; });
 		this.input.registerShortcut("[", function() { thisRef.media.time-=5; });
@@ -306,6 +305,7 @@
 				return;
 			if(value) {	// turn on
 				var elem=this.container;
+				this.vrMode=Bivrost.VRMODE_NONE;
 
 				if(!this._sizeBeforeFullscreen)
 					this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];

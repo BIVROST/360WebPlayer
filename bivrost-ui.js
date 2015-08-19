@@ -66,9 +66,11 @@
 		player.container.appendChild(loading);
 		
 		var cancel=function(e) { e.stopPropagation(); return false; };
-		domElement.addEventListener("mousedown", cancel, true);
-		domElement.addEventListener("dblclick", cancel, true);
-		domElement.addEventListener("selectionstart", cancel, true);
+		domElement.addEventListener("mousedown", cancel);
+		domElement.addEventListener("mousemove", cancel);
+		domElement.addEventListener("mouseup", cancel);
+		domElement.addEventListener("dblclick", cancel);
+		domElement.addEventListener("click", cancel);
 	};
 
 	
@@ -92,6 +94,11 @@
 		}, "powered by Bivrost"));
 		
 		rightAligned.appendChild(makeButton("oculus", function() { thisRef.player.vrModeEnterOrCycle(); }, "VR" ));
+		
+		// hide on picture
+		if(!media.video) {
+			this.loading.hide();
+		}
 		
 		if(media.video) {
 			this.loading.show();
@@ -186,7 +193,6 @@
 			video.addEventListener("play", pauseCheck);
 			video.addEventListener("pause", pauseCheck);
 
-
 			// this.domElement.appendChild(makeButton("back", function() { media.time-=5; }, "<<"));
 			leftAligned.appendChild(playButton);
 			// this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
@@ -206,10 +212,29 @@
 			volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; })
 			volumebar.className="bivrost-volume hidden";
 			var ticks=[];
+			var inVolumeDrag=false;
 			for(var i=8; i--; ) {
 				var tick=document.createElement("div");
 				tick.className="bivrost-volume-tick bivrost-volume-tick-on";
-				tick.addEventListener("click", (function(vol) { return function() { log(vol); video.volume=vol; }; })( (i+1)/8) );
+				var setVolumeCond=(function(vol) { return function() { 
+					if(inVolumeDrag)
+						video.volume=vol; 
+				}; })((i+1)/8);
+				var setVolumeBreak=(function(vol) { return function() { 
+					volumebar.classList.add("hidden");
+					video.volume=vol; 
+					inVolumeDrag=false;
+				}; })((i+1)/8);
+				var setVolumeStart=(function(vol) { return function() { 
+					video.volume=vol; 
+					inVolumeDrag=true;
+				}; })((i+1)/8);
+				tick.addEventListener("click", setVolumeBreak);
+				tick.addEventListener("touchend", setVolumeBreak);
+				tick.addEventListener("mousemove", setVolumeCond);
+				tick.addEventListener("touchmove", setVolumeCond);
+				tick.addEventListener("mousedown", setVolumeStart);
+				tick.addEventListener("touchstart", setVolumeStart);
 				ticks.push(tick);
 				volumebar.appendChild(tick);
 			}
@@ -229,7 +254,7 @@
 			}, Math.round(video.volume*100)+"%");
 			
 			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); });
-			volumebutton.addEventListener("mouseout", function() { volumebar.classList.add("hidden"); });
+			volumebutton.addEventListener("mouseout", function() { volumebar.classList.add("hidden"); inVolumeDrag=false; });
 			
 			video.addEventListener("volumechange", function() {
 				log(volumebutton.title=Math.round(video.volume*100)+"%");
@@ -241,12 +266,12 @@
 			volumebutton.appendChild(volumebar);
 			rightAligned.appendChild(volumebutton);
 			
-		}
-		else 
-			this.loading.hide();	// picture
+		}			
 		
 		if(media.video) {
 			this.player.container.addEventListener("mousemove", this.show.bind(this));
+			this.player.container.addEventListener("touchstart", this.show.bind(this));
+			this.player.container.addEventListener("touchmove", this.show.bind(this));
 			this.show();
 		}
 
@@ -317,10 +342,10 @@
 		this.domElement.classList.remove("hidden");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
-		log("shown pause timeout, paused=", this._paused);
+//		log("shown pause timeout, paused=", this._paused);
 		if(this.autoHide > 0) {
 			this._hideTimeoutId=setTimeout(function() {
-				log("pause, paused=", thisRef._paused);
+//				log("pause, paused=", thisRef._paused);
 				if(!thisRef._paused && thisRef.autoHide > 0)
 					thisRef.hide();
 			} , this.autoHide*1000);
@@ -333,7 +358,7 @@
 	
 	Bivrost.UI.prototype.hide=function() {
 		this.domElement.classList.add("hidden");
-		log("hidden, paused=", this._paused);
+//		log("hidden, paused=", this._paused);
 		clearTimeout(this._hideTimeoutId);
 	};
 	

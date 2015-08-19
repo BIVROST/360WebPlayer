@@ -15,7 +15,11 @@
 
 			<a class="rounded" href="index.php">powrót do listy materiałów</a>
 			
-			<p>Nazwa pliku: <a href="<?=htmlspecialchars($_GET['file'])?>"><tt><?=htmlspecialchars($_GET['file'])?></tt></a></p>
+			<ul>
+				<?php foreach($_GET['file'] as $f): ?>
+				<li><a href="<?=htmlspecialchars($f)?>"><tt><?=htmlspecialchars($f)?></tt></a></li>
+				<?php endforeach ?>
+			</ul>
 			
 			<div id="bivrost_container"></div>
 
@@ -27,7 +31,7 @@
 				<li><kbd>V</kbd> - tryb VR (dostępny tylko w pełnym ekranie)</li>
 				<li><kbd>R</kbd> - przewinięcie filmu do początku i odtworzenie go</li>
 				<li><kbd>[</kbd> / <kbd>]</kbd> - przewinięcie filmu do przodu/tyłu o 5 sekund</li>
-				<li><kbd>Z</kbd> / <kbd>shift</kbd>+<kbd>Z</kbd> - zoom (niedostępny w trybie Oculusa)</li>
+				<li><kbd>+</kbd> / <kbd>-</kbd> - zoom (niedostępny w trybie Oculusa)</li>
 			</ul>
 			
 			<p>

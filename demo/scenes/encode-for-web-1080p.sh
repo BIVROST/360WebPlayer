@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-bitrate_video=16M
-bufsize=32M
+bitrate_video=10M
+bufsize=20M
 bitrate_audio=128k
 resolution=1920:1080
 
@@ -18,6 +18,6 @@ ffmpeg -i "$1" \
 
 ffmpeg -i "$1" \
 	-codec:v libvpx -b:v $bitrate_video -bufsize $bufsize \
-	-vf scale=$resolution -movflags +faststart -pix_fmt yuv420p -g 5 \
+	-vf scale=$resolution -g 5 \
 	-c:a libvorbis -b:a $bitrate_audio \
 	"$2.webm"

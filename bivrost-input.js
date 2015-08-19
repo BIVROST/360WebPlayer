@@ -25,10 +25,11 @@
 	 * This class manages the input of the player - it handles mouse, keyboard, gyro and VR headset movement
 	 * @constructor
 	 * @class Bivrost.Input
+	 * @param {Bivrost.Player} player
 	 * @param {HTMLElement} domElement
 	 * @param {number} scale - the scale in which mouse events work
 	 */
-	Bivrost.Input=function(domElement, scale) {
+	Bivrost.Input=function(player, domElement, scale) {
 		/**
 		 * @type {Bivrost.Input}
 		 */
@@ -42,6 +43,8 @@
 		
 		var isDown=false;
 		var isIn=false;
+		var inDrag=false;
+		var dragSize=16;
 		
 		var originX, originY;
 
@@ -65,8 +68,13 @@
 		}
 
 		function mouseup(e) {
+			// click
+			if(player.media && !inDrag)
+				player.media.pauseToggle();
+			
 			isDown=false;
 			isIn=false;
+			inDrag=false;
 			window.removeEventListener("up", mouseup);
 			window.removeEventListener("move", mousemove);
 			window.removeEventListener("selectstart", selectstart);
@@ -84,6 +92,9 @@
 			thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
 			thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
 			thisRef._mouseLookInProgress=true;
+			
+			if(dx*dx + dy*dy > dragSize*dragSize)
+				inDrag=true;
 		}
 		
 		function mouseover(e) { isIn=true; }
@@ -95,6 +106,10 @@
 		domElement.addEventListener("mousedown", mousedown);
 		domElement.addEventListener("mouseout", mouseout);
 		domElement.addEventListener("mouseover", mouseover);
+		
+		// mouse select cancel
+//		domElement.addEventListener("mousedown", function(e) { e.preventDefault(); } );
+		domElement.addEventListener("mousemove", function(e) { e.preventDefault(); } );
 
 
 		function keydown(e) {
@@ -137,6 +152,7 @@
 			return false;
 		}
 
+		domElement.setAttribute("tabindex", 1337);	// for keyboard hooks to work
 		domElement.addEventListener("keydown", keydown);
 		domElement.addEventListener("keyup", keyup);
 		
@@ -144,18 +160,16 @@
 		this._keyboardShortcuts={};
 		function keypress(e) {
 			var keyName=e.key || String.fromCharCode(e.which);
-			log("keypress", e);
 			if(thisRef._keyboardShortcuts[keyName]) {
-				log("recognised", keyName);
 				thisRef._keyboardShortcuts[keyName]();
 				e.preventDefault();
 				e.stopPropagation();
 			}
-			else
-				log("unrecognised", keyName, thisRef._keyboardShortcuts);
 
 		};
 		domElement.addEventListener("keypress", keypress);
+
+
 		
 		
 		this._unattach=function() {

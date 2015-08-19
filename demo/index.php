@@ -17,7 +17,7 @@
 				
 				if(is_dir($f)):
 					?><li><a href="show.php?<?=http_build_query( array('file' => glob("$f/*") ))?>"><?=$name?> <span style="file-size">(dir)</span></a></li><?php
-				else:
+				elseif(preg_match('/\\.(mp4|webm|ogv|jpg|jpeg|png)$/i', $f)):
 					$size=(round(filesize($f)/104857)/10).'MB';
 					?><li><a href="show.php?<?=http_build_query( array('file' => array($f) ))?>"><?=$name?> <span style="file-size">(<?=$size?>)</span></a></li><?php
 				endif;
@@ -26,9 +26,8 @@
 			</ul>
 			
 			<p>
-				Do oglądania sugerowany
 				<a href="http://mozvr.com/downloads/" target="_blank">Firefox Nightly with VR</a>
-				lub
+				|
 				<a href="http://webvr.info/" target="_blank">Chromium branch WebVR</a>.
 			</p>
 		</article>
