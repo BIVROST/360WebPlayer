@@ -13,6 +13,10 @@ TODO: player screenshot linking to demo page
 
 
 
+
+
+
+
 Features
 --------
 
@@ -33,6 +37,10 @@ Features
 
 
 
+
+
+
+
 Quickstart
 ----------
 
@@ -44,6 +52,10 @@ Quickstart
 <script type="text/javascript" src="bivrost_dir/bivrost-min.js"></script>
 <bivrost-player url="stereoscopic_movie_LR.mp4"></bivrost-player>
 ```
+
+
+
+
 
 
 
@@ -60,6 +72,10 @@ Installation
 3. Configure the player
 
 [21]: TODO: download link
+
+
+
+
 
 
 Configuration
@@ -102,6 +118,10 @@ Following configuration options are allowed:
 Apart from that, you can tune down the player console information with `Bivrost.verbose=false` in a script somewhere.
 
 The player can be run and configured in two ways:
+
+
+
+
 
 
 
@@ -274,10 +294,18 @@ TODO: vrMode
 
 [51]: TODO: link three.euler
 
+
+
+
+
 Standalone players
 ------------------
 
 TODO
+
+
+
+
 
 
 Themes
@@ -287,17 +315,54 @@ TODO: preset colors, diy sass
 
 
 
+
+
+
+
 Media preparation guide
 -----------------------
-TODO
 
-TODO scripts
 
-https://wiki.whatwg.org/wiki/Video_type_parameters
-http://linux.goeszen.com/html5-video-tag-and-codecs.html
-#t=10,20
-https://trac.ffmpeg.org/wiki/Encode/H.264
-https://trac.ffmpeg.org/wiki/Encode/VP8
+TODO: h264 level/profile (5.1 high yuv420?)
+
+
+VR needs high definition material and browsers aren't best at playing video, so there are quite few guidelines and restrictions on how to make the most portable video for the web. 
+
+First of all, not all browsers support the same **content types**: there is mp4, webm and sometimes even ogv. These have a lot of options to fine tune these formats, this is even more true in mp4 where there are lots of codecs you can use. We suggest using an combination of mp4/h264 and webm/vp8 and not using ogv as it is only required on old/low end platforms that won't support the required resolution anyway (ogv is usually software decoded). Provide both files, some browsers support one or the other.
+
+**Resoulution** - full HD (1920x1080) is a minimum for quality, HD ready (1280x720) will be watchable, but not necessarily enjoyable. Good quality is 4k (4096x2048, 3840x2160 etc). 8k would be great, but currently unachievable on almost all configurations. The perfect aspect ratio for equirectangular 360 video is 2:1, but it will stretch nicely is you stay close. Remember about stereoscopy - you might need to cramp two frames into that picture.
+
+Then you have the **bitrate** - VR movies take a lot of that, with full HD an absolute minimum is 10mbps, 16 or even 25 might be required if there is more detail. With higher resolutions 30, 50mbps or even more are not unseen.
+
+Last, but not least, there's **the hardware** - a movie with this high of a resolution must be hardware decoded. Decoding is done on operating system or browser level, and there are always restrictions to it. For the **desktop**, it is safe to make a 4k mp4/h264 and webm/vp8 file, newer codecs like hevc/h265 work great in terms of compression, but take up a lot of the CPU, as they're decoded in software. For **mobile** do full HD, all but the newest flagships support video only up to 1080p.
+
+And as always there is some random **stuff** to remember: 
+
+* make keyframes often (a few times per second) or the movie will take forever to scroll (ffmpeg's `-g` option) 
+* make the movie streamable by putting the headers in the begining of the file (ffmpeg's `+faststart` option)
+* codecs, especially h264, have lots of black magic like switches like that should be used like using the yuv420 colorspace or keeping a correct level
+* don't forget the audio 
+
+Here at Bivrost we use [ffmpeg][61] with these options for web/mobile:
+
+    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -preset veryfast -b:v 10M -maxrate 10M -bufsize 20M -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
+
+    ffmpeg -i input.mp4 -codec:v libvpx -b:v 10M -bufsize 20M -vf scale=1920:1080 -g 5 -c:a libvorbis -b:a 128k output.webm
+
+If you want to know more, there are some good manuals to look into:
+
+* https://wiki.whatwg.org/wiki/Video_type_parameters
+* http://linux.goeszen.com/html5-video-tag-and-codecs.html
+* https://trac.ffmpeg.org/wiki/Encode/H.264
+* https://trac.ffmpeg.org/wiki/Encode/VP8
+
+
+[61]: https://www.ffmpeg.org/
+
+Oh and if you want the guideline for a **static picture**, use a jpeg, png or something. At least this part is easy.
+
+
+
 
 
 
@@ -315,10 +380,10 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 #### Side By Side
 
 ```
-[      |       ]
-[ left | right ]
-[ eye  | eye   ]
-[      |       ]
+[       |       ]
+[ left  | right ]
+[ eye   | eye   ]
+[       |       ]
 ```
 
 1. stereoscopy is set to "side-by-side" (or `Bivrost.STEREOSCOPY_SIDE_BY_SIDE`)
@@ -329,11 +394,11 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 #### Top And Bottom
 
 ```
-[     left     ]
-[     eye      ]
-----------------
-[     right    ]
-[     eye      ]
+[      left     ]
+[      eye      ]
+-----------------
+[      right    ]
+[      eye      ]
 ```
 
 1. stereoscopy is set to "top-and-bottom" (or `Bivrost.STEREOSCOPY_TOP_AND_BOTTOM`)
@@ -345,11 +410,11 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 #### Top And Bottom Reversed
 
 ```
-[     right    ]
-[     eye      ]
-----------------
-[     left     ]
-[     eye      ]
+[      right    ]
+[      eye      ]
+-----------------
+[      left     ]
+[      eye      ]
 ```
 
 1. stereoscopy is set to "top-and-bottom-reversed" (or `Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED`)
@@ -358,14 +423,18 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 #### Mono
 
 ```
-[              ]
-[  left and    ]
-[  right eye   ]
-[              ]
+[               ]
+[   left and    ]
+[   right eye   ]
+[               ]
 ```
 
 1. stereoscopy is set to "mono" (or `Bivrost.STEREOSCOPY_MONO`)
 2. no other detection succeeded
+
+
+
+
 
 
 Keyboard shortcuts
@@ -377,6 +446,10 @@ Keyboard shortcuts
 * ` V ` - enter/toggle VR mode
 * ` [ `, ` ] ` - scroll movie by 5 seconds
 * ` + `, ` - ` - zoom in/out (not available in VR mode)
+
+
+
+
 
 
 Roadmap
@@ -394,12 +467,16 @@ Roadmap
 [ ] Multi-resolution video (HD/non HD button)
 
 
+
+
+
+
 License
 -------
 
 TODO: DRAFT
 
-You can use this software in your private or company website for free, including modifying it to suit your needs  provided you keep our logo and the Bivrost button.
+You can use this software in your private or company website for free, including modifying it to suit your needs, provided you keep our logo and the Bivrost button.
 
 If you want to remove or replace our branding or embed the player on a customers site, please [contact us for licensing][91].
 
