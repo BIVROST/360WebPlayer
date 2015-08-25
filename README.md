@@ -22,6 +22,7 @@ Features
 
 * Easy integration into any website
 * Simple for the end user
+* Works on desktop and mobile
 * Free for personal use (see the [license][12] for details)
 * Works on major browsers
 * Possible to embed more than one on the same page
@@ -255,33 +256,33 @@ You can control the Bivrost Player using the `Bivrost.Player` instance. There ar
 
 Some interesting API methods:
 
-`player.view.zoom` (number): property allowing to set or get the current zoom, default value is `1`, higher values zoom in, lower zoom out.
+`player.view.zoom` (number): gets or sets the current zoom, default value is `1`, higher values zoom in, lower zoom out.
 
-`player.ui.show()`, `player.ui.hide()`: show or hide the UI.
+`player.ui.show()`, `player.ui.hide()`: shows or hides the UI.
 
 `player.ui.autohide` (number): number of seconds of user inactivity after which the UI hides, set to `0` to never hide.
 
-`player.media.play()`: plays the video
+`player.media.play()`: plays the movie
 
-`player.media.pause()`: pauses the video
+`player.media.pause()`: pauses the movie
 
-`player.media.pauseToggle()`: toggles the pause button
+`player.media.pauseToggle()`: plays or pauses the movie
 
 `player.media.rewind()`: resets the movie
 
-`player.media.time` (number): get or set the current time of the movie (in seconds).
+`player.media.time` (number): gets or sets the current time of the movie (in seconds).
 
-`player.media.duration` (number): get the total time of the movie (in seconds).
+`player.media.duration` (number): gets the total time of the movie (in seconds).
 
-`player.media.loop` (boolean): get or set if the movie should loop.
+`player.media.loop` (boolean): gets or sets if the movie should loop.
 
-`player.input.clampY` (boolean): should user movement be constrained if he looks too far up or down, default true (does not restrict VR headset movement).
+`player.input.clampY` (boolean): should user movement be constrained if he or she looks too far up or down, default true (does not restrict VR headset movement).
 
-`player.input.lookEuler` ([THREE.Euler][51]): get or set the direction that the user is looking towards, does include VR headset movement (`vrLookQuaternion` if for that). The values are in radians.
+`player.input.lookEuler` ([THREE.Euler][51]): gets or sets the direction that the user is looking towards, does include VR headset movement (`vrLookQuaternion` is for that). The values are in radians.
 
-`player.input.keyboardSpeed` (number): get or set the speed in which the keyboard rotates the camera, value in radians per second. Default PI/2. 
+`player.input.keyboardSpeed` (number): gets or sets the speed in which the keyboard rotates the camera, value in radians per second. Default π/2 (full horizontal rotation in 4 seconds). 
 
-`player.fullscreen` (boolean): get or set if the player is displayed in fullscreen. Browsers require this to be called in a user event handler.
+`player.fullscreen` (boolean): gets or sets if the player is displayed in fullscreen. Browsers require this to be called in a user event handler.
 
 `Bivrost.Loader(domNode)`: if you have changed a part of HTML code and want it parsed for `bivrost-player` tags, you can call this static function on a dom node or `document.body`. Already parsed tags will not be parsed again.
 
@@ -292,7 +293,7 @@ Some interesting API methods:
 TODO: aspect ratio
 TODO: vrMode
 
-[51]: TODO: link three.euler
+[51]: http://threejs.org/docs/#Reference/Math/Euler
 
 
 
@@ -328,9 +329,9 @@ TODO: h264 level/profile (5.1 high yuv420?)
 
 VR needs high definition material and browsers aren't best at playing video, so there are quite few guidelines and restrictions on how to make the most portable video for the web. 
 
-First of all, not all browsers support the same **content types**: there is mp4, webm and sometimes even ogv. These have a lot of options to fine tune these formats, this is even more true in mp4 where there are lots of codecs you can use. We suggest using an combination of mp4/h264 and webm/vp8 and not using ogv as it is only required on old/low end platforms that won't support the required resolution anyway (ogv is usually software decoded). Provide both files, some browsers support one or the other.
+First of all, not all browsers support the same **content types**: there is mp4, webm and sometimes even ogv. There are a lot of options to fine tune these formats, this is even more true in mp4 where there are lots of codecs you can use. We suggest using an combination of mp4/h264 and webm/vp8 and not using ogv as it is only required on old/low end platforms that won't support the required resolution anyway (ogv is usually software decoded). Provide both files, some browsers support one or the other.
 
-**Resoulution** - full HD (1920x1080) is a minimum for quality, HD ready (1280x720) will be watchable, but not necessarily enjoyable. Good quality is 4k (4096x2048, 3840x2160 etc). 8k would be great, but currently unachievable on almost all configurations. The perfect aspect ratio for equirectangular 360 video is 2:1, but it will stretch nicely is you stay close. Remember about stereoscopy - you might need to cramp two frames into that picture.
+**Resoulution** - full HD (1920x1080) is a minimum for quality, HD ready (1280x720) will be watchable, but not necessarily enjoyable. Good quality is 4k (4096x2048, 3840x2160 etc). 8k would be great, but currently unachievable on almost all configurations. The perfect aspect ratio for equirectangular 360 video is 2:1, but it will stretch nicely if you stay close. Remember about stereoscopy - you might need to cramp two frames into that picture.
 
 Then you have the **bitrate** - VR movies take a lot of that, with full HD an absolute minimum is 10mbps, 16 or even 25 might be required if there is more detail. With higher resolutions 30, 50mbps or even more are not unseen.
 
@@ -340,12 +341,12 @@ And as always there is some random **stuff** to remember:
 
 * make keyframes often (a few times per second) or the movie will take forever to scroll (ffmpeg's `-g` option) 
 * make the movie streamable by putting the headers in the begining of the file (ffmpeg's `+faststart` option)
-* codecs, especially h264, have lots of black magic like switches like that should be used like using the yuv420 colorspace or keeping a correct level
+* codecs, especially h264, have lots of black magic like switches that should be used, for example using the yuv420p colorspace or keeping a correct level and profile
 * don't forget the audio 
 
 Here at Bivrost we use [ffmpeg][61] with these options for web/mobile:
 
-    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -preset veryfast -b:v 10M -maxrate 10M -bufsize 20M -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
+    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -b:v 10M -maxrate 10M -bufsize 20M -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
 
     ffmpeg -i input.mp4 -codec:v libvpx -b:v 10M -bufsize 20M -vf scale=1920:1080 -g 5 -c:a libvorbis -b:a 128k output.webm
 
@@ -359,7 +360,7 @@ If you want to know more, there are some good manuals to look into:
 
 [61]: https://www.ffmpeg.org/
 
-Oh and if you want the guideline for a **static picture**, use a jpeg, png or something. At least this part is easy.
+Oh and if you want the guideline for a **static picture**, use a jpeg, png or something. At least this part is easy. Hugin's equirectangular or Google's Photo Sphere pictures work nicely.
 
 
 
@@ -391,7 +392,7 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 3. the image ratio is 4:1
 
 
-#### Top And Bottom
+#### Top And Bottom (over under)
 
 ```
 [      left     ]
@@ -424,8 +425,8 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 
 ```
 [               ]
-[   left and    ]
-[   right eye   ]
+[      both     ]
+[      eyes     ]
 [               ]
 ```
 
@@ -463,7 +464,7 @@ Roadmap
 [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
 [ ] More supported headsets
 [ ] Better mobile support
-[ ] Smaller footprint (getting rid of THREEjs?)
+[ ] Smaller footprint
 [ ] Multi-resolution video (HD/non HD button)
 
 
