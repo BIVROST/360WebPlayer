@@ -216,20 +216,25 @@
 			for(var i=8; i--; ) {
 				var tick=document.createElement("div");
 				tick.className="bivrost-volume-tick bivrost-volume-tick-on";
-				var setVolumeCond=(function(vol) { return function() { 
+				var setVolumeCond=(function(vol) { return function() {
+//					log("cond", arguments[0].type, inVolumeDrag);
 					if(inVolumeDrag)
 						video.volume=vol; 
+					return true;
 				}; })((i+1)/8);
 				var setVolumeBreak=(function(vol) { return function() { 
 					volumebar.classList.add("hidden");
+//					log("break", arguments[0].type, inVolumeDrag);
 					video.volume=vol; 
 					inVolumeDrag=false;
 				}; })((i+1)/8);
 				var setVolumeStart=(function(vol) { return function() { 
+//					log("start", arguments[0].type, inVolumeDrag);
 					video.volume=vol; 
 					inVolumeDrag=true;
 				}; })((i+1)/8);
 				tick.addEventListener("click", setVolumeBreak);
+				tick.addEventListener("mouseup", setVolumeBreak);
 				tick.addEventListener("touchend", setVolumeBreak);
 				tick.addEventListener("mousemove", setVolumeCond);
 				tick.addEventListener("touchmove", setVolumeCond);
@@ -253,8 +258,18 @@
 				}
 			}, Math.round(video.volume*100)+"%");
 			
-			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); });
-			volumebutton.addEventListener("mouseout", function() { volumebar.classList.add("hidden"); inVolumeDrag=false; });
+			var volumeActive=false;
+			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); volumeActive=true; });
+			volumebutton.addEventListener("mouseleave", function() { volumebar.classList.add("hidden"); inVolumeDrag=volumeActive=false; });
+			
+			// on first touch cancel click, so it doesn't mute automaticaly
+			volumebutton.addEventListener("touchstart", function(ev) {
+				log("touchstart");
+				if(!volumeActive) {
+					ev.stopPropagation();
+					return false;
+				}
+			});
 			
 			video.addEventListener("volumechange", function() {
 				log(volumebutton.title=Math.round(video.volume*100)+"%");
@@ -334,7 +349,7 @@
 	 * Set to 0 to disable
 	 * @type {number}
 	 */
-	Bivrost.UI.prototype.autoHide=2;
+	Bivrost.UI.prototype.autoHide=5;
 	
 	
 	Bivrost.UI.prototype.show=function() {
