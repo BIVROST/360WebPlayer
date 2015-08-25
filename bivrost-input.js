@@ -219,23 +219,50 @@
 		else
 			log("no VR API available, try http://webvr.info");
 
-		// gyroscope controls
-		window.addEventListener("deviceorientation", function(ev) {
-			var a=DEG2RAD*ev.alpha;	// bank (left-right)
-			var b=DEG2RAD*ev.beta; // pitch (up-down)
-			var c=DEG2RAD*ev.gamma;
-			
-			var euler=new THREE.Euler(c,0,0, 'XZY');
-			var gyro=new THREE.Quaternion();
-			gyro.setFromEuler(euler);
+
+
+		// gyroscope controls, based on https://dev.opera.com/articles/w3c-device-orientation-usage/, 
+		var deviceEuler = new THREE.Euler();
+		var screenTransform = new THREE.Quaternion();
+		var minusHalfAngle = - THREE.Math.degToRad(window.orientation || 0) / 2;
+		screenTransform.set( 0, Math.sin( minusHalfAngle ), 0, Math.cos( minusHalfAngle ) );
+		var worldTransform = new THREE.Quaternion( - Math.sqrt(0.5), 0, 0, Math.sqrt(0.5) ); // - PI/2 around the x-axis
+		
+		window.addEventListener('deviceorientation', function(ev) {
+			if(ev.alpha === null || ev.beta === null || ev.gamma === null)
+				return;
+			var alpha=THREE.Math.degToRad(ev.alpha);    // roll (clockwise-anticlockwise)
+			var beta=THREE.Math.degToRad(ev.beta);      // pitch (up-down)
+			var gamma=THREE.Math.degToRad(ev.gamma);    // bank (left-right)
+			if (isNaN(alpha) || isNaN(beta) || isNaN(gamma))
+				throw "device orientation? "+ev;
+			deviceEuler.set(beta, alpha, - gamma, 'YXZ');
+			var quat=thisRef._gyroLookQuaternion;
+			quat.setFromEuler(deviceEuler);
+			quat.multiply(screenTransform);
+			quat.multiply(worldTransform);
 			if(!thisRef._gyroOriginQuaternion) {
-				log("deviceorientation: reoriented gyro to ", euler);
-				thisRef._gyroOriginQuaternion=gyro.clone();
-				thisRef._gyroOriginQuaternion.inverse();
+				var originEuler=new THREE.Euler();
+				var origin=quat.clone();
+				origin.inverse();
+				originEuler.setFromQuaternion(origin);
+				originEuler.x=0;
+				originEuler.z=0;
+				origin.setFromEuler(originEuler);
+				thisRef._gyroOriginQuaternion=origin;
 			}
-//			that._gyroLookQuaternion.multiplyQuaternions(that._gyroOriginQuaternion, gyro);
+			quat.multiplyQuaternions(thisRef._gyroOriginQuaternion, quat);
 		}, false);
-	};
+		
+		window.addEventListener('orientationchange', function(ev) { 
+			var orient=THREE.Math.degToRad(window.orientation);
+			log("orient", orient);
+			if(isNaN(orient))
+				throw "screen orientation? "+window.orientation;
+			var minusHalfAngle = - orient / 2;
+			screenTransform.set( 0, Math.sin( minusHalfAngle ), 0, Math.cos( minusHalfAngle ) );
+		}, false);
+	}; 
 	
 	
 	/**
@@ -329,7 +356,7 @@
 		}
 		
 		if(this._gyroLookQuaternion) {
-			this.lookQuaternion.multiplyQuaternions(this._gyroLookQuaternion, this.lookQuaternion);
+			this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this._gyroLookQuaternion);
 			return;
 		}
 	};
