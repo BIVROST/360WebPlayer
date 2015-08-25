@@ -224,19 +224,31 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					}[(video.error || {code:-1}) && video.error.code];
 					console.error("error: ", description);
 					thisRef.onerror(description);
-				})
-;
-				video.addEventListener("loadeddata", function() {
-					log("video loaded", this, arguments);
+				});
+				
+				var videoLoadedDone=false;
+				var videoLoaded=function(ev) {
+					if(videoLoadedDone)
+						return;
+					videoLoadedDone=true;
+					
+					log("video loaded by event", ev.type);
 					var texture = new THREE.VideoTexture(video);
 					texture.name=thisRef.title;
 					texture.minFilter = THREE.LinearFilter;
 					texture.magFilter = THREE.LinearFilter;
 					thisRef.gotTexture(texture);
+				};
+
+				video.addEventListener("loadeddata", videoLoaded);
+				video.addEventListener("load", videoLoaded);
+				video.addEventListener("canplay", videoLoaded);
+				video.addEventListener("canplaythrough", videoLoaded);
+				video.addEventListener("readystatechange", function(ev) {
+					if(video.readyState > video.HAVE_CURRENT_DATA)
+						videoLoaded(ev);
 				});
 				
-				console.log("video.readyState", video.readyState);
-
 				// last to prevent event before load
 				Object.keys(url).forEach(function(e) {
 					var sourceTag=document.createElement("source");
@@ -247,6 +259,10 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				});
 				
 				video.load();
+				window.bivrost_debug_video=video;
+				
+				if(video.readyState > video.HAVE_CURRENT_DATA)
+					videoLoaded(ev);
 				
 				break;
 				
