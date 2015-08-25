@@ -344,6 +344,17 @@
 			document.msFullscreenElement
 		) === this.container;
 
+
+		if(this.fullscreen && chrome && chrome.power && chrome.power.requestKeepAwake) {
+			log("chrome device management active");
+			chrome.power.requestKeepAwake("display");
+		}
+		if(!this.fullscreen  && chrome && chrome.power && chrome.power.releaseKeepAwake) {
+			log("chrome device management inactive");
+			chrome.power.release();
+		}
+
+
 		if(!this.fullscreen && this._sizeBeforeFullscreen) {
 			log("fullscreen exit, resize to", this._sizeBeforeFullscreen);
 			this.renderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
