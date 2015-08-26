@@ -35221,6 +35221,17 @@ Bivrost.AVAILABLE_VRMODES=[
 			document.msFullscreenElement
 		) === this.container;
 
+
+		if(this.fullscreen && chrome && chrome.power && chrome.power.requestKeepAwake) {
+			log("chrome device management active");
+			chrome.power.requestKeepAwake("display");
+		}
+		if(!this.fullscreen  && chrome && chrome.power && chrome.power.releaseKeepAwake) {
+			log("chrome device management inactive");
+			chrome.power.release();
+		}
+
+
 		if(!this.fullscreen && this._sizeBeforeFullscreen) {
 			log("fullscreen exit, resize to", this._sizeBeforeFullscreen);
 			this.renderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
@@ -35388,6 +35399,8 @@ Bivrost.AVAILABLE_VRMODES=[
 		get: function() { return this._leftCamera.zoom; },
 		set: function(value) {
 			log("set zoom: ", value);
+			if(value < 0.5) value=0.5;
+			if(value > 2.0) value=2.0;
 			this._leftCamera.zoom=value;
 			this._rightCamera.zoom=value;
 			this._leftCamera.updateProjectionMatrix();
@@ -35842,7 +35855,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			
 			window.addEventListener("mouseup", mouseup);
 			window.addEventListener("mousemove", mousemove);
-			window.addEventListener("selectstart", selectstart);
+			window.addEventListener("selectstart", cancel);
 			
 			domElement.classList.add("grabbing");
 			
@@ -35851,7 +35864,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 
 		function mouseup(e) {
 			// click
-			if(player.media && !inDrag)
+			if(player.media && !inDrag && isIn && isDown)
 				player.media.pauseToggle();
 			
 			isDown=false;
@@ -35859,7 +35872,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			inDrag=false;
 			window.removeEventListener("up", mouseup);
 			window.removeEventListener("move", mousemove);
-			window.removeEventListener("selectstart", selectstart);
+			window.removeEventListener("selectstart", cancel);
 			thisRef._mouseLookInProgress=false;
 			domElement.classList.remove("grabbing");
 		}
@@ -35870,7 +35883,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			
 			var dx=~~(e.x || e.clientX)-originX;
 			var dy=~~(e.y || e.clientY)-originY;
-			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth)
+			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth);
 			thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
 			thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
 			thisRef._mouseLookInProgress=true;
@@ -35883,17 +35896,61 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		
 		function mouseout(e) { isIn=false; }
 		
-		function selectstart(e) { e.preventDefault(); e.stopPropagation(); return false; }
+		function cancel(e) { e.preventDefault(); e.stopPropagation(); return false; }
 
 		domElement.addEventListener("mousedown", mousedown);
 		domElement.addEventListener("mouseout", mouseout);
 		domElement.addEventListener("mouseover", mouseover);
 		
 		// mouse select cancel
-//		domElement.addEventListener("mousedown", function(e) { e.preventDefault(); } );
-		domElement.addEventListener("mousemove", function(e) { e.preventDefault(); } );
+//		domElement.addEventListener("mousemove", function(e) { e.preventDefault(); } );
 
 
+
+		// touch events
+		
+		function touchstartend(ev) {
+			if(ev.touches.length === 1) {	// one finger touch					
+				window.addEventListener("touchmove", touchmove);
+				var x=~~(ev.touches[0].clientX || ev.touches[0].pageX);
+				var y=~~(ev.touches[0].clientY || ev.touches[0].pageY);
+				originX=x;
+				originY=y;
+				originEulerX=thisRef.lookEuler.x;
+				originEulerY=thisRef.lookEuler.y;
+			}
+			else {	// scale or no fingers
+				window.removeEventListener("touchmove", touchmove);
+				thisRef._mouseLookInProgress=false;
+				
+				if(!inDrag && ev.touches.length === 0)
+					player.fullscreen=true;
+			}
+		}
+		function touchmove(ev) {
+			var x=~~(ev.touches[0].clientX || ev.touches[0].pageX);
+			var y=~~(ev.touches[0].clientY || ev.touches[0].pageY);
+			var dx=x-originX;
+			var dy=y-originY;
+			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth);
+			
+			if(dx*dx + dy*dy > dragSize*dragSize)
+				inDrag=true;
+				
+			if(player.fullscreen) {
+				thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
+				thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
+				thisRef._mouseLookInProgress=true;
+				ev.preventDefault();
+				ev.stopPropagation();
+				return false;
+			}
+		}
+		domElement.addEventListener("touchstart", touchstartend);
+		domElement.addEventListener("touchend", touchstartend);
+
+
+		// keyboard controls
 		function keydown(e) {
 			switch(e.which) {
 				case KEYCODE_DOWN:
@@ -35938,7 +35995,6 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		domElement.addEventListener("keydown", keydown);
 		domElement.addEventListener("keyup", keyup);
 		
-		
 		this._keyboardShortcuts={};
 		function keypress(e) {
 			var keyName=e.key || String.fromCharCode(e.which);
@@ -35947,7 +36003,6 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				e.preventDefault();
 				e.stopPropagation();
 			}
-
 		};
 		domElement.addEventListener("keypress", keypress);
 
@@ -35958,12 +36013,16 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			domElement.removeEventListener("mousedown", mousedown);
 			window.removeEventListener("mousemove", mousemove);
 			window.removeEventListener("mouseup", mouseup);
-			window.removeEventListener("selectstart", selectstart);
+			window.removeEventListener("selectstart", cancel);
 			domElement.removeEventListener("mouseout", mouseout);
 			domElement.removeEventListener("mouseover", mouseover);
 			domElement.removeEventListener("keydown", keydown);
 			domElement.removeEventListener("keyup", keyup);
 			domElement.removeEventListener("keypress", keypress);
+			
+			domElement.removeEventListener("touchstart", touchstartend);
+			domElement.removeEventListener("touchend", touchstartend);
+			window.removeEventListener("touchmove", touchmove);
 		}
 		
 		
@@ -36001,23 +36060,51 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		else
 			log("no VR API available, try http://webvr.info");
 
-		// gyroscope controls
-		window.addEventListener("deviceorientation", function(ev) {
-			var a=DEG2RAD*ev.alpha;	// bank (left-right)
-			var b=DEG2RAD*ev.beta; // pitch (up-down)
-			var c=DEG2RAD*ev.gamma;
-			
-			var euler=new THREE.Euler(c,0,0, 'XZY');
-			var gyro=new THREE.Quaternion();
-			gyro.setFromEuler(euler);
-			if(!thisRef._gyroOriginQuaternion) {
-				log("deviceorientation: reoriented gyro to ", euler);
-				thisRef._gyroOriginQuaternion=gyro.clone();
-				thisRef._gyroOriginQuaternion.inverse();
+
+
+		// gyroscope controls, loosely based on https://dev.opera.com/articles/w3c-device-orientation-usage/
+		var deviceEuler = new THREE.Euler();
+		var screenTransform = new THREE.Quaternion();
+		var minusHalfAngle = - THREE.Math.degToRad(window.orientation || 0) / 2;
+		screenTransform.set(0, Math.sin(minusHalfAngle), 0, Math.cos(minusHalfAngle));
+		var worldTransform = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
+		
+		window.addEventListener('deviceorientation', function(ev) {
+			if(ev.alpha === null || ev.beta === null || ev.gamma === null)
+				return;
+			var alpha=THREE.Math.degToRad(ev.alpha);    // roll (clockwise-anticlockwise)
+			var beta=THREE.Math.degToRad(ev.beta);      // pitch (up-down)
+			var gamma=THREE.Math.degToRad(ev.gamma);    // yaw (left-right)
+			if (isNaN(alpha) || isNaN(beta) || isNaN(gamma))
+				throw "device orientation? "+ev;
+			deviceEuler.set(beta, alpha, - gamma, 'YXZ');
+			var quat=thisRef._gyroLookQuaternion;
+			quat.setFromEuler(deviceEuler);
+			quat.multiply(screenTransform);
+			quat.multiply(worldTransform);
+			if(!thisRef._gyroOriginQuaternion) {	// regenerate origin
+				var originEuler=new THREE.Euler();
+				var origin=quat.clone();
+				origin.inverse();
+				originEuler.setFromQuaternion(origin);
+				originEuler.x=0;	// keep only
+				originEuler.z=0;	//   yaw in origin
+				origin.setFromEuler(originEuler);
+				thisRef._gyroOriginQuaternion=origin;
+				thisRef.gyroAvailable=true;
 			}
-//			that._gyroLookQuaternion.multiplyQuaternions(that._gyroOriginQuaternion, gyro);
+			quat.multiplyQuaternions(thisRef._gyroOriginQuaternion, quat);
 		}, false);
-	};
+		
+		window.addEventListener('orientationchange', function(ev) { 
+			var orient=THREE.Math.degToRad(window.orientation);
+			log("orient", orient);
+			if(isNaN(orient))
+				throw "screen orientation? "+window.orientation;
+			var minusHalfAngle = - orient / 2;
+			screenTransform.set(0, Math.sin(minusHalfAngle), 0, Math.cos(minusHalfAngle));
+		}, false);
+	}; 
 	
 	
 	/**
@@ -36106,12 +36193,26 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			if(vrState.hasOrientation) {
 				this.vrLookQuaternion.copy(vrState.orientation);
 				this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this.vrLookQuaternion);
-				return;
+				return;	// if vr was used, don't use the gyroscope
 			}
 		}
 		
-		if(this._gyroLookQuaternion) {
-			this.lookQuaternion.multiplyQuaternions(this._gyroLookQuaternion, this.lookQuaternion);
+		if(this.enableGyro && this._gyroLookQuaternion) {
+//  			this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this._gyroLookQuaternion);
+//			this.lookQuaternion.multiplyQuaternions(this._gyroLookQuaternion, this.lookQuaternion);
+			this.lookQuaternion.copy(this._gyroLookQuaternion);
+			
+			var yaw = new THREE.Quaternion();
+			yaw.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), this.lookEuler.y );
+			this.lookQuaternion.multiplyQuaternions(yaw, this.lookQuaternion);
+			
+			var pitch = new THREE.Quaternion();
+			var right=new THREE.Vector3( 1, 0, 0 );
+//			this.lookQuaternion.multiplyVector3(right);
+			right.applyQuaternion(this.lookQuaternion);
+			pitch.setFromAxisAngle( right, this.lookEuler.x );
+			this.lookQuaternion.multiplyQuaternions(pitch, this.lookQuaternion);
+			
 			return;
 		}
 	};
@@ -36159,6 +36260,13 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	 */
 	Bivrost.Input.prototype._mouseLookInProgress=false;
 	
+	
+	/**
+	 * Is looking around with a gyroscope enabled?
+	 * @private
+	 */
+	Bivrost.Input.prototype.enableGyro=true;
+	
 })();
 
 // file: bivrost-ui.js
@@ -36193,7 +36301,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		
 		button.action=action;
 		
-		button.addEventListener("click", function() { button.action(); });
+		button.addEventListener("click", function() { button.action(); button.blur(); });
 		
 		button.title=alt;
 		
@@ -36235,6 +36343,9 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		domElement.addEventListener("mouseup", cancel);
 		domElement.addEventListener("dblclick", cancel);
 		domElement.addEventListener("click", cancel);
+		domElement.addEventListener("touchstart", cancel);
+		domElement.addEventListener("touchmove", cancel);
+		domElement.addEventListener("touchend", cancel);
 	};
 
 	
@@ -36380,20 +36491,25 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			for(var i=8; i--; ) {
 				var tick=document.createElement("div");
 				tick.className="bivrost-volume-tick bivrost-volume-tick-on";
-				var setVolumeCond=(function(vol) { return function() { 
+				var setVolumeCond=(function(vol) { return function() {
+//					log("cond", arguments[0].type, inVolumeDrag);
 					if(inVolumeDrag)
 						video.volume=vol; 
+					return true;
 				}; })((i+1)/8);
 				var setVolumeBreak=(function(vol) { return function() { 
 					volumebar.classList.add("hidden");
+//					log("break", arguments[0].type, inVolumeDrag);
 					video.volume=vol; 
 					inVolumeDrag=false;
 				}; })((i+1)/8);
 				var setVolumeStart=(function(vol) { return function() { 
+//					log("start", arguments[0].type, inVolumeDrag);
 					video.volume=vol; 
 					inVolumeDrag=true;
 				}; })((i+1)/8);
 				tick.addEventListener("click", setVolumeBreak);
+				tick.addEventListener("mouseup", setVolumeBreak);
 				tick.addEventListener("touchend", setVolumeBreak);
 				tick.addEventListener("mousemove", setVolumeCond);
 				tick.addEventListener("touchmove", setVolumeCond);
@@ -36417,8 +36533,18 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				}
 			}, Math.round(video.volume*100)+"%");
 			
-			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); });
-			volumebutton.addEventListener("mouseout", function() { volumebar.classList.add("hidden"); inVolumeDrag=false; });
+			var volumeActive=false;
+			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); volumeActive=true; });
+			volumebutton.addEventListener("mouseleave", function() { volumebar.classList.add("hidden"); inVolumeDrag=volumeActive=false; });
+			
+			// on first touch cancel click, so it doesn't mute automaticaly
+			volumebutton.addEventListener("touchstart", function(ev) {
+				log("touchstart");
+				if(!volumeActive) {
+					ev.stopPropagation();
+					return false;
+				}
+			});
 			
 			video.addEventListener("volumechange", function() {
 				log(volumebutton.title=Math.round(video.volume*100)+"%");
@@ -36440,7 +36566,22 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		}
 
 
-		rightAligned.appendChild(makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, "fullscreen" ));
+		var gyroButton;
+		var listenGyro=function() {
+			log("listengyro", gyroButton, thisRef.player.input.gyroAvailable);
+			if(gyroButton) return;
+			if(!thisRef.player.input.gyroAvailable) return;
+			gyroButton=makeButton("gyro", function() {
+				thisRef.player.input.enableGyro=!thisRef.player.input.enableGyro; 
+				gyroButton.changeIcons(thisRef.player.input.enableGyro ? "gyrooff" : "gyro");
+			}, "gyroscope");
+			rightAligned.insertBefore(gyroButton, fullscreenButton);
+			// window.removeEventListener("deviceorientation", listenGyro);
+		};
+		window.addEventListener("deviceorientation", listenGyro);
+
+		var fullscreenButton=makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, "fullscreen" );
+		rightAligned.appendChild(fullscreenButton);
 
 		this.domElement.appendChild(leftAligned);
 		this.domElement.appendChild(rightAligned);
@@ -36498,7 +36639,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	 * Set to 0 to disable
 	 * @type {number}
 	 */
-	Bivrost.UI.prototype.autoHide=2;
+	Bivrost.UI.prototype.autoHide=5;
 	
 	
 	Bivrost.UI.prototype.show=function() {

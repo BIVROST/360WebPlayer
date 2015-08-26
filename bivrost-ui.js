@@ -29,7 +29,7 @@
 		
 		button.action=action;
 		
-		button.addEventListener("click", function() { button.action(); });
+		button.addEventListener("click", function() { button.action(); button.blur(); });
 		
 		button.title=alt;
 		
@@ -71,6 +71,9 @@
 		domElement.addEventListener("mouseup", cancel);
 		domElement.addEventListener("dblclick", cancel);
 		domElement.addEventListener("click", cancel);
+		domElement.addEventListener("touchstart", cancel);
+		domElement.addEventListener("touchmove", cancel);
+		domElement.addEventListener("touchend", cancel);
 	};
 
 	
@@ -291,7 +294,22 @@
 		}
 
 
-		rightAligned.appendChild(makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, "fullscreen" ));
+		var gyroButton;
+		var listenGyro=function() {
+			log("listengyro", gyroButton, thisRef.player.input.gyroAvailable);
+			if(gyroButton) return;
+			if(!thisRef.player.input.gyroAvailable) return;
+			gyroButton=makeButton("gyro", function() {
+				thisRef.player.input.enableGyro=!thisRef.player.input.enableGyro; 
+				gyroButton.changeIcons(thisRef.player.input.enableGyro ? "gyrooff" : "gyro");
+			}, "gyroscope");
+			rightAligned.insertBefore(gyroButton, fullscreenButton);
+			// window.removeEventListener("deviceorientation", listenGyro);
+		};
+		window.addEventListener("deviceorientation", listenGyro);
+
+		var fullscreenButton=makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, "fullscreen" );
+		rightAligned.appendChild(fullscreenButton);
 
 		this.domElement.appendChild(leftAligned);
 		this.domElement.appendChild(rightAligned);

@@ -8,6 +8,7 @@ $ui-height: 68px;
 $ui-background: rgba(0,0,0, 0.5);
 $range-size: 14px;
 $button-margin: 8px;
+$text-color: #ffffff;
 
 .bivrost-player,
 bivrost-player {
@@ -119,6 +120,7 @@ bivrost-player {
 			$w: bivrost-icon-sprite-width(back);
 			height: $h;
 			display: inline-block;
+			color: $text-color;
 			
 			margin: ($ui-height - $h)/2 0 0 $button-margin;
 			

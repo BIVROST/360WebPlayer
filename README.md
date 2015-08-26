@@ -483,7 +483,27 @@ If you want to remove or replace our branding or embed the player on a customers
 
 [91]:	TODO mailto:licensing
 
+
+
+
+
+
+
+
+
+
+
 Changelog
 ---------
 
-2015-08-01: initial release
+2015-09-01: initial release
+
+
+Third party libraries
+---------------------
+
+The Bivrost Web Player uses third party libraries:
+
+* [THREE.js][99]
+
+[99]: http://threejs.org

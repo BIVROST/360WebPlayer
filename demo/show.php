@@ -9,7 +9,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         </head>
 	<body class="show">
-		
+		<img src="../bivrost-min.js">
+
 		<article>
 			<h1><img src="logo.png" alt="Bivrost" /></h1>
 

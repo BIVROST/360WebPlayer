@@ -149,6 +149,8 @@
 		get: function() { return this._leftCamera.zoom; },
 		set: function(value) {
 			log("set zoom: ", value);
+			if(value < 0.5) value=0.5;
+			if(value > 2.0) value=2.0;
 			this._leftCamera.zoom=value;
 			this._rightCamera.zoom=value;
 			this._leftCamera.updateProjectionMatrix();

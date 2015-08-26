@@ -60,7 +60,7 @@
 			
 			window.addEventListener("mouseup", mouseup);
 			window.addEventListener("mousemove", mousemove);
-			window.addEventListener("selectstart", selectstart);
+			window.addEventListener("selectstart", cancel);
 			
 			domElement.classList.add("grabbing");
 			
@@ -69,7 +69,7 @@
 
 		function mouseup(e) {
 			// click
-			if(player.media && !inDrag)
+			if(player.media && !inDrag && isIn && isDown)
 				player.media.pauseToggle();
 			
 			isDown=false;
@@ -77,7 +77,7 @@
 			inDrag=false;
 			window.removeEventListener("up", mouseup);
 			window.removeEventListener("move", mousemove);
-			window.removeEventListener("selectstart", selectstart);
+			window.removeEventListener("selectstart", cancel);
 			thisRef._mouseLookInProgress=false;
 			domElement.classList.remove("grabbing");
 		}
@@ -88,7 +88,7 @@
 			
 			var dx=~~(e.x || e.clientX)-originX;
 			var dy=~~(e.y || e.clientY)-originY;
-			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth)
+			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth);
 			thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
 			thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
 			thisRef._mouseLookInProgress=true;
@@ -101,17 +101,61 @@
 		
 		function mouseout(e) { isIn=false; }
 		
-		function selectstart(e) { e.preventDefault(); e.stopPropagation(); return false; }
+		function cancel(e) { e.preventDefault(); e.stopPropagation(); return false; }
 
 		domElement.addEventListener("mousedown", mousedown);
 		domElement.addEventListener("mouseout", mouseout);
 		domElement.addEventListener("mouseover", mouseover);
 		
 		// mouse select cancel
-//		domElement.addEventListener("mousedown", function(e) { e.preventDefault(); } );
-		domElement.addEventListener("mousemove", function(e) { e.preventDefault(); } );
+//		domElement.addEventListener("mousemove", function(e) { e.preventDefault(); } );
 
 
+
+		// touch events
+		
+		function touchstartend(ev) {
+			if(ev.touches.length === 1) {	// one finger touch					
+				window.addEventListener("touchmove", touchmove);
+				var x=~~(ev.touches[0].clientX || ev.touches[0].pageX);
+				var y=~~(ev.touches[0].clientY || ev.touches[0].pageY);
+				originX=x;
+				originY=y;
+				originEulerX=thisRef.lookEuler.x;
+				originEulerY=thisRef.lookEuler.y;
+			}
+			else {	// scale or no fingers
+				window.removeEventListener("touchmove", touchmove);
+				thisRef._mouseLookInProgress=false;
+				
+				if(!inDrag && ev.touches.length === 0)
+					player.fullscreen=true;
+			}
+		}
+		function touchmove(ev) {
+			var x=~~(ev.touches[0].clientX || ev.touches[0].pageX);
+			var y=~~(ev.touches[0].clientY || ev.touches[0].pageY);
+			var dx=x-originX;
+			var dy=y-originY;
+			var revSize=2/(domElement.offsetHeight+domElement.offsetWidth);
+			
+			if(dx*dx + dy*dy > dragSize*dragSize)
+				inDrag=true;
+				
+			if(player.fullscreen) {
+				thisRef.lookEuler.x=originEulerX+scale*dy*revSize;
+				thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
+				thisRef._mouseLookInProgress=true;
+				ev.preventDefault();
+				ev.stopPropagation();
+				return false;
+			}
+		}
+		domElement.addEventListener("touchstart", touchstartend);
+		domElement.addEventListener("touchend", touchstartend);
+
+
+		// keyboard controls
 		function keydown(e) {
 			switch(e.which) {
 				case KEYCODE_DOWN:
@@ -156,7 +200,6 @@
 		domElement.addEventListener("keydown", keydown);
 		domElement.addEventListener("keyup", keyup);
 		
-		
 		this._keyboardShortcuts={};
 		function keypress(e) {
 			var keyName=e.key || String.fromCharCode(e.which);
@@ -165,7 +208,6 @@
 				e.preventDefault();
 				e.stopPropagation();
 			}
-
 		};
 		domElement.addEventListener("keypress", keypress);
 
@@ -176,12 +218,16 @@
 			domElement.removeEventListener("mousedown", mousedown);
 			window.removeEventListener("mousemove", mousemove);
 			window.removeEventListener("mouseup", mouseup);
-			window.removeEventListener("selectstart", selectstart);
+			window.removeEventListener("selectstart", cancel);
 			domElement.removeEventListener("mouseout", mouseout);
 			domElement.removeEventListener("mouseover", mouseover);
 			domElement.removeEventListener("keydown", keydown);
 			domElement.removeEventListener("keyup", keyup);
 			domElement.removeEventListener("keypress", keypress);
+			
+			domElement.removeEventListener("touchstart", touchstartend);
+			domElement.removeEventListener("touchend", touchstartend);
+			window.removeEventListener("touchmove", touchmove);
 		}
 		
 		
@@ -221,19 +267,19 @@
 
 
 
-		// gyroscope controls, based on https://dev.opera.com/articles/w3c-device-orientation-usage/, 
+		// gyroscope controls, loosely based on https://dev.opera.com/articles/w3c-device-orientation-usage/
 		var deviceEuler = new THREE.Euler();
 		var screenTransform = new THREE.Quaternion();
 		var minusHalfAngle = - THREE.Math.degToRad(window.orientation || 0) / 2;
-		screenTransform.set( 0, Math.sin( minusHalfAngle ), 0, Math.cos( minusHalfAngle ) );
-		var worldTransform = new THREE.Quaternion( - Math.sqrt(0.5), 0, 0, Math.sqrt(0.5) ); // - PI/2 around the x-axis
+		screenTransform.set(0, Math.sin(minusHalfAngle), 0, Math.cos(minusHalfAngle));
+		var worldTransform = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
 		
 		window.addEventListener('deviceorientation', function(ev) {
 			if(ev.alpha === null || ev.beta === null || ev.gamma === null)
 				return;
 			var alpha=THREE.Math.degToRad(ev.alpha);    // roll (clockwise-anticlockwise)
 			var beta=THREE.Math.degToRad(ev.beta);      // pitch (up-down)
-			var gamma=THREE.Math.degToRad(ev.gamma);    // bank (left-right)
+			var gamma=THREE.Math.degToRad(ev.gamma);    // yaw (left-right)
 			if (isNaN(alpha) || isNaN(beta) || isNaN(gamma))
 				throw "device orientation? "+ev;
 			deviceEuler.set(beta, alpha, - gamma, 'YXZ');
@@ -241,15 +287,16 @@
 			quat.setFromEuler(deviceEuler);
 			quat.multiply(screenTransform);
 			quat.multiply(worldTransform);
-			if(!thisRef._gyroOriginQuaternion) {
+			if(!thisRef._gyroOriginQuaternion) {	// regenerate origin
 				var originEuler=new THREE.Euler();
 				var origin=quat.clone();
 				origin.inverse();
 				originEuler.setFromQuaternion(origin);
-				originEuler.x=0;
-				originEuler.z=0;
+				originEuler.x=0;	// keep only
+				originEuler.z=0;	//   yaw in origin
 				origin.setFromEuler(originEuler);
 				thisRef._gyroOriginQuaternion=origin;
+				thisRef.gyroAvailable=true;
 			}
 			quat.multiplyQuaternions(thisRef._gyroOriginQuaternion, quat);
 		}, false);
@@ -260,7 +307,7 @@
 			if(isNaN(orient))
 				throw "screen orientation? "+window.orientation;
 			var minusHalfAngle = - orient / 2;
-			screenTransform.set( 0, Math.sin( minusHalfAngle ), 0, Math.cos( minusHalfAngle ) );
+			screenTransform.set(0, Math.sin(minusHalfAngle), 0, Math.cos(minusHalfAngle));
 		}, false);
 	}; 
 	
@@ -351,12 +398,26 @@
 			if(vrState.hasOrientation) {
 				this.vrLookQuaternion.copy(vrState.orientation);
 				this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this.vrLookQuaternion);
-				return;
+				return;	// if vr was used, don't use the gyroscope
 			}
 		}
 		
-		if(this._gyroLookQuaternion) {
-			this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this._gyroLookQuaternion);
+		if(this.enableGyro && this._gyroLookQuaternion) {
+//  			this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this._gyroLookQuaternion);
+//			this.lookQuaternion.multiplyQuaternions(this._gyroLookQuaternion, this.lookQuaternion);
+			this.lookQuaternion.copy(this._gyroLookQuaternion);
+			
+			var yaw = new THREE.Quaternion();
+			yaw.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), this.lookEuler.y );
+			this.lookQuaternion.multiplyQuaternions(yaw, this.lookQuaternion);
+			
+			var pitch = new THREE.Quaternion();
+			var right=new THREE.Vector3( 1, 0, 0 );
+//			this.lookQuaternion.multiplyVector3(right);
+			right.applyQuaternion(this.lookQuaternion);
+			pitch.setFromAxisAngle( right, this.lookEuler.x );
+			this.lookQuaternion.multiplyQuaternions(pitch, this.lookQuaternion);
+			
 			return;
 		}
 	};
@@ -403,5 +464,12 @@
 	 * @type {boolean}
 	 */
 	Bivrost.Input.prototype._mouseLookInProgress=false;
+	
+	
+	/**
+	 * Is looking around with a gyroscope enabled?
+	 * @private
+	 */
+	Bivrost.Input.prototype.enableGyro=true;
 	
 })();
