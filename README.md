@@ -360,9 +360,7 @@ If you want to know more, there are some good manuals to look into:
 
 [61]: https://www.ffmpeg.org/
 
-Oh and if you want the guideline for a **static picture**, use a jpeg, png or something. At least this part is easy. Hugin's equirectangular or Google's Photo Sphere pictures work nicely.
-
-
+Oh and if you want the guideline for a **static picture**, use a jpeg, png or something. At least this part is easy. Hugin's equirectangular or Google's Photo Sphere pictures work nicely. You can use a bit more resolution here, but above around 4096x4096 you might experience performance problems.
 
 
 
@@ -463,7 +461,9 @@ Roadmap
 [ ] More supported browsers
 [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
 [ ] More supported headsets
-[ ] Better mobile support
+[x] Mobile support - Android
+[ ] Mobile support - iOS and windows phone
+[ ] Internet Exporer/Edge
 [ ] Smaller footprint
 [ ] Multi-resolution video (HD/non HD button)
 
@@ -504,6 +504,6 @@ Third party libraries
 
 The Bivrost Web Player uses third party libraries:
 
-* [THREE.js][99]
+* [THREE.js][99] (MIT license)
 
 [99]: http://threejs.org
