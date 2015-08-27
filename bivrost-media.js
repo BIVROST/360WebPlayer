@@ -193,6 +193,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				video.setAttribute("width", "32");	// any number will be ok
 				video.setAttribute("height", "32");	// any number will be ok
 				video.setAttribute("loop", JSON.stringify(!!loop));
+				video.setAttribute("webkit-playsinline", "webkit-playsinline");
 				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
 				this._setLoop=function(value) { video.setAttribute("loop", JSON.stringify(!!value)); };
 
@@ -259,7 +260,6 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				});
 				
 				video.load();
-				window.bivrost_debug_video=video;
 				
 				if(video.readyState > video.HAVE_CURRENT_DATA)
 					videoLoaded(ev);

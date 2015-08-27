@@ -250,6 +250,23 @@ bivrost-player {
 	}
 	
 	
+	.bivrost-bigplay {
+		background: inline-image("play-big.png") no-repeat center center;
+		cursor: pointer;
+		position: absolute;
+		width: image-width("play-big.png");
+		height: image-height("play-big.png");
+		left: 50%;
+		top: 50%;
+		margin-left: image-width("play-big.png")/-2;
+		margin-top: image-height("play-big.png")/-2;
+		
+		&.hidden {
+			display: none;
+		}
+	}
+	
+	
 	&:-webkit-full-screen {
 		position: fixed;
 		width: 100% !important;

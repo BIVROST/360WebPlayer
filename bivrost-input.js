@@ -53,6 +53,7 @@
 		function mousedown(e) {
 			isDown=true;
 			isIn=true;
+			inDrag=false;
 			originX=~~(e.x || e.clientX);
 			originY=~~(e.y || e.clientY);
 			originEulerX=thisRef.lookEuler.x;
@@ -69,8 +70,8 @@
 
 		function mouseup(e) {
 			// click
-			if(player.media && !inDrag && isIn && isDown)
-				player.media.pauseToggle();
+//			if(player.media && !inDrag && isIn && isDown)
+//				player.media.pauseToggle();
 			
 			isDown=false;
 			isIn=false;
@@ -115,8 +116,10 @@
 		// touch events
 		
 		function touchstartend(ev) {
-			if(ev.touches.length === 1) {	// one finger touch					
+				if(ev.touches.length === 1) {	// one finger touch					
 				window.addEventListener("touchmove", touchmove);
+				window.addEventListener("touchend", touchstartend);
+				inDrag=false;
 				var x=~~(ev.touches[0].clientX || ev.touches[0].pageX);
 				var y=~~(ev.touches[0].clientY || ev.touches[0].pageY);
 				originX=x;
@@ -124,12 +127,13 @@
 				originEulerX=thisRef.lookEuler.x;
 				originEulerY=thisRef.lookEuler.y;
 			}
-			else {	// scale or no fingers
+			else {	// pinch or no fingers - not interesting at the moment
+				window.removeEventListener("touchend", touchstartend);
 				window.removeEventListener("touchmove", touchmove);
 				thisRef._mouseLookInProgress=false;
 				
-				if(!inDrag && ev.touches.length === 0)
-					player.fullscreen=true;
+//				if(!inDrag && ev.touches.length === 0)
+//					player.fullscreen=true;
 			}
 		}
 		function touchmove(ev) {
@@ -152,7 +156,6 @@
 			}
 		}
 		domElement.addEventListener("touchstart", touchstartend);
-		domElement.addEventListener("touchend", touchstartend);
 
 
 		// keyboard controls
@@ -267,48 +270,48 @@
 
 
 
-		// gyroscope controls, loosely based on https://dev.opera.com/articles/w3c-device-orientation-usage/
-		var deviceEuler = new THREE.Euler();
-		var screenTransform = new THREE.Quaternion();
-		var minusHalfAngle = - THREE.Math.degToRad(window.orientation || 0) / 2;
-		screenTransform.set(0, Math.sin(minusHalfAngle), 0, Math.cos(minusHalfAngle));
-		var worldTransform = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
+		// gyroscope controls
+		var orientation=new THREE.Quaternion();
+		var tempEuler=new THREE.Euler(0, DEG2RAD*(-window.orientation || 0), 0);
+		orientation.setFromEuler(tempEuler);
 		
-		window.addEventListener('deviceorientation', function(ev) {
+		var lookForward=new THREE.Quaternion();
+		tempEuler.set(DEG2RAD*-90, 0, 0);
+		lookForward.setFromEuler(tempEuler);
+		
+		window.addEventListener("deviceorientation", function(ev) {
 			if(ev.alpha === null || ev.beta === null || ev.gamma === null)
 				return;
-			var alpha=THREE.Math.degToRad(ev.alpha);    // roll (clockwise-anticlockwise)
-			var beta=THREE.Math.degToRad(ev.beta);      // pitch (up-down)
-			var gamma=THREE.Math.degToRad(ev.gamma);    // yaw (left-right)
+			var alpha=DEG2RAD*ev.alpha;    // roll (clockwise-anticlockwise)
+			var beta=DEG2RAD*ev.beta;      // pitch (up-down)
+			var gamma=DEG2RAD*ev.gamma;    // yaw (left-right)
 			if (isNaN(alpha) || isNaN(beta) || isNaN(gamma))
 				throw "device orientation? "+ev;
-			deviceEuler.set(beta, alpha, - gamma, 'YXZ');
+			tempEuler.set(beta, alpha, -gamma, 'YXZ');
 			var quat=thisRef._gyroLookQuaternion;
-			quat.setFromEuler(deviceEuler);
-			quat.multiply(screenTransform);
-			quat.multiply(worldTransform);
+			quat.setFromEuler(tempEuler);
+			quat.multiply(orientation);
+			quat.multiply(lookForward);
 			if(!thisRef._gyroOriginQuaternion) {	// regenerate origin
-				var originEuler=new THREE.Euler();
 				var origin=quat.clone();
 				origin.inverse();
-				originEuler.setFromQuaternion(origin);
-				originEuler.x=0;	// keep only
-				originEuler.z=0;	//   yaw in origin
-				origin.setFromEuler(originEuler);
+				tempEuler.setFromQuaternion(origin);
+				tempEuler.x=0;	// keep only
+				tempEuler.z=0;	//   yaw in origin
+				origin.setFromEuler(tempEuler);
 				thisRef._gyroOriginQuaternion=origin;
 				thisRef.gyroAvailable=true;
 			}
 			quat.multiplyQuaternions(thisRef._gyroOriginQuaternion, quat);
-		}, false);
+		});
 		
-		window.addEventListener('orientationchange', function(ev) { 
-			var orient=THREE.Math.degToRad(window.orientation);
-			log("orient", orient);
+		window.addEventListener("orientationchange", function() { 
+			var orient=DEG2RAD*window.orientation;
 			if(isNaN(orient))
 				throw "screen orientation? "+window.orientation;
-			var minusHalfAngle = - orient / 2;
-			screenTransform.set(0, Math.sin(minusHalfAngle), 0, Math.cos(minusHalfAngle));
-		}, false);
+			tempEuler.set(0, -orient, 0);
+			orientation.setFromEuler(tempEuler);
+		});
 	}; 
 	
 	
@@ -470,6 +473,31 @@
 	 * Is looking around with a gyroscope enabled?
 	 * @private
 	 */
-	Bivrost.Input.prototype.enableGyro=true;
+	Bivrost.Input.prototype._enableGyro=false;
+	
+	
+	/**
+	 * Is looking around with a gyroscope enabled?
+	 */
+	Object.defineProperty(Bivrost.Input.prototype, "enableGyro", {
+		set: function(value) { 
+			value=!!value;
+			if(value === this._enableGyro)
+				return;
+			this._enableGyro=value;
+			this._gyroOriginQuaternion=null;
+			
+			// when off, sets the new position (with gyro data) to the lookEuler
+			if(!value) {
+				this.lookEuler.setFromQuaternion(this.lookQuaternion);
+				this.lookEuler.z=0;
+			}
+			else {	// when turning on, remove euler up-down
+				this.lookEuler.x=0;
+			}
+		},
+		get: function() { return this._enableGyro; }
+	});
+
 	
 })();

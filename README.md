@@ -22,7 +22,7 @@ Features
 
 * Easy integration into any website
 * Simple for the end user
-* Works on desktop and mobile
+* Works on both desktop and mobile
 * Free for personal use (see the [license][12] for details)
 * Works on major browsers
 * Possible to embed more than one on the same page

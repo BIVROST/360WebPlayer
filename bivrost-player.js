@@ -255,6 +255,9 @@
 			if(value === this._vrMode)
 				return;
 			
+			if(value !== Bivrost.VRMODE_NONE)
+				this.input.enableGyro=true;
+			
 			this._vrMode=value;
 			this.resize();
 		}
@@ -320,6 +323,7 @@
 				).call(elem);			/// TODO: use HMD if available - , {vrDisplay: this.hmd}
 			}
 			else { // turn off
+				this.input.enableGyro=false;
 				(
 					document.exitFullscreen
 					|| document.mozCancelFullScreen 

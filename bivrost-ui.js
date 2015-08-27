@@ -55,13 +55,16 @@
 	 * @param {Bivrost.Player} player
 	 */
 	Bivrost.UI=function(domElement, player) {
+		var thisRef=this;
+		
 		this.domElement=domElement;
 		this.player=player;
 		
 		var loading=this.loading=document.createElement("div");
+		var loadingVisible=true;
 		loading.className="bivrost-loading";
-		loading.show=function() { loading.classList.remove("hidden"); }
-		loading.hide=function() { loading.classList.add("hidden"); }
+		loading.show=function() { if(!loadingVisible) loading.classList.remove("hidden"); loadingVisible=true; };
+		loading.hide=function() { if(loadingVisible) loading.classList.add("hidden"); loadingVisible=false; };
 		loading.appendChild(document.createElement("div"));
 		player.container.appendChild(loading);
 		
@@ -74,6 +77,12 @@
 		domElement.addEventListener("touchstart", cancel);
 		domElement.addEventListener("touchmove", cancel);
 		domElement.addEventListener("touchend", cancel);
+
+		var touchSetter=function(ev) {
+			thisRef.isTouchInterface=true; 
+			window.removeEventListener("touchstart", touchSetter); 
+		};
+		window.addEventListener("touchstart", touchSetter);
 	};
 
 	
@@ -142,17 +151,6 @@
 				rangeForeground.style.width=Math.round(value01 * (rangeBackground.offsetWidth-thumbWidth) + thumbWidth/2)+"px";
 			};
 
-			var onFullscreenChange=function() {
-				setTimeout(function() {
-					rangeForeground.setValue01(media.time/media.duration);
-				}, 0);
-			};
-			document.addEventListener("fullscreenchange", onFullscreenChange);
-			document.addEventListener("fullScreenchange", onFullscreenChange);
-			document.addEventListener("webkitfullscreenchange", onFullscreenChange);
-			document.addEventListener("mozfullscreenchange", onFullscreenChange);
-			document.addEventListener("MSFullscreenChange", onFullscreenChange);
-
 			rangeBackground.appendChild(range);
 
 
@@ -168,11 +166,13 @@
 			});
 
 			var rangeChange=function() {
-				rangeForeground.setValue01(range.value/media.duration)+"px";
+				rangeForeground.setValue01(range.value/media.duration);
 				media.time=range.value; 
 			};
 			range.addEventListener("change", rangeChange);
-			range.addEventListener("input", rangeChange);
+			range.addEventListener("input", rangeChange);		
+			window.addEventListener("resize", rangeChange);
+
 
 			var playButton=makeButton("play", media.play.bind(media), "play");
 
@@ -185,6 +185,7 @@
 					thisRef._paused=true;
 				}
 				else {
+					thisRef.bigPlay.hide();
 					playButton.changeIcons("pause");
 					playButton.title="pause";
 					playButton.action=video.pause.bind(video);
@@ -207,8 +208,14 @@
 			if(video.readyState >= video.HAVE_FUTURE_DATA)
 				this.loading.hide();
 			video.addEventListener("canplay", this.loading.hide);
-			video.addEventListener("playing", this.loading.hide);
 			video.addEventListener("waiting", this.loading.show);
+			
+			// show loading on trying to play (playing) or seeking and hide only when this succeeds (timeupdate)
+			video.addEventListener("playing", this.loading.show);
+			video.addEventListener("seeking", this.loading.show);
+			video.addEventListener("seeked", this.loading.show);
+			video.addEventListener("timeupdate", this.loading.hide);
+			
 			
 			// volume
 			var volumebar=document.createElement("div");
@@ -296,7 +303,6 @@
 
 		var gyroButton;
 		var listenGyro=function() {
-			log("listengyro", gyroButton, thisRef.player.input.gyroAvailable);
 			if(gyroButton) return;
 			if(!thisRef.player.input.gyroAvailable) return;
 			gyroButton=makeButton("gyro", function() {
@@ -304,15 +310,50 @@
 				gyroButton.changeIcons(thisRef.player.input.enableGyro ? "gyrooff" : "gyro");
 			}, "gyroscope");
 			rightAligned.insertBefore(gyroButton, fullscreenButton);
-			// window.removeEventListener("deviceorientation", listenGyro);
+			window.removeEventListener("deviceorientation", listenGyro);
 		};
 		window.addEventListener("deviceorientation", listenGyro);
 
 		var fullscreenButton=makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, "fullscreen" );
 		rightAligned.appendChild(fullscreenButton);
 
+		var onFullscreenChange=function() {
+			fullscreenButton.changeIcons(thisRef.player.fullscreen ? "window" : "fullscreen");
+			
+			// exiting fullscreen on touch
+			if(!thisRef.player.fullscreen && thisRef.isTouchInterface) {
+				media.pause();
+				bigPlay.show();
+			}
+			
+			// entering fullscreen on touch or other
+			if(thisRef.player.fullscreen) {
+				bigPlay.hide();
+			}
+		};
+		document.addEventListener("fullscreenchange", onFullscreenChange);
+		document.addEventListener("fullScreenchange", onFullscreenChange);
+		document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+		document.addEventListener("mozfullscreenchange", onFullscreenChange);
+		document.addEventListener("MSFullscreenChange", onFullscreenChange);
+
 		this.domElement.appendChild(leftAligned);
 		this.domElement.appendChild(rightAligned);
+
+
+		// big play
+		var bigPlay=this.bigPlay=document.createElement("div");
+		bigPlay.className="bivrost-bigplay";
+		bigPlay.hide=function() { bigPlay.classList.add("hidden"); };
+		bigPlay.show=function() { bigPlay.classList.remove("hidden"); };
+		bigPlay.addEventListener("click", function() {
+			media.play();
+			bigPlay.hide();
+			log("thisRef.isTouchInterface", thisRef.isTouchInterface);
+			if(thisRef.isTouchInterface)
+				thisRef.player.fullscreen=true; 
+		} );
+		this.player.container.appendChild(bigPlay);
 
 
 
@@ -399,5 +440,19 @@
 			
 
 	Bivrost.UI.prototype.loading=null;
+	
+	
+	/**
+	 * @private
+	 */
+	Bivrost.UI.prototype.isTouchInterface=false;
+	
+	
+	/**
+	 * @type {HTMLElement}
+	 * @private
+	 */
+	Bivrost.UI.bigPlay=null;
+	
 	
 })();
