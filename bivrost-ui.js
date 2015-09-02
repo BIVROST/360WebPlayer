@@ -78,6 +78,12 @@
 		domElement.addEventListener("touchmove", cancel);
 		domElement.addEventListener("touchend", cancel);
 
+		var logo=document.createElement("a");
+		logo.setAttribute("target", "_blank");
+		logo.setAttribute("href", "http://bivrost360.com");
+		logo.className="bivrost-logo";
+		player.container.appendChild(logo);
+
 		var touchSetter=function(ev) {
 			thisRef.isTouchInterface=true; 
 			window.removeEventListener("touchstart", touchSetter); 
@@ -413,7 +419,7 @@
 	
 	Bivrost.UI.prototype.show=function() {
 		var thisRef=this;
-		this.domElement.classList.remove("hidden");
+		this.player.container.classList.remove("hide-ui");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
 //		log("shown pause timeout, paused=", this._paused);
@@ -431,7 +437,7 @@
 	
 	
 	Bivrost.UI.prototype.hide=function() {
-		this.domElement.classList.add("hidden");
+		this.player.container.classList.add("hide-ui");
 //		log("hidden, paused=", this._paused);
 		clearTimeout(this._hideTimeoutId);
 	};

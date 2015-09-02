@@ -4,6 +4,7 @@ $bivrost-icon-spacing: 20px;
 @import "compass/utilities/sprites";
 @include all-bivrost-icon-sprites;
 
+$transition-time: 0.5s;
 
 .bivrost-player,
 bivrost-player {
@@ -31,7 +32,9 @@ bivrost-player {
 	}
 	
 	&.no-ui .bivrost-ui,
-	&.no-ui .bivrost-loading { 
+	&.no-ui .bivrost-bigplay,
+	&.no-ui .bivrost-logo,
+	&.no-ui .bivrost-loading {
 		display: none !important; 
 	}
 	
@@ -79,8 +82,8 @@ bivrost-player {
 		bottom: 0;
 		display: block;
 		
-		-webkit-transition: bottom 0.5s;
-		transition: bottom 0.5s;
+		-webkit-transition: bottom $transition-time;
+		transition: bottom $transition-time;
 	
 		input[type="range"]::-webkit-slider-thumb { 
 			-webkit-transition: opacity 1s, background-size 1s; 
@@ -88,15 +91,6 @@ bivrost-player {
 		}
 		input[type="range"]::-moz-range-thumb { transition: opacity 1s, background-size 1s; }
 		input[type="range"]::-ms-thumb { transition: opacity 1s, background-size 1s; }
-		
-		&.hidden {
-			bottom: - $ui-height;
-						
-			input[type="range"]::-webkit-slider-thumb { opacity: 0; background-size: 0 0; }
-			input[type="range"]::-moz-range-thumb { opacity: 0; background-size: 0 0;  }
-			input[type="range"]::-ms-thumb { opacity: 0; background-size: 0 0; }
-		}
-		
 		
 		.bivrost-aligned {
 			position: absolute;
@@ -242,6 +236,41 @@ bivrost-player {
 			background: inline-image("#{$skin}/bivrost-range-thumb.png") no-repeat center center;
 		}
 
+
+	}
+
+	
+	&.hide-ui .bivrost-ui {
+		bottom: - $ui-height;
+
+		input[type="range"]::-webkit-slider-thumb { opacity: 0; background-size: 0 0; }
+		input[type="range"]::-moz-range-thumb { opacity: 0; background-size: 0 0;  }
+		input[type="range"]::-ms-thumb { opacity: 0; background-size: 0 0; }
+	}
+	
+	
+	.bivrost-logo {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: image-width("#{$common}/bivrost-logo.png");
+		height: image-height("#{$common}/bivrost-logo.png");
+		background: inline-image("#{$common}/bivrost-logo.png") center center no-repeat;
+		transition: transform $transition-time, filter $transition-time, opacity $transition-time;
+		-webkit-transition: -webkit-transform $transition-time, -webkit-filter $transition-time, opacity $transition-time;
+		-webkit-transform-origin: 100% 0%;
+		-webkit-filter: grayscale(0);
+		transform: scale(0.85);
+		transform-origin: 100% 0%;
+		filter: grayscale(0);
+		opacity: 1;
+	}
+	&.hide-ui .bivrost-logo {
+		-webkit-transform: scale(0.75);
+		-webkit-filter: grayscale(1);
+		transform: scale(0.75);
+		filter: grayscale(1);
+		opacity: 0.75;
 	}
 	
 	
@@ -260,6 +289,7 @@ bivrost-player {
 			display: none;
 		}
 	}
+
 	
 	
 	&:-webkit-full-screen {
