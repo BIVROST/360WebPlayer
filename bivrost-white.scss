@@ -1,0 +1,11 @@
+$skin: "style-skin-white";
+
+$ui-height: 68px;
+$ui-background: rgba(255,255,255, 0.25);
+$range-size: 14px;
+$button-margin: 8px;
+$text-color: #000000;
+
+@import "style-skin-white/bivrost-icon/*.png";
+@import "_bivrost.scss";
+

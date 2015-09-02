@@ -40,7 +40,7 @@ Bivrost.Loader=function(dom) {
 	}
 	
 	
-	[].slice.call(document.querySelectorAll("bivrost-player, [data-bivrost-player]")).forEach(function(container,i) {
+	[].slice.call(document.querySelectorAll("bivrost-player, [data-bivrost-player]")).forEach(function(container) {
 		var urls={};
 		
 		// root url+type configuration
@@ -50,7 +50,7 @@ Bivrost.Loader=function(dom) {
 			urls[url]=type;
 	
 		// additional media-source url+type
-		[].slice.call(container.querySelectorAll("bivrost-media, [data-bivrost-media]")).forEach(function(ee, ii) {
+		[].slice.call(container.querySelectorAll("bivrost-media, [data-bivrost-media]")).forEach(function(ee) {
 			urls[attr(ee, "url", "url (or data-bivrost-url) attribute is required in the bivrost-media tag")]=attr(ee, "type");
 		});
 		
@@ -85,7 +85,7 @@ Bivrost.Loader=function(dom) {
 document.addEventListener('DOMContentLoaded', Bivrost.Loader.bind(Bivrost, document.body));
 
 
-// not using document.registerElement - it's not it's time, yet we can always register the element for future use
+// not using document.registerElement to it's fullness - it's not it's time, yet we can always register the element for future use
 // TODO: Maybe polymer/x-tag?
 if(document.registerElement) {
 	document.registerElement('bivrost-player');

@@ -92,7 +92,7 @@ Following configuration options are allowed:
 	Allowed values: "true", "false";  
 	optional, default: "false".
 
-*	`autoplay`: should the media be played on load? This might fail on mobile platforms.
+*	`autoplay`: should the media be played on load? This might fail on some platforms (android).
 	Allowed values: "true", "false";  
 	optional, default: "true".
 
@@ -245,12 +245,12 @@ var player=new Bivrost.Player(
 You can control the Bivrost Player using the `Bivrost.Player` instance. There are two ways to get the object:
 
 1.	From the DOM node:
-	```
+	```javascript
 	var player=document.getElementById("bivrost-container").bivrost;
 	```
 
 2.	Returned from the `new Bivrost.Player(...)` statement:
-	```
+	```javascript
 	var player=new Bivrost.Player(url);
 	```
 
@@ -299,22 +299,23 @@ TODO: vrMode
 
 
 
-Standalone players
-------------------
-
-TODO
-
-
-
-
 
 
 Themes
 ------
 
-TODO: preset colors, diy sass
+At this time there are two themes available:
 
 
+## The default theme 
+
+![The default theme](README-skin-default.png)
+
+## The white theme 
+
+![The white theme](README-skin-white.png)
+
+You can use the default theme by loading the `bivrost.css` file or the white theme with `bivrost-white.css`.
 
 
 
@@ -322,9 +323,6 @@ TODO: preset colors, diy sass
 
 Media preparation guide
 -----------------------
-
-
-TODO: h264 level/profile (5.1 high yuv420?)
 
 
 VR needs high definition material and browsers aren't best at playing video, so there are quite few guidelines and restrictions on how to make the most portable video for the web. 
@@ -360,7 +358,7 @@ If you want to know more, there are some good manuals to look into:
 
 [61]: https://www.ffmpeg.org/
 
-Oh and if you want the guideline for a **static picture**, use a jpeg, png or something. At least this part is easy. Hugin's equirectangular or Google's Photo Sphere pictures work nicely. You can use a bit more resolution here, but above around 4096x4096 you might experience performance problems.
+Oh and if you want the guideline for a **static picture**, use a jpeg or png, at least this part is easy. Hugin's equirectangular or Google's Photo Sphere pictures work nicely. You can use a bit more resolution here, but above around 4096x4096 you might experience performance problems.
 
 
 
@@ -449,6 +447,14 @@ Keyboard shortcuts
 
 
 
+Standalone players
+------------------
+
+Browsers are the most accessible platform, but far from most performant - that's why we didn't stop at creating just one player, we have made a whole family.
+
+The Bivrost Web Player has a special button that allows the content to be run in a native player that allows for performance and user experience better then what will be possible inside a browser for the next few years. If the user doesn't have the player, he will be asked if he would like to download it.
+
+
 
 
 Roadmap
@@ -463,11 +469,9 @@ Roadmap
 [ ] More supported headsets
 [x] Mobile support - Android
 [ ] Mobile support - iOS and windows phone
-[ ] Internet Exporer/Edge
+[ ] video on Internet Exporer/Edge
 [ ] Smaller footprint
 [ ] Multi-resolution video (HD/non HD button)
-
-
 
 
 
