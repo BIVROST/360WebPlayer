@@ -10,7 +10,6 @@ nbactions.xml
 nb-configuration.xml
 .nb-gradle/
 
-smieci
-
 .DS_Store
 *.css.map
+standalone

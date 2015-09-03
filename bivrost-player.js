@@ -349,11 +349,11 @@
 		) === this.container;
 
 
-		if(this.fullscreen && chrome && chrome.power && chrome.power.requestKeepAwake) {
+		if(this.fullscreen && typeof(chrome) !== "undefined" && typeof(chrome.power) !== "undefined" && typeof(chrome.power.requestKeepAwake) !== "undefined") {
 			log("chrome device management active");
 			chrome.power.requestKeepAwake("display");
 		}
-		if(!this.fullscreen  && chrome && chrome.power && chrome.power.releaseKeepAwake) {
+		if(!this.fullscreen && typeof(chrome) !== "undefined" && typeof(chrome.power) !== "undefined" && typeof(chrome.power.releaseKeepAwake) !== "undefined") {
 			log("chrome device management inactive");
 			chrome.power.release();
 		}
