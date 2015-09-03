@@ -4,6 +4,8 @@ THREE.IEVideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFi
 	 * Internet Explorer as of Microsoft Edge is not capable of rendering a video
 	 * to a WebGL Texture. But it is capable of rendering a video to a canvas and
 	 * a canvas to a texture.
+	 * 
+	 * TODO: feature detection of not being able to set texture, not UA
 	 */
 	var isIE=/\b(Trident|IEMobile|Edge)\b/.test(navigator.userAgent);
 	var canvas, ctx;

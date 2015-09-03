@@ -203,13 +203,26 @@
 	Bivrost.Player.prototype.resize=function() {
 		var width=this.container.offsetWidth;
 		var height=this.container.offsetHeight;
+//		if(this.fullscreen) {
+//			width=window.innerWidth;
+//			height=window.innerHeight;
+//		}
+
+		if(this.fullscreen)
+			delete this.container.style.height;
+
 		if(height === 0) {
 			log("guess height from w=", width, "and aspect=", this.aspect);
 			height=width/this.aspect;
 			this.container.style.height=height+"px";
 		}
+		log("size/1", width, height, this.fullscreen);
 
-		log("size", width, height);
+
+		var width=this.container.offsetWidth;
+		var height=this.container.offsetHeight;
+
+		log("size/2", width, height, this.fullscreen);
 		if(this.riftRenderer) {
 			this.riftRenderer.HMD.hResolution=width;
 			this.riftRenderer.HMD.vResolution=height;

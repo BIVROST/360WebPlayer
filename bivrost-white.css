@@ -369,5 +369,12 @@ bivrost-player {
     height: 100% !important;
     top: 0;
     background: none; }
+  .bivrost-player:-ms-fullscreen,
+  bivrost-player:-ms-fullscreen {
+    position: fixed;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0;
+    background: none; }
 
 /*# sourceMappingURL=bivrost-white.css.map */
