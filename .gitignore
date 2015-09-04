@@ -2,8 +2,8 @@
 
 ### NetBeans ###
 nbproject/private/
-build/
 nbbuild/
+build/
 dist/
 nbdist/
 nbactions.xml
@@ -12,4 +12,6 @@ nb-configuration.xml
 
 .DS_Store
 *.css.map
-standalone
+/node_modules/
+compiler.jar
+.sass-cache

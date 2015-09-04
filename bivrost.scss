@@ -6,5 +6,8 @@ $range-size: 14px;
 $button-margin: 8px;
 $text-color: #ffffff;
 
+$bivrost-icon-spacing: 20px;
+$bivrost-icon-inline: true;
 @import "style-skin-default/bivrost-icon/*.png";
+
 @import "_bivrost.scss";
