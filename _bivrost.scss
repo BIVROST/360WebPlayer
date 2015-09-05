@@ -234,8 +234,8 @@ bivrost-player {
 			width: $range-size;
 			height: $range-size;
 			border: 0;
-			/*background: inline-image("#{$skin}/bivrost-range-thumb.png") no-repeat center center;*/
-			background: red;
+			background: inline-image("#{$skin}/bivrost-range-thumb.png") no-repeat center center;
+			/*background: red;*/
 		}
 
 	}
