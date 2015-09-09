@@ -193,7 +193,7 @@
 		if(this.autoplay) {
 			media.play();
 		}
-	},
+	};
 		
 		
 	/**
@@ -240,7 +240,7 @@
 			this.container.classList.remove("no-ui");
 		else
 			this.container.classList.add("no-ui");
-	},
+	};
 
 
 	/**
@@ -260,7 +260,9 @@
 	
 	/**
 	 * Change VR mode
-	 * @param {number} mode, see Bivrost.VRMODE_*
+	 * @param {string} mode, see Bivrost.VRMODE_*
+	 * @member {string} vrMode
+	 * @memberOf Bivrost.Player#
 	 */
 	Object.defineProperty(Bivrost.Player.prototype, "vrMode", {
 		get: function() { return this._vrMode; },
@@ -289,7 +291,7 @@
 			this.fullscreen=true;
 			this.vrMode=Bivrost.AVAILABLE_VRMODES[0];
 		}
-	}
+	};
 
 
 		
@@ -313,6 +315,8 @@
 	 * Call to enter/exit or check state of fullscreen. Changes must be called from an user event.
 	 * @property {boolean}
 	 * @name Bivrost.Player#fullscreen
+	 * @member {boolean} fullscreen
+	 * @memberOf Bivrost.Player#
 	 */
 	Object.defineProperty(Bivrost.Player.prototype, "fullscreen", {
 		get: function() { return this._fullscreen; },

@@ -192,10 +192,16 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				var video=this.video=document.createElement("video");
 				video.setAttribute("width", "32");	// any number will be ok
 				video.setAttribute("height", "32");	// any number will be ok
-				video.setAttribute("loop", JSON.stringify(!!loop));
+				if(loop)
+					video.setAttribute("loop", "true");
 				video.setAttribute("webkit-playsinline", "webkit-playsinline");
 				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
-				this._setLoop=function(value) { video.setAttribute("loop", JSON.stringify(!!value)); };
+				this._setLoop=function(value) { 
+					if(value)
+						video.setAttribute("loop", "true");
+					else
+						video.removeAttribute("loop");
+				};
 
 				this.play=function() { video.play(); };
 				this.pause=function() { video.pause(); };
@@ -350,7 +356,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		}
 		log("got texture", texture);
 		this.onload(this);
-	},
+	};
 
 
 	Bivrost.Media.prototype.play=function() {};
@@ -362,14 +368,14 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 	Bivrost.Media.prototype._setTime=function() {};
 	Object.defineProperty(Bivrost.Media.prototype, "time", {
 		get: function() {return this._getTime();},
-		set: function(value) {this._setTime(value);},
+		set: function(value) {this._setTime(value);}
 	});
 
 	Bivrost.Media.prototype._getLoop=function() { return false; };
 	Bivrost.Media.prototype._setLoop=function() {};
 	Object.defineProperty(Bivrost.Media.prototype, "loop", {
 		get: function() {return this._getLoop();},
-		set: function(value) {this._setLoop(value);},
+		set: function(value) {this._setLoop(value);}
 	});
 
 	Bivrost.Media.prototype._getDuration=function() { return 0; },

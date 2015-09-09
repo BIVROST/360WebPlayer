@@ -91,7 +91,7 @@ bivrost-player {
 			transition: opacity 1s, background-size 1s; 
 		}
 		input[type="range"]::-moz-range-thumb { transition: opacity 1s, background-size 1s; }
-		input[type="range"]::-ms-thumb { transition: opacity 1s, background-size 1s; }
+		/*input[type="range"]::-ms-thumb { transition: opacity 1s, background-size 1s; }*/
 		
 		.bivrost-aligned {
 			position: absolute;
@@ -186,6 +186,7 @@ bivrost-player {
 			width: 100%;
 			height: $range-size;
 			margin: 0;
+			padding: 0;
 			border: none;
 			border-radius: 0px;
 			background: transparent;

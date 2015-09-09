@@ -110,7 +110,7 @@
 		this._leftCamera.quaternion.copy(look.lookQuaternion);
 		this._rightCamera.quaternion.copy(look.lookQuaternion);
 		renderStereoDelegate([this._leftScene,this._rightScene], [this._leftCamera,this._rightCamera]);
-	},
+	};
 
 
 	/**
@@ -128,9 +128,11 @@
 	/**
 	 * Camera aspect ratio
 	 * @type {number}
+	 * @member {number} aspect
+	 * @memberOf Bivrost.View#
 	 */
 	Object.defineProperty(Bivrost.View.prototype, "aspect", {
-		get: function() {	return this._leftCamera.aspect;	},
+		get: function() { return this._leftCamera.aspect; },
 		set: function(value) {
 			log("set aspect: ", value);
 			this._leftCamera.aspect=value;
@@ -144,11 +146,12 @@
 	/**
 	 * Camera zoom
 	 * @type {number}
+	 * @member {number} zoom
+	 * @memberOf Bivrost.View#
 	 */
 	Object.defineProperty(Bivrost.View.prototype, "zoom", {
 		get: function() { return this._leftCamera.zoom; },
 		set: function(value) {
-			log("set zoom: ", value);
 			if(value < 0.5) value=0.5;
 			if(value > 2.0) value=2.0;
 			this._leftCamera.zoom=value;
