@@ -12,8 +12,7 @@ module.exports = function (grunt) {
 					trace: true
 				},
 				files: {
-					'output/bivrost.css': 'bivrost.scss',
-					'output/bivrost-white.css': 'bivrost-white.scss'
+					'output/bivrost.css': 'bivrost.scss'
 				}
 			}
 		},

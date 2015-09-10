@@ -305,14 +305,11 @@ At this time there are two themes available:
 
 
 ## The default theme 
-
 ![The default theme](README-skin-default.png)
 
 ## The white theme 
-
 ![The white theme](README-skin-white.png)
-
-You can use the default theme by loading the `bivrost.css` file or the white theme with `bivrost-white.css`.
+You can change the theme by adding a `bivrost-theme-white` class to the `bivrost-player` tag.
 
 
 

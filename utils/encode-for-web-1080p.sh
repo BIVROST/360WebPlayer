@@ -25,7 +25,7 @@ fi
 if [ $mp4 = "true" ]; then
 	echo "Encoding mp4 (bitrate v/a: $bitrate_video/$bitrate_audio, bufsize: $bufsize, resolution: $resolution)";
 	ffmpeg -i "$1" \
-		-codec:v libx264 -profile:v high -preset veryfast -b:v $bitrate_video -maxrate $bitrate_video -bufsize $bufsize \
+		-codec:v libx264 -profile:v high -b:v $bitrate_video -maxrate $bitrate_video -bufsize $bufsize \
 		-vf scale=$resolution -movflags +faststart -pix_fmt yuv420p -g 5 \
 		-strict experimental -codec:a aac -b:a $bitrate_audio \
 		"$2.mp4"
