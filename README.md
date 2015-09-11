@@ -1,7 +1,7 @@
-Bivrost Web Player
-==================
+BIVROST 360WebPlayer
+====================
 
-The Bivrost Web Player is a part of the family of [immersive video players][1] made by [Bivrost][2] to supplement our [360 stereoscopic camera][3] and [software suite][4].
+The Bivrost 360WebPlayer is a part of the family of [immersive video players][1] made by [Bivrost][2] to supplement our [360 stereoscopic camera][3] and [software suite][4].
 
 
 TODO: player screenshot linking to demo page

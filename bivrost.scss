@@ -32,9 +32,24 @@ $transition-time: 0.5s;
 	@content;
 
 	$skin: "style-skin-white" !global;
-	$ui-background: rgba(255,255,255, 0.25) !global;
+	$ui-background: transparentize(#ffffff, 0.25) !global;
 	$text-color: #000000 !global;
 	@at-root #{theme(".bivrost-theme-white")} {
+		@content;
+	}
+	
+	$skin: "style-skin-spring" !global;
+	$ui-background: transparentize(#000000, 0.5) !global;
+	$text-color: #1C140D !global;
+	@at-root #{theme(".bivrost-theme-spring")} {
+		@content;
+	}	
+	
+	$skin: "style-skin-red" !global;
+	// $ui-background: transparentize(#da5d0e, 0.50) !global;
+	$ui-background: inline-image("ui-background.png");
+	$text-color: #ffffff !global;
+	@at-root #{theme(".bivrost-theme-red")} {
 		@content;
 	}
 
@@ -56,6 +71,16 @@ bivrost-player {
 	// white
 	&.bivrost-theme-white {
 		@import "style-skin-white/bivrost-icon/*.png";
+		@include all-bivrost-icon-sprites;
+	}
+	// spring
+	&.bivrost-theme-spring {
+		@import "style-skin-spring/bivrost-icon/*.png";
+		@include all-bivrost-icon-sprites;
+	}
+	// red
+	&.bivrost-theme-red {
+		@import "style-skin-red/bivrost-icon/*.png";
 		@include all-bivrost-icon-sprites;
 	}
 	
@@ -164,8 +189,9 @@ bivrost-player {
 			$w: bivrost-icon-sprite-width(back);
 			height: $h;
 			display: inline-block;
-			color: $text-color;
-			
+			@include themed {
+				color: $text-color;
+			}
 			margin: ($ui-height - $h)/2 0 0 $button-margin;
 			
 			line-height: $h;
