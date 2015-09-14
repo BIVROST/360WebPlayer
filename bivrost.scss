@@ -31,25 +31,26 @@ $transition-time: 0.5s;
 	$text-color: #ffffff !global;
 	@content;
 
-	$skin: "style-skin-white" !global;
-	$ui-background: transparentize(#ffffff, 0.25) !global;
-	$text-color: #000000 !global;
-	@at-root #{theme(".bivrost-theme-white")} {
+	// #1d6171 #113841
+	$skin: "style-skin-winter" !global;
+	$ui-background: transparentize(#eeeeee, 0.25) !global;
+	$text-color: #1d6171 !global;
+	@at-root #{theme(".bivrost-theme-winter")} {
 		@content;
 	}
-	
+
 	$skin: "style-skin-spring" !global;
 	$ui-background: transparentize(#000000, 0.5) !global;
 	$text-color: #1C140D !global;
 	@at-root #{theme(".bivrost-theme-spring")} {
 		@content;
-	}	
+	}
 	
-	$skin: "style-skin-red" !global;
+	$skin: "style-skin-autumn" !global;
 	// $ui-background: transparentize(#da5d0e, 0.50) !global;
-	$ui-background: inline-image("ui-background.png");
+	$ui-background: inline-image("#{$skin}/ui-background.png");
 	$text-color: #ffffff !global;
-	@at-root #{theme(".bivrost-theme-red")} {
+	@at-root #{theme(".bivrost-theme-autumn")} {
 		@content;
 	}
 
@@ -61,26 +62,25 @@ $transition-time: 0.5s;
 
 
 
-.bivrost-player,
-bivrost-player {
+.bivrost-player {
 	
-	//default
+	// theme default
 	$bivrost-icon-inline: true;
 	@import "style-skin-default/bivrost-icon/*.png";
 	@include all-bivrost-icon-sprites;
-	// white
-	&.bivrost-theme-white {
-		@import "style-skin-white/bivrost-icon/*.png";
+	// theme winter
+	&.bivrost-theme-winter {
+		@import "style-skin-winter/bivrost-icon/*.png";
 		@include all-bivrost-icon-sprites;
 	}
-	// spring
+	// theme spring
 	&.bivrost-theme-spring {
 		@import "style-skin-spring/bivrost-icon/*.png";
 		@include all-bivrost-icon-sprites;
 	}
-	// red
-	&.bivrost-theme-red {
-		@import "style-skin-red/bivrost-icon/*.png";
+	// theme autumn
+	&.bivrost-theme-autumn {
+		@import "style-skin-autumn/bivrost-icon/*.png";
 		@include all-bivrost-icon-sprites;
 	}
 	

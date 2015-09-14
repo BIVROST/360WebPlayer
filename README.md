@@ -20,7 +20,7 @@ TODO: player screenshot linking to demo page
 Features
 --------
 
-* Easy integration into any website
+* Easy integration into any web site
 * Simple for the end user
 * Works on both desktop and mobile
 * Free for personal use (see the [license][12] for details)
@@ -28,13 +28,12 @@ Features
 * Possible to embed more than one on the same page
 * Themable
 * Supports mono and stereoscopic pictures and video
-* [MozVR][11] support - working with Oculus Rift DK1, DK2, cardboard and more
+* [WebVR][11] (MozVR) support - working with Oculus Rift DK1, DK2, cardboard and more
 * Lots of configuration options
 * Supports viewing media in native players (also [supplied by Bivrost][1])
 * Accepting feature requests - tell us what you want in the player!
 
-[11]: http://mozvr.com/
-[12]: #License
+[11]: http://webvr.info/
 
 
 
@@ -64,16 +63,18 @@ Quickstart
 Installation
 ------------
 
-1. Get the js, css and image files from [the download page][21], put on your server.
+1. Get the JS and CSS files from [the download page][21], put on your server.
 2. Link to the CSS and JS files anywhere in the HTML (for example in the head):
 ```html
 <link rel="stylesheet" href="bivrost.css" />
 <script type="text/javascript" src="bivrost-min.js"></script>
 ```
-3. Configure the player
+3. [Configure][22] the player
+4. [Encode the media][23]
 
 [21]: TODO: download link
-
+[22]: #Configuration
+[23]: #Media%20preparation%20guide
 
 
 
@@ -284,14 +285,14 @@ Some interesting API methods:
 
 `player.fullscreen` (boolean): gets or sets if the player is displayed in fullscreen. Browsers require this to be called in a user event handler.
 
+`player.aspect` (number): gets or sets default aspect ratio, override by styling (default 4/3).
+
 `Bivrost.Loader(domNode)`: if you have changed a part of HTML code and want it parsed for `bivrost-player` tags, you can call this static function on a dom node or `document.body`. Already parsed tags will not be parsed again.
 
 `Bivrost.verbose` (boolean): set to false to suppress log output.
 
 `Bivrost.version` (string): the current player version.
 
-TODO: aspect ratio
-TODO: vrMode
 
 [51]: http://threejs.org/docs/#Reference/Math/Euler
 
@@ -428,15 +429,26 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 
 
 
-Keyboard shortcuts
-------------------
+User Guide
+----------
+
+### Available keyboard shortcuts
 
 * ` ↑ ` ` → ` ` ↓ ` ` ← ` - look around
 * ` space ` - pause/play
 * ` F ` or doubleclick movie - fullscreen
 * ` V ` - enter/toggle VR mode
+ ` escape ` - exit fullscreen/VR mode
 * ` [ `, ` ] ` - scroll movie by 5 seconds
 * ` + `, ` - ` - zoom in/out (not available in VR mode)
+
+### WebVR
+
+See instructions at [MozVR][81] and [WebVR.info][82] for instructions on how to setup your browser.
+
+
+[81]: http://mozvr.com/downloads/
+[82]: http://webvr.info/
 
 
 
@@ -455,39 +467,36 @@ Roadmap
 -------
 
 [x] Standalone web component
+[x] Mobile support - Android
+[ ] Posters - flat thumbnails for spherical video
+[ ] Multi-resolution video ("HD" button)
 [ ] Support built-in media galleries and switching media
 [ ] Overlays - add content on top of your media
-[ ] Interactive overlays
-[ ] More supported browsers
 [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
-[ ] More supported headsets
-[x] Mobile support - Android
+[ ] More supported browsers
+[ ] Interactive overlays
 [ ] Mobile support - iOS and windows phone
-[ ] video on Internet Exporer/Edge
+[x] video on Internet Exporer/Edge
 [ ] Smaller footprint
-[ ] Multi-resolution video (HD/non HD button)
 
+Please post suggestions using the issue function of GitHub.
 
 
 
 License
 -------
 
-TODO: DRAFT
+There are two separate licenses to choose from:
 
-You can use this software in your private or company website for free, including modifying it to suit your needs, provided you keep our logo and the Bivrost button.
+1. [The free license][92] - use for web sites that are non commercial
+2. [The paid license][93] - use for commercial web sites, one license per domain (contact [sales][94] for payment).
 
-If you want to remove or replace our branding or embed the player on a customers site, please [contact us for licensing][91].
+If you want to remove or replace our branding or are unsure about which license applies to you, please [contact us for help and additional licensing options][91].
 
-[91]:	TODO mailto:licensing
-
-
-
-
-
-
-
-
+[91]: TODO: mailto:licensing
+[92]: LICENSE-free.txt
+[93]: LICENSE-paid.txt
+[94]: TODO: mailto:sales 
 
 
 

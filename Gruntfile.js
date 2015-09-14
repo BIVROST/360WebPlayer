@@ -34,10 +34,11 @@ module.exports = function (grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-sass');
-	grunt.loadNpmTasks('grunt-postcss');
+//	grunt.loadNpmTasks('grunt-postcss');
 	grunt.loadNpmTasks('grunt-closure-compiler');
 
 	grunt.registerTask('default', ['sass', 'closure-compiler']);
+	grunt.registerTask('build', ['sass', 'closure-compiler']);
 };
 
 // scss -> css

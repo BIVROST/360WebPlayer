@@ -15,3 +15,5 @@ nb-configuration.xml
 /node_modules/
 compiler.jar
 .sass-cache
+
+bivrost-icon-*png
