@@ -53,12 +53,19 @@ $transition-time: 0.5s;
 	@at-root #{theme(".bivrost-theme-autumn")} {
 		@content;
 	}
-
+	
+	$skin: "style-skin-turquoise" !global;
+	// $ui-background: transparentize(#da5d0e, 0.50) !global;
+	$ui-background: transparentize(#4c0070, 0.5) !global;
+	$text-color: #ffffff !global;
+	@at-root #{theme(".bivrost-theme-turquoise")} {
+		@content;
+	}
+	
 	$skin: null !global;;
 	$ui-background: null !global;;
 	$text-color: null !global;
 }
-
 
 
 
@@ -81,6 +88,11 @@ $transition-time: 0.5s;
 	// theme autumn
 	&.bivrost-theme-autumn {
 		@import "style-skin-autumn/bivrost-icon/*.png";
+		@include all-bivrost-icon-sprites;
+	}
+	// theme turquoise
+	&.bivrost-theme-turquoise {
+		@import "style-skin-turquoise/bivrost-icon/*.png";
 		@include all-bivrost-icon-sprites;
 	}
 	
