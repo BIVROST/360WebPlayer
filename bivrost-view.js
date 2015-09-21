@@ -68,7 +68,7 @@
 		this._rightCamera=this._leftCamera.clone();
 
 		var sphereLeft=new THREE.Mesh(
-			new THREE.SphereGeometry(1, 50, 50),
+			new THREE.SphereGeometry(1, 64, 64),
 			new THREE.MeshBasicMaterial({
 				side: THREE.DoubleSide,
 				map: media.texture,
@@ -76,7 +76,7 @@
 			})
 		);
 		var sphereRight=new THREE.Mesh(
-			new THREE.SphereGeometry(1, 50, 50),
+			new THREE.SphereGeometry(1, 64, 64),
 			new THREE.MeshBasicMaterial({
 				side: THREE.DoubleSide,
 				map: media.texture,

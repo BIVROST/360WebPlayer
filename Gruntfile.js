@@ -25,8 +25,8 @@ module.exports = function (grunt) {
 //				maxBuffer: 5000,
 				options: {
 					compilation_level: 'SIMPLE',
-					language_in: 'ECMASCRIPT6',
-					language_out: 'ECMASCRIPT5'
+					language_in: 'ECMASCRIPT5_STRICT',
+					language_out: 'ECMASCRIPT5_STRICT'
 				}
 			}
 		}

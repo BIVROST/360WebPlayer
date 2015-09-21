@@ -11,8 +11,7 @@ nb-configuration.xml
 .nb-gradle/
 
 .DS_Store
-*.css.map
-/node_modules/
+/node_modules
 compiler.jar
 .sass-cache
 

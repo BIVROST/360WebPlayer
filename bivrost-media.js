@@ -176,6 +176,9 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					function(texture) {
 						log("still loaded", thisRef);
 						texture.name=thisRef.title;
+//						texture.minFilter=THREE.LinearMipMapLinearFilter;
+//						texture.magFilter=THREE.LinearMipMapLinearFilter;
+						texture.anisotropy=16;
 						thisRef.gotTexture(texture);
 					},
 					function(xhr) {

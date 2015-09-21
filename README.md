@@ -444,11 +444,18 @@ User Guide
 
 ### WebVR
 
-See instructions at [MozVR][81] and [WebVR.info][82] for instructions on how to setup your browser.
-
+See instructions at [MozVR][81] and [WebVR.info][82] for how to setup your browser.
 
 [81]: http://mozvr.com/downloads/
 [82]: http://webvr.info/
+
+
+### Google Cardboard
+
+Be sure to enable screen rotation on your device.
+
+Some phones lack a gyroscope, if you cannot look left or right, but looking up and down works this means that your phone manufacturer did not install one.
+
 
 
 
@@ -473,13 +480,13 @@ Roadmap
 [ ] Support built-in media galleries and switching media
 [ ] Overlays - add content on top of your media
 [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
-[ ] More supported browsers
 [ ] Interactive overlays
-[ ] Mobile support - iOS and windows phone
+[ ] Mobile support - iOS
+[ ] Mobile support - windows phone
 [x] video on Internet Exporer/Edge
 [ ] Smaller footprint
 
-Please post suggestions using the issue function of GitHub.
+Please post suggestions using the issue function of GitHub, always provide a valid use case.
 
 
 
@@ -512,5 +519,6 @@ Third party libraries
 The Bivrost Web Player uses third party libraries:
 
 * [THREE.js][99] (MIT license)
+
 
 [99]: http://threejs.org

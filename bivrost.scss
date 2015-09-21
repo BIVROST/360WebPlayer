@@ -48,7 +48,7 @@ $transition-time: 0.5s;
 	
 	$skin: "style-skin-autumn" !global;
 	// $ui-background: transparentize(#da5d0e, 0.50) !global;
-	$ui-background: inline-image("#{$skin}/ui-background.png");
+	$ui-background: inline-image("#{$skin}/ui-background.png") !global;
 	$text-color: #ffffff !global;
 	@at-root #{theme(".bivrost-theme-autumn")} {
 		@content;
