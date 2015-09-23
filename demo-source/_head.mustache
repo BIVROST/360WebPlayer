@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bivrost{{#title}} - {{ title }}{{/title}}</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=800, initial-scale=1.0">
+		{{#styles}}
+		<link href="../{{.}}" rel="stylesheet" />
+		{{/styles}}
+		{{^styles}}
+		<link href="../output/bivrost.css" rel="stylesheet" />
+		{{/styles}}
+		{{#scripts}}
+		<script src="../{{.}}"></script>
+		{{/scripts}}
+		{{^scripts}}
+		<script src="../output/bivrost.js"></script>
+		{{/scripts}}
+	</head>
+	<body style="width: 750px; margin: 1em auto">

@@ -1,4 +1,6 @@
 module.exports = function (grunt) {
+	var mustache;
+	
 	grunt.initConfig({
 		
 		pkg: grunt.file.readJSON("package.json"),
@@ -29,6 +31,44 @@ module.exports = function (grunt) {
 					language_out: 'ECMASCRIPT5_STRICT'
 				}
 			}
+		},
+		
+		"mustache_render": {
+			options: {
+				directory: "demo-source"
+			},
+			examples: {
+				files: (function() {
+					var r=[];
+					grunt.file.readJSON("demo-source/examples.json").forEach(function(data, i) {
+						if(data["override-scripts"])
+							data.scripts=grunt.file.readJSON("scripts.json");
+						r.push({
+							template: "demo-source/tag-template.mustache",
+							dest: "demo/"+data.slug+".html",
+							data: data
+						});
+//						r.push({
+//							template: "demo-source/data-template.mustache",
+//							dest: "demo/"+data.slug+"-data.html",
+//							data: data
+//						});
+					});
+					return r;
+				})()
+			},
+			index: {
+				files: [
+					{
+						template: "demo-source/index.mustache",
+						dest: "demo/index.html",
+						data: {
+							examples: grunt.file.readJSON("demo-source/examples.json"),
+							title: "documentation index"
+						}
+					}
+				]
+			}
 		}
 
 	});
@@ -36,9 +76,10 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-sass');
 //	grunt.loadNpmTasks('grunt-postcss');
 	grunt.loadNpmTasks('grunt-closure-compiler');
+	grunt.loadNpmTasks('grunt-mustache-render');
 
-	grunt.registerTask('default', ['sass', 'closure-compiler']);
-	grunt.registerTask('build', ['sass', 'closure-compiler']);
+	grunt.registerTask('default', ['sass', 'closure-compiler', "mustache_render"]);
+	grunt.registerTask('build', ['sass', 'closure-compiler', "mustache_render"]);
 };
 
 // scss -> css

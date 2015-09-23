@@ -1,0 +1,11 @@
+{{ >_head }}
+
+		<h1>Demo index</h1>
+
+		<ul>
+		{{ #examples }}
+		<li><a href="{{ slug }}.html">{{ title }}</a></li>
+		{{ /examples }}
+		</ul>
+		
+{{ >_foot }}

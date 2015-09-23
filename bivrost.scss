@@ -39,6 +39,7 @@ $transition-time: 0.5s;
 		@content;
 	}
 
+	// #ffffff #86c239
 	$skin: "style-skin-spring" !global;
 	$ui-background: transparentize(#000000, 0.5) !global;
 	$text-color: #1C140D !global;
@@ -46,16 +47,16 @@ $transition-time: 0.5s;
 		@content;
 	}
 	
+	// #ffffff #f53753
 	$skin: "style-skin-autumn" !global;
-	// $ui-background: transparentize(#da5d0e, 0.50) !global;
 	$ui-background: inline-image("#{$skin}/ui-background.png") !global;
 	$text-color: #ffffff !global;
 	@at-root #{theme(".bivrost-theme-autumn")} {
 		@content;
 	}
 	
+	// #ffffff #00ffc2
 	$skin: "style-skin-turquoise" !global;
-	// $ui-background: transparentize(#da5d0e, 0.50) !global;
 	$ui-background: transparentize(#4c0070, 0.5) !global;
 	$text-color: #ffffff !global;
 	@at-root #{theme(".bivrost-theme-turquoise")} {

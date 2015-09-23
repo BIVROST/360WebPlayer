@@ -302,17 +302,26 @@ Some interesting API methods:
 Themes
 ------
 
-At this time there are two themes available:
+There are five themes available:
 
-
-## The default theme 
+## The default theme
 ![The default theme](README-skin-default.png)
 
-## The white theme 
-![The white theme](README-skin-white.png)
-You can change the theme by adding a `bivrost-theme-white` class to the `bivrost-player` tag.
+## The winter theme
+![The winter theme](README-skin-winter.png)
+You can change the theme by adding a `bivrost-theme-winter` class to the `bivrost-player` tag.
 
+## The spring theme
+![The spring theme](README-skin-spring.png)
+You can change the theme by adding a `bivrost-theme-spring` class to the `bivrost-player` tag.
 
+## The autumn theme
+![The autumn theme](README-skin-autumn.png)
+You can change the theme by adding a `bivrost-theme-autumn` class to the `bivrost-player` tag.
+
+## The turquoise theme
+![The winter theme](README-skin-turquoise.png)
+You can change the theme by adding a `bivrost-theme-turquoise` class to the `bivrost-player` tag.
 
 
 
@@ -442,21 +451,40 @@ User Guide
 * ` [ `, ` ] ` - scroll movie by 5 seconds
 * ` + `, ` - ` - zoom in/out (not available in VR mode)
 
-### WebVR
+
+### Virtual Reality on the desktop with WebVR
+
+At the time of writing, WebVR is supported by Firefox Nightly with an extension. It supports Oculus Rift and (allegedly) other headsets like HTC Vive.
 
 See instructions at [MozVR][81] and [WebVR.info][82] for how to setup your browser.
+
+When you have a working setup, press ` V ` or the "eye" button to go to VR mode.
 
 [81]: http://mozvr.com/downloads/
 [82]: http://webvr.info/
 
 
-### Google Cardboard
+### Virtual Reality in mobile with Google Cardboard
 
-Be sure to enable screen rotation on your device.
+It is possible to use the Bivrost 360Player with Google Cardboard and it's many clones. Just press the "eye" button to go to VR mode.
 
-Some phones lack a gyroscope, if you cannot look left or right, but looking up and down works this means that your phone manufacturer did not install one.
+Some tips:
+
+* Be sure to enable screen rotation on your device.
+* If you have a NFC tag in your cardboard it might be a good idea to disable NFC in your phone as it will run the cardboard app instead of allowing you to use a browser.
+* Some phones lack a gyroscope, if you have problems looking left and right, but looking up and down works this means that your phone manufacturer did not install one. The phone tries to compensate this with a compass (magnetometer), but the results are far from good.
+* Consider setting a longer time for screen timeout.
 
 
+### Platform availability
+
+We try to make the player run on as many platforms as possible, but we still have far from 100% coverage. Major unsupported platforms are:
+
+* iOS - only pictures work, videos are distorted and without a user interface
+* Windows Phone - only pictures work, videos are black
+* GearVR - currently no way to run a web browser
+
+If you're experiencing problems with any other recent platform, please let us know.
 
 
 
@@ -482,9 +510,10 @@ Roadmap
 [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
 [ ] Interactive overlays
 [ ] Mobile support - iOS
-[ ] Mobile support - windows phone
+[ ] Mobile support - Windows Phone
 [x] video on Internet Exporer/Edge
 [ ] Smaller footprint
+[ ] 3d glasses stereoscopic display support (line by line, red cyan)
 
 Please post suggestions using the issue function of GitHub, always provide a valid use case.
 

@@ -1,0 +1,125 @@
+[
+	{
+		"slug": "simple",
+		"title": "Simplest example",
+		"description": [
+			"Simplest use of a tag, no additional options. ",
+			"The media source type is detected from the file extension and stereoscopy by the word 'mono' (details of the parameter guessing algorithm are in the README.md file)",
+			"There is only one video source provided in the shorthand <tt>bivrost-player[url]</tt> tag. It's best to provide an alternate video source, like a webm - to do that use a <tt>bivrost-media</tt> tag"
+		],
+		"options": [
+			{ "attr": "url", "value": "media/Morskie%20Oko%205s%20(mono,%201080p).mp4" }
+		]
+	},
+	
+	{
+		"slug": "full",
+		"title": "Fully configured example",
+		"description": [
+			"All options provided. They are all their default values except of <tt>bivrost-media[type]</tt> which is normally undefined."
+		],
+		"options": [
+			 {"attr": "loop", "value": "false"},
+			 {"attr": "autoplay", "value": "false"},
+			 {"attr": "stereoscopy", "value": "autodetect"},
+			 {"attr": "projection", "value": "equirectangular"},
+			 {"attr": "source", "value": "autodetect"}
+		],
+		"src": [
+			{"url": "Morskie%20Oko%205s%20(mono,%201080p).mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "Morskie%20Oko%205s%20(mono,%201080p).webm", "type": "video/webm; codecs=vp8.0"}
+		]
+	},
+	
+	{
+		"slug": "size",
+		"title": "Modified size",
+		"description": "Normally the size of the player is autodetected from available width and preset aspect ratio of 4:3. You can override this with css style or class and the player will adapt.",
+		"options": [
+			{"attr": "style", "value": "width: 400px; height: 500px", "unescaped": true}
+		],
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	},
+	
+	{
+		"slug": "unminified",
+		"override-scripts": true,
+		"title": "Unminified javascript",
+		"description": "This is a development copy without javascript compilation by closure compiler.",
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	},
+	
+	{
+		"slug": "theme-default",
+		"title": "Default theme",
+		"description": [
+			"The default theme, explicitly stated.",
+			"You can ommit this theme class as it is the default."
+		],
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-default", "unescaped": true}
+		],
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	},
+	
+	{
+		"slug": "theme-winter",
+		"title": "Winter theme",
+		"description": "A gray-bluish theme",
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-winter", "unescaped": true}
+		],
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	},
+	
+	{
+		"slug": "theme-spring",
+		"title": "Spring theme",
+		"description": "A black and green theme",
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-spring", "unescaped": true}
+		],
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	},
+	
+	{
+		"slug": "theme-autumn",
+		"title": "Autumn theme",
+		"description": "An orange theme with a floral design",
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-autumn", "unescaped": true}
+		],
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	},
+	
+	{
+		"slug": "theme-turquoise",
+		"title": "Turquoise theme",
+		"description": "A blue-pinkish theme",
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-turquoise", "unescaped": true}
+		],
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	}
+]

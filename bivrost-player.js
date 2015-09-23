@@ -99,7 +99,7 @@
 		
 		// load media if provided
 		if(url) {
-			new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source, loop);
+			this.media_loading=new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source, loop);
 		}
 		
 		

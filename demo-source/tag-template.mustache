@@ -1,0 +1,50 @@
+{{ >_head }}
+
+
+	<header>
+		<h1>{{ title }}</h1>
+	</header>
+
+	<article>
+		
+		{{ #description }}
+		<p>{{{ . }}}</p>
+		{{ /description }}
+		
+		<bivrost-player{{ #options }} {{attr}}="{{value}}"{{ /options }}>
+			{{ #src }}
+			<bivrost-media url="media/{{url}}{{ ^url }}{{ . }}{{ /url }}"{{ #type }} type="{{ type }}"{{ /type }}></bivrost-media>
+			{{ /src }}
+		</bivrost-player>
+		
+		<p>Source code:</p>
+		<code>	
+		&lt;bivrost-player{{ #options }}<br /> 
+		&nbsp;	&nbsp;	{{ attr }}="{{ value }}"{{ /options }}&gt;
+		{{ #src }}
+		<br />&nbsp;	&lt;bivrost-media 
+				{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	{{ /type }}
+				url="media/{{url}}{{ ^url }}{{ . }}{{ /url }}"{{!
+				}}{{ #type }}<br/>&nbsp;	&nbsp;	 &nbsp;	type="{{ type }}"{{ /type }}{{!
+				}}&gt;&lt;/bivrost-media&gt;
+		{{ /src }}
+		<br />&lt;/bivrost-player&gt;
+		</code>
+		
+		<p>Alternative source code with data attributes:</p>
+		<code>
+		&lt;div data-bivrost-player{{ #options }} <br />
+		&nbsp;	&nbsp;	{{ ^unescaped }}data-bivrost-{{ /unescaped }}{{ attr }}="{{ value }}"{{ /options }}&gt;
+		{{ #src }}
+		<br />&nbsp;	&lt;div data-bivrost-media 
+				{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	{{ /type }}
+				data-bivrost-url="media/{{url}}{{ ^url }}{{ . }}{{ /url }}"{{!
+				}}{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	data-bivrost-type="{{ type }}"{{ /type }}{{!
+				}}&gt;&lt;/div&gt;
+		{{ /src }}
+		<br />&lt;/div&gt;
+		</code>
+		
+	</article>
+		
+{{ >_foot }}

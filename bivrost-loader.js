@@ -40,7 +40,7 @@ Bivrost.Loader=function(dom) {
 	}
 	
 	
-	[].slice.call(document.querySelectorAll("bivrost-player, [data-bivrost-player]")).forEach(function(container) {
+	return [].map.call(document.querySelectorAll("bivrost-player, [data-bivrost-player]"), function(container) {
 		var urls={};
 		
 		// root url+type configuration
@@ -54,8 +54,7 @@ Bivrost.Loader=function(dom) {
 			urls[attr(ee, "url", "url (or data-bivrost-url) attribute is required in the bivrost-media tag")]=attr(ee, "type");
 		});
 		
-		log("found media: ", container, urls);
-		
+		log("loading media: ", container, urls);
 
 		var stereoscopy=attr(container, "stereoscopy") || Bivrost.STEREOSCOPY_AUTODETECT;
 		assert(stereoscopy, Bivrost.AVAILABLE_STEREOSCOPIES, "stereoscopy must be "+Bivrost.AVAILABLE_STEREOSCOPIES.join(" or "));
@@ -74,9 +73,7 @@ Bivrost.Loader=function(dom) {
 		assert(autoplay, ["true", "false"], "autoplay must be true or false");
 		autoplay=autoplay === "true";
 		
-		console.log("autoplay", autoplay);
-		
-		new Bivrost.Player(container, urls, projection, stereoscopy, source, JSON.parse(loop), JSON.parse(autoplay));
+		return new Bivrost.Player(container, urls, projection, stereoscopy, source, JSON.parse(loop), JSON.parse(autoplay));
 	});
 	
 };
