@@ -60,7 +60,7 @@ Bivrost.Loader=function(dom) {
 		assert(stereoscopy, Bivrost.AVAILABLE_STEREOSCOPIES, "stereoscopy must be "+Bivrost.AVAILABLE_STEREOSCOPIES.join(" or "));
 
 		var projection=attr(container, "projection") || Bivrost.PROJECTION_EQUIRECTANGULAR;
-		assert(projection, Bivrost.AVAILABLE_PROJECTIONS, "projection must be "+Bivrost.AVAILABLE_PROJECTIONS.join(" or "));
+		assert(projection.replace(/:.+/, ""), Bivrost.AVAILABLE_PROJECTIONS, "projection must be "+Bivrost.AVAILABLE_PROJECTIONS.join(" or "));
 		
 		var source=attr(container, "source") || Bivrost.SOURCE_AUTODETECT;
 		assert(source, Bivrost.AVAILABLE_SOURCES, "source must be "+Bivrost.AVAILABLE_SOURCES.join(" or "));

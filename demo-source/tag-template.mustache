@@ -24,7 +24,7 @@
 		{{ #src }}
 		<br />&nbsp;	&lt;bivrost-media 
 				{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	{{ /type }}
-				url="media/{{url}}{{ ^url }}{{ . }}{{ /url }}"{{!
+				url="<a href="media/{{url}}{{ ^url }}{{ . }}{{ /url }}">media/{{url}}{{ ^url }}{{ . }}{{ /url }}</a>"{{!
 				}}{{ #type }}<br/>&nbsp;	&nbsp;	 &nbsp;	type="{{ type }}"{{ /type }}{{!
 				}}&gt;&lt;/bivrost-media&gt;
 		{{ /src }}
@@ -38,7 +38,7 @@
 		{{ #src }}
 		<br />&nbsp;	&lt;div data-bivrost-media 
 				{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	{{ /type }}
-				data-bivrost-url="media/{{url}}{{ ^url }}{{ . }}{{ /url }}"{{!
+				data-bivrost-url="<a href="media/{{url}}{{ ^url }}{{ . }}{{ /url }}">media/{{url}}{{ ^url }}{{ . }}{{ /url }}</a>"{{!
 				}}{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	data-bivrost-type="{{ type }}"{{ /type }}{{!
 				}}&gt;&lt;/div&gt;
 		{{ /src }}

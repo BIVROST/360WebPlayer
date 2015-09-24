@@ -9,6 +9,13 @@
 Bivrost.PROJECTION_EQUIRECTANGULAR="equirectangular";
 
 
+/**
+ * Cubemap, all faces in one row
+ * @type String
+ */
+Bivrost.PROJECTION_CUBEMAP="cubemap";
+
+
 // TODO:
 ///**
 // * Media will be projected on a quad (resembling a picture frame)
@@ -22,7 +29,8 @@ Bivrost.PROJECTION_EQUIRECTANGULAR="equirectangular";
  * @type Array
  */
 Bivrost.AVAILABLE_PROJECTIONS=[
-	Bivrost.PROJECTION_EQUIRECTANGULAR
+	Bivrost.PROJECTION_EQUIRECTANGULAR,
+	Bivrost.PROJECTION_CUBEMAP
 //	Bivrost.PROJECTION_FRAME
 ];
 

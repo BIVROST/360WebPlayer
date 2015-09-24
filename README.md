@@ -44,18 +44,19 @@ Features
 Quickstart
 ----------
 
-1. [Get][21] and unpack to `bivrost_dir`
-2. Copy and paste:
+1.	[Get][21] and unpack to `bivrost_dir`
+2.	Copy and paste:
 
-```html
-<link rel="stylesheet" href="bivrost_dir/bivrost.css" />
-<script type="text/javascript" src="bivrost_dir/bivrost-min.js"></script>
-<bivrost-player url="stereoscopic_movie_LR.mp4"></bivrost-player>
-```
+	```html
+	<link rel="stylesheet" href="bivrost_dir/bivrost.css" />
+	<script type="text/javascript" src="bivrost_dir/bivrost-min.js"></script>
+	<bivrost-player url="stereoscopic_movie_SbS.mp4"></bivrost-player>
+	```
+3.	Enjoy. 
 
+All configuration is autodetected, from the `.mp4` extension it assumes it's a movie, from the `SbS` it takes it's a side-by-side stereoscopic one. It also assumes it's and equirectangular projection, because almost everything is.
 
-
-
+You might want to provide an additional webm version for browsers not supporting mp4 and tweek other options, but these three lines with a well named file should work in 90% of cases.
 
 
 
@@ -113,11 +114,34 @@ Following configuration options are allowed:
 	optional, default: "autodetect"
 	
 *	`projection`: reserved for future use; what is the projection (mapping from 2d to 3d) of the media?
-	Allowed value: "equirectangular";
-	optional, default: "equirectangular"
+	Allowed value: "equirectangular", "cubemap", "cubemap:configuration...";
+	optional, default: "equirectangular".
+	Cubemap can be configured with cubemap type. There are a few presets defining the order of faces: 
 
+	* "horizontal" (default) - all sides of the cube are in one line in the order; left, right, down, up, back, front. OBRX uses this format.
+	* "two-by-three" - sides are in two rows: left, right, down and up, bottom, front. Facebook 360 videos use this format.
+	* "horizontal-cross" - sides are in a cross with bottom, right, front and left in the middle row; up is in the top row and down in the bottom. 
+	* "vertical-cross" - up is in the first row, bottom, right and front in the second, left in the third and down in the fourth. ATI CubeMapGen uses this format.
+	* custom - you can specify any alignment with a simple description string. The order string is an 2d array of face names in the order they appear on the texture. The rows are separated by "," and the faces are one letter acronyms (also accepts capital letters):
 
-Apart from that, you can tune down the player console information with `Bivrost.verbose=false` in a script somewhere.
+		*  "f" - front
+		*  "b" - back
+		*  "l" - left
+		*  "r" - right
+		*  "u" - up
+		*  "d" - down
+		*  "-" - unused space
+
+	Additionally two optional modifiers are supported at the end of the string:
+
+		*  ">90" - rotate clockwise by x degrees (90 in example)
+		*  "<72" - rotate counter clockwise by x degrees (72 in example)
+		*  "+0.01" - crop faces by amount (prevents visible edges)
+
+	Example: `-u--,blfr,-d-->90+0.002`
+	
+
+Apart from that, you can tune down the player console information with `Bivrost.verbose=false` in a script.
 
 The player can be run and configured in two ways:
 
@@ -348,9 +372,9 @@ And as always there is some random **stuff** to remember:
 
 Here at Bivrost we use [ffmpeg][61] with these options for web/mobile:
 
-    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -b:v 10M -maxrate 10M -bufsize 20M -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
+    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -b:v 10M -bufsize 20M -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
 
-    ffmpeg -i input.mp4 -codec:v libvpx -b:v 10M -bufsize 20M -vf scale=1920:1080 -g 5 -c:a libvorbis -b:a 128k output.webm
+    ffmpeg -i input.mp4 -codec:v libvpx -vb 10M -bufsize 20M -vf scale=1920:1080 -g 5 -c:a libvorbis -b:a 128k output.webm
 
 If you want to know more, there are some good manuals to look into:
 

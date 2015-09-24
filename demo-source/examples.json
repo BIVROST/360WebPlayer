@@ -14,22 +14,124 @@
 	
 	{
 		"slug": "full",
-		"title": "Fully configured example",
+		"title": "All available options provided with defaults",
 		"description": [
 			"All options provided. They are all their default values except of <tt>bivrost-media[type]</tt> which is normally undefined."
 		],
 		"options": [
-			 {"attr": "loop", "value": "false"},
-			 {"attr": "autoplay", "value": "false"},
-			 {"attr": "stereoscopy", "value": "autodetect"},
-			 {"attr": "projection", "value": "equirectangular"},
-			 {"attr": "source", "value": "autodetect"}
+			{"attr": "loop", "value": "false"},
+			{"attr": "autoplay", "value": "false"},
+			{"attr": "stereoscopy", "value": "autodetect"},
+			{"attr": "projection", "value": "equirectangular"},
+			{"attr": "source", "value": "autodetect"}
 		],
 		"src": [
 			{"url": "Morskie%20Oko%205s%20(mono,%201080p).mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
 			{"url": "Morskie%20Oko%205s%20(mono,%201080p).webm", "type": "video/webm; codecs=vp8.0"}
 		]
 	},
+	
+	{
+		"slug": "proper",
+		"title": "Properly configured example",
+		"description": [
+			"All options provided. Nothing is autodetected, everything is specified."
+		],
+		"options": [
+			 {"attr": "loop", "value": "false"},
+			 {"attr": "autoplay", "value": "false"},
+			 {"attr": "stereoscopy", "value": "mono"},
+			 {"attr": "projection", "value": "equirectangular"},
+			 {"attr": "source", "value": "video"}
+		],
+		"src": [
+			"Morskie%20Oko%205s%20(mono,%201080p).mp4", 
+			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+		]
+	},
+	
+	{
+		"slug": "cubemap",
+		"title": "Cubemap",
+		"override-scripts": true,
+		"description": "Panorama in the less common cubemap format.",
+		"options": [
+			{"attr": "projection", "value": "cubemap"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			"KeloidVR-mono.jpeg"
+		]
+	},
+	{
+		"slug": "cubemap-stereo",
+		"title": "Cubemap stereo (side-by-side)",
+		"override-scripts": true,
+		"description": "Panorama in the less common cubemap format. Stereoscopic version.",
+		"options": [
+			{"attr": "projection", "value": "cubemap"},
+			{"attr": "stereoscopy", "value": "side-by-side"}
+		],
+		"src": [
+			"KeloidVR-SbS.png"
+		]
+	},
+	
+	{
+		"slug": "cubemap-stereo-facebook",
+		"title": "Cubemap stereo (faceook two by three)",
+		"override-scripts": true,
+		"description": "Panorama in the less common cubemap format. Facebook version.",
+		"options": [
+			{"attr": "projection", "value": "cubemap:facebook"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			"output_01181.jpg"
+		]
+	},
+	
+	{
+		"slug": "cubemap-stereo-custom",
+		"title": "Cubemap stereo (custom)",
+		"override-scripts": true,
+		"description": "Panorama in the less common cubemap format. Facebook version.",
+		"options": [
+			{"attr": "projection", "value": "cubemap:horizontal"},
+			{"attr": "stereoscopy", "value": "side-by-side"}
+		],
+		"src": [
+			"Space_Station_76_Hallway-SbS.png"
+		]
+	},	
+	
+	{
+		"slug": "cubemap-facebook-movie",
+		"title": "Cubemap facebook movie",
+		"override-scripts": true,
+		"description": "Panorama in the less common cubemap format. The format used by Facebook",
+		"options": [
+			{"attr": "projection", "value": "cubemap:facebook"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			"11969984_870751996307656_847599406_n.mp4 "
+			
+		]
+	},
+	
+	{
+		"slug": "loop",
+		"title": "Looping video",
+		"description": ["Example with looping enabled"],
+		"options": { "attr": "loop", "value": "true" },
+		"src": [
+			{"url": "Morskie%20Oko%205s%20(mono,%201080p).mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "Morskie%20Oko%205s%20(mono,%201080p).webm", "type": "video/webm; codecs=vp8.0"}
+		]
+	},
+	
+	
 	
 	{
 		"slug": "size",
@@ -42,6 +144,25 @@
 			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
 			"Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
+	},
+		
+	{
+		"slug": "still",
+		"title": "Static panoramas",
+		"description": "The 360WebPlayer can also display pictures",
+		"src": [
+			"Field%20(mono).jpeg"
+		]
+	},
+	
+	{
+		"slug": "top-and-bottom",
+		"title": "Top And Bottom stereoscopy",
+		"description": "A stereoscopic render using an top-and-bottom oriented image.",
+		"options": [
+			{"attr": "stereoscopy", "value":"top-and-bottom-reversed"}
+		],
+		"src": ["blood-TaB.png"]
 	},
 	
 	{
