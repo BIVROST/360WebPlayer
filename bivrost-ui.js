@@ -99,7 +99,7 @@
 		var thisRef=this;
 		this.media=media;
 		
-		var bivrostButtonLink="player-jump.html";
+		var bivrostButtonLink="http://bivrost360.com/open-in-native/";
 		
 		var leftAligned=document.createElement("div");
 		leftAligned.className="bivrost-aligned bivrost-left-aligned";

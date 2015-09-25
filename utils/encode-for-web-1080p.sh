@@ -10,7 +10,7 @@ mp4=${mp4:-true}
 
 echo $# $webm $mp4
 
-if [ $# != 2 ]; then
+if [[ $# -lt 2 ]]; then
 	echo "SYNTAX: $0 infile outfile (mp4 and webm)"
 	echo "available configuration options:"
 	echo "  bitrate_video (default: 10M)"
@@ -22,24 +22,32 @@ if [ $# != 2 ]; then
 	exit 1
 fi
 
-if [ $mp4 = "true" ]; then
+IN=$1
+OUT=$2
+shift
+shift
+
+if [[ $mp4 = "true" ]]; then
 	echo "Encoding mp4 (bitrate v/a: $bitrate_video/$bitrate_audio, bufsize: $bufsize, resolution: $resolution)";
-	ffmpeg -i "$1" \
-		-codec:v libx264 -profile:v high -b:v $bitrate_video -maxrate $bitrate_video -bufsize $bufsize \
+	ffmpeg -i "$IN" \
+		$* \
+		-codec:v libx264 -profile:v high -vb $bitrate_video -bufsize $bufsize \
 		-vf scale=$resolution -movflags +faststart -pix_fmt yuv420p -g 5 \
 		-strict experimental -codec:a aac -b:a $bitrate_audio \
-		"$2.mp4"
+		"$OUT.mp4"
 else
 	echo "mp4 skipped";
 fi
 
-if [ $webm = "true" ]; then
+
+if [[ $webm = "true" ]]; then
 	echo "Encoding webm (bitrate v/a: $bitrate_video/$bitrate_audio, bufsize: $bufsize, resolution: $resolution)";
-	ffmpeg -i "$1" \
-		-codec:v libvpx -b:v $bitrate_video -maxrate $bitrate_video -minrate $bitrate_video -bufsize $bufsize \
+	ffmpeg -i "$IN" \
+		$* \
+		-codec:v libvpx -vb $bitrate_video -bufsize $bufsize \
 		-vf scale=$resolution -g 5 \
 		-c:a libvorbis -b:a $bitrate_audio \
-		"$2.webm"
+		"$OUT.webm"
 else
         echo "webm skipped";
 fi

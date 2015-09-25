@@ -132,13 +132,15 @@ Following configuration options are allowed:
 		*  "d" - down
 		*  "-" - unused space
 
+	Each face can be supplied with a rotation with `*x` where x is a number from 0 to 3.
+
 	Additionally two optional modifiers are supported at the end of the string:
 
 		*  ">90" - rotate clockwise by x degrees (90 in example)
 		*  "<72" - rotate counter clockwise by x degrees (72 in example)
 		*  "+0.01" - crop faces by amount (prevents visible edges)
 
-	Example: `-u--,blfr,-d-->90+0.002`
+	Example: `-u--,blfr,-d*2-->90+0.002`
 	
 
 Apart from that, you can tune down the player console information with `Bivrost.verbose=false` in a script.

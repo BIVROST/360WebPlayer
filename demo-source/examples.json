@@ -89,6 +89,34 @@
 		"src": [
 			"output_01181.jpg"
 		]
+	},	
+	
+	{
+		"slug": "cubemap-hcross",
+		"title": "Cubemap horizontal cross",
+		"override-scripts": true,
+		"description": "Panorama in the less common cubemap format. Horizontal cross.",
+		"options": [
+			{"attr": "projection", "value": "cubemap:horizontal-cross"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			"Skybox_example.png"
+		]
+	},
+		
+	{
+		"slug": "cubemap-vcross",
+		"title": "Cubemap vertical cross",
+		"override-scripts": true,
+		"description": "Panorama in the less common cubemap format. Vertical cross.",
+		"options": [
+			{"attr": "projection", "value": "cubemap:vertical-cross"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			"maxresdefault.jpg"
+		]
 	},
 	
 	{
