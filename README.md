@@ -562,6 +562,11 @@ Either your webserver doesn't support [Content-Range][content-range] or your vid
 [content-range]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
 
 
+### Where can I submit feature requests or bug reports? Where can I find the unminified version? =
+
+Please send bugs and feature requests to our GitHub at http://github.com/Bivrost/360WebPlayer the sources are located there too. Thanks.
+
+
 
 Standalone players
 ------------------

@@ -5,6 +5,7 @@
     "grunt": "~0.4.5",
     "grunt-closure-compiler": "0.0.21",
     "grunt-contrib-sass": "^0.9.2",
-    "grunt-mustache-render": "^1.9.0"
+    "grunt-mustache-render": "^1.9.0",
+    "marked": "^0.3.5"
   }
 }
