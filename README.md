@@ -1,15 +1,19 @@
 BIVROST 360WebPlayer
 ====================
 
-The Bivrost 360WebPlayer is a part of the family of [immersive video players][1] made by [Bivrost][2] to supplement our [360 stereoscopic camera][3] and [software suite][4].
+![The default theme](README-player.png)
 
+Easy virtual reality on desktop and mobile: the BIVROST 360WebPlayer is a simple way to show 360 videos and pictures on your blog or website.
 
-TODO: player screenshot linking to demo page
+This player is a part of the family of [immersive video players][player-windows] made by [Bivrost][bivrost-website] to supplement our [360 stereoscopic camera][camera] and [software suite][stitcher].
 
-[1]: TODO: player-windows
-[2]: http://bivrost360.com
-[3]: TODO: camera
-[4]: TODO: sticher
+Please view the [live demo][live-demo].
+
+[player-windows]: TODO:player-windows
+[bivrost-website]: http://bivrost360.com
+[camera]: TODO:camera
+[stitcher]: TODO:sticher
+[live-demo]: http://bivrost360.com/webplayer-docs
 
 
 
@@ -23,17 +27,18 @@ Features
 * Easy integration into any web site
 * Simple for the end user
 * Works on both desktop and mobile
-* Free for personal use (see the [license][12] for details)
+* Free for personal use (see the [license][wordpress-plugin] for details)
 * Works on major browsers
 * Possible to embed more than one on the same page
 * Themable
 * Supports mono and stereoscopic pictures and video
-* [WebVR][11] (MozVR) support - working with Oculus Rift DK1, DK2, cardboard and more
+* [WebVR][webvr] (MozVR) support - working with Oculus Rift DK1, DK2, cardboard and more
 * Lots of configuration options
-* Supports viewing media in native players (also [supplied by Bivrost][1])
+* Supports viewing media in native players (also [supplied by Bivrost][player-windows])
+* Available also as [a WordPress plugin][wordpress-plugin]
 * Accepting feature requests - tell us what you want in the player!
 
-[11]: http://webvr.info/
+[wordpress-plugin]: TODO:wordpress-plugin
 
 
 
@@ -44,7 +49,7 @@ Features
 Quickstart
 ----------
 
-1.	[Get][21] and unpack to `bivrost_dir`
+1.	[Get][download-link] and unpack to `bivrost_dir`
 2.	Copy and paste:
 
 	```html
@@ -54,9 +59,14 @@ Quickstart
 	```
 3.	Enjoy. 
 
+
+### How does this work?
+
 All configuration is autodetected, from the `.mp4` extension it assumes it's a movie, from the `SbS` it takes it's a side-by-side stereoscopic one. It also assumes it's and equirectangular projection, because almost everything is.
 
-You might want to provide an additional webm version for browsers not supporting mp4 and tweek other options, but these three lines with a well named file should work in 90% of cases.
+You might want to provide an additional webm version for browsers not supporting mp4 and tweak other options, but these three lines with a well named file should work in 90% of cases.
+
+There are no additional image assets downloaded from some CDN, just the two files. Everything is embedded in the css and js files.
 
 
 
@@ -64,18 +74,19 @@ You might want to provide an additional webm version for browsers not supporting
 Installation
 ------------
 
-1. Get the JS and CSS files from [the download page][21], put on your server.
+1. Get the JS and CSS files from [the download page][download-link], put on your server.
 2. Link to the CSS and JS files anywhere in the HTML (for example in the head):
 ```html
 <link rel="stylesheet" href="bivrost.css" />
 <script type="text/javascript" src="bivrost-min.js"></script>
 ```
-3. [Configure][22] the player
-4. [Encode the media][23]
+Don't forget to set the correct paths.
+3. [Configure][configuration] the player
+4. [Encode the media][media-preparation-guide]
 
-[21]: TODO: download link
-[22]: #Configuration
-[23]: #Media%20preparation%20guide
+[download-link]: TODO:download-link
+[configuration]: #configuration
+[media-preparation-guide]: #media-preparation-guide
 
 
 
@@ -86,7 +97,7 @@ Configuration
 
 Following configuration options are allowed:
 
-*	`url`: media address, may be multiple for alternative sources (translates to `source` tag of HTML5 `video` or `img` if a picture); required.
+*	`url`: media address, may be multiple for alternative sources (translates to `source` tag of HTML5 `video` or `img` if a picture); At least one `url` attribute or `bivrost-media` tag is required.
 
 *	`type`: media mime types and codec information. Format is the same as in HTML5 video; optional, ignored on pictures.
 
@@ -120,9 +131,10 @@ Following configuration options are allowed:
 
 	* "horizontal" (default) - all sides of the cube are in one line in the order; left, right, down, up, back, front. OBRX uses this format.
 	* "two-by-three" - sides are in two rows: left, right, down and up, bottom, front. Facebook 360 videos use this format.
+	* "facebook" - the same as in two-by-three, but rotated and each face is cropped by 1%.
 	* "horizontal-cross" - sides are in a cross with bottom, right, front and left in the middle row; up is in the top row and down in the bottom. 
 	* "vertical-cross" - up is in the first row, bottom, right and front in the second, left in the third and down in the fourth. ATI CubeMapGen uses this format.
-	* custom - you can specify any alignment with a simple description string. The order string is an 2d array of face names in the order they appear on the texture. The rows are separated by "," and the faces are one letter acronyms (also accepts capital letters):
+	* custom - advanced, please use presets if possible; you can specify any alignment with a simple description string. The order string is an 2d array of face names in the order they appear on the texture. The rows are separated by "," and the faces are one letter acronyms (also accepts capital letters):
 
 		*  "f" - front
 		*  "b" - back
@@ -132,13 +144,13 @@ Following configuration options are allowed:
 		*  "d" - down
 		*  "-" - unused space
 
-	Each face can be supplied with a rotation with `*x` where x is a number from 0 to 3.
+	Each face can be supplied with a rotation with `*x` where x is a number from 0 to 3. For example `r*1` is right rotated 90 degrees clockwise.
 
 	Additionally two optional modifiers are supported at the end of the string:
 
-		*  ">90" - rotate clockwise by x degrees (90 in example)
-		*  "<72" - rotate counter clockwise by x degrees (72 in example)
-		*  "+0.01" - crop faces by amount (prevents visible edges)
+	*  ">90" - rotate clockwise by x degrees (90 in example)
+	*  "<72" - rotate counter clockwise by x degrees (72 in example)
+	*  "+0.01" - crop faces by amount (prevents visible edges)
 
 	Example: `-u--,blfr,-d*2-->90+0.002`
 	
@@ -283,44 +295,44 @@ You can control the Bivrost Player using the `Bivrost.Player` instance. There ar
 
 Some interesting API methods:
 
-`player.view.zoom` (number): gets or sets the current zoom, default value is `1`, higher values zoom in, lower zoom out.
+* `player.view.zoom:number`: gets or sets the current zoom, default value is `1`, higher values zoom in, lower zoom out.
 
-`player.ui.show()`, `player.ui.hide()`: shows or hides the UI.
+* `player.ui.show()`, `player.ui.hide()`: shows or hides the UI.
 
-`player.ui.autohide` (number): number of seconds of user inactivity after which the UI hides, set to `0` to never hide.
+* `player.ui.autohide:number`: number of seconds of user inactivity after which the UI hides, set to `0` to never hide.
 
-`player.media.play()`: plays the movie
+* `player.media.play()`: plays the movie
 
-`player.media.pause()`: pauses the movie
+* `player.media.pause()`: pauses the movie
 
-`player.media.pauseToggle()`: plays or pauses the movie
+* `player.media.pauseToggle()`: plays or pauses the movie
 
-`player.media.rewind()`: resets the movie
+* `player.media.rewind()`: resets the movie
 
-`player.media.time` (number): gets or sets the current time of the movie (in seconds).
+* `player.media.time:number`: gets or sets the current time of the movie (in seconds).
 
-`player.media.duration` (number): gets the total time of the movie (in seconds).
+* `player.media.duration:number`: gets the total time of the movie (in seconds).
 
-`player.media.loop` (boolean): gets or sets if the movie should loop.
+* `player.media.loop:boolean`: gets or sets if the movie should loop.
 
-`player.input.clampY` (boolean): should user movement be constrained if he or she looks too far up or down, default true (does not restrict VR headset movement).
+* `player.input.clampY:boolean`: should user movement be constrained if he or she looks too far up or down, default true (does not restrict VR headset movement).
 
-`player.input.lookEuler` ([THREE.Euler][51]): gets or sets the direction that the user is looking towards, does include VR headset movement (`vrLookQuaternion` is for that). The values are in radians.
+* `player.input.lookEuler:`[`THREE.Euler`][threejs-euler]: gets or sets the direction that the user is looking towards, does include VR headset movement (`vrLookQuaternion` is for that). The values are in radians.
 
-`player.input.keyboardSpeed` (number): gets or sets the speed in which the keyboard rotates the camera, value in radians per second. Default π/2 (full horizontal rotation in 4 seconds). 
+* `player.input.keyboardSpeed:number`: gets or sets the speed in which the keyboard rotates the camera, value in radians per second. Default π/2 (full horizontal rotation in 4 seconds). 
 
-`player.fullscreen` (boolean): gets or sets if the player is displayed in fullscreen. Browsers require this to be called in a user event handler.
+* `player.fullscreen:boolean`: gets or sets if the player is displayed in fullscreen. Browsers require this to be called in a user event handler.
 
-`player.aspect` (number): gets or sets default aspect ratio, override by styling (default 4/3).
+* `player.aspect:number`: gets or sets default aspect ratio, override by styling (default 4/3).
 
-`Bivrost.Loader(domNode)`: if you have changed a part of HTML code and want it parsed for `bivrost-player` tags, you can call this static function on a dom node or `document.body`. Already parsed tags will not be parsed again.
+* `Bivrost.Loader(domNode)`: if you have changed a part of HTML code and want it parsed for `bivrost-player` tags, you can call this static function on a dom node or `document.body`. Already parsed tags will not be parsed again.
 
-`Bivrost.verbose` (boolean): set to false to suppress log output.
+* `Bivrost.verbose:boolean`: set to false to suppress log output.
 
-`Bivrost.version` (string): the current player version.
+* `Bivrost.version:string`: the current player version.
 
 
-[51]: http://threejs.org/docs/#Reference/Math/Euler
+[threejs-euler]: http://threejs.org/docs/#Reference/Math/Euler
 
 
 
@@ -331,23 +343,42 @@ Themes
 There are five themes available:
 
 ## The default theme
-![The default theme](README-skin-default.png)
+
+![The default theme](README-skin-default.jpeg)
+
+
 
 ## The winter theme
-![The winter theme](README-skin-winter.png)
+
+![The winter theme](README-skin-winter.jpeg)
+
 You can change the theme by adding a `bivrost-theme-winter` class to the `bivrost-player` tag.
 
+
+
 ## The spring theme
-![The spring theme](README-skin-spring.png)
+
+![The spring theme](README-skin-spring.jpeg)
+
 You can change the theme by adding a `bivrost-theme-spring` class to the `bivrost-player` tag.
 
+
+
 ## The autumn theme
-![The autumn theme](README-skin-autumn.png)
+
+![The autumn theme](README-skin-autumn.jpeg)
+
 You can change the theme by adding a `bivrost-theme-autumn` class to the `bivrost-player` tag.
 
+
+
 ## The turquoise theme
-![The winter theme](README-skin-turquoise.png)
+
+![The winter theme](README-skin-turquoise.jpeg)
+
 You can change the theme by adding a `bivrost-theme-turquoise` class to the `bivrost-player` tag.
+
+
 
 
 
@@ -365,14 +396,14 @@ Then you have the **bitrate** - VR movies take a lot of that, with full HD an ab
 
 Last, but not least, there's **the hardware** - a movie with this high of a resolution must be hardware decoded. Decoding is done on operating system or browser level, and there are always restrictions to it. For the **desktop**, it is safe to make a 4k mp4/h264 and webm/vp8 file, newer codecs like hevc/h265 work great in terms of compression, but take up a lot of the CPU, as they're decoded in software. For **mobile** do full HD, all but the newest flagships support video only up to 1080p.
 
-And as always there is some random **stuff** to remember: 
+And as always there is some **random stuff** to remember: 
 
 * make keyframes often (a few times per second) or the movie will take forever to scroll (ffmpeg's `-g` option) 
 * make the movie streamable by putting the headers in the begining of the file (ffmpeg's `+faststart` option)
 * codecs, especially h264, have lots of black magic like switches that should be used, for example using the yuv420p colorspace or keeping a correct level and profile
 * don't forget the audio 
 
-Here at Bivrost we use [ffmpeg][61] with these options for web/mobile:
+Here at Bivrost we use [ffmpeg][ffmpeg] with these options for web/mobile:
 
     ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -b:v 10M -bufsize 20M -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
 
@@ -386,7 +417,7 @@ If you want to know more, there are some good manuals to look into:
 * https://trac.ffmpeg.org/wiki/Encode/VP8
 
 
-[61]: https://www.ffmpeg.org/
+[ffmpeg]: https://www.ffmpeg.org/
 
 Oh and if you want the guideline for a **static picture**, use a jpeg or png, at least this part is easy. Hugin's equirectangular or Google's Photo Sphere pictures work nicely. You can use a bit more resolution here, but above around 4096x4096 you might experience performance problems.
 
@@ -482,12 +513,12 @@ User Guide
 
 At the time of writing, WebVR is supported by Firefox Nightly with an extension. It supports Oculus Rift and (allegedly) other headsets like HTC Vive.
 
-See instructions at [MozVR][81] and [WebVR.info][82] for how to setup your browser.
+See instructions at [MozVR][mozvr] and [WebVR.info][webvr] for how to setup your browser.
 
 When you have a working setup, press ` V ` or the "eye" button to go to VR mode.
 
-[81]: http://mozvr.com/downloads/
-[82]: http://webvr.info/
+[mozvr]: http://mozvr.com/downloads/
+[webvr]: http://webvr.info/
 
 
 ### Virtual Reality in mobile with Google Cardboard
@@ -513,6 +544,24 @@ We try to make the player run on as many platforms as possible, but we still hav
 If you're experiencing problems with any other recent platform, please let us know.
 
 
+### Video does not work
+
+Check if your device supports this kind of video (play it in the browser directly). Some devices support only up to 1920x1080 resolution.
+
+Videos or pictures have to be served from the same domain or provide [Cross-Origin Resource Sharing][cors]
+
+[cors]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+
+Do not test from your local filesystem (the `file:///` protocol). You have to have a working webserver for the plugin to work.
+
+
+### Seeking does not work
+
+Either your webserver doesn't support [Content-Range][content-range] or your video file has issues. Common server not supporting Content-Range is the builtin PHP development webserver.
+
+[content-range]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
+
+
 
 Standalone players
 ------------------
@@ -527,19 +576,19 @@ The Bivrost Web Player has a special button that allows the content to be run in
 Roadmap
 -------
 
-[x] Standalone web component
-[x] Mobile support - Android
-[ ] Posters - flat thumbnails for spherical video
-[ ] Multi-resolution video ("HD" button)
-[ ] Support built-in media galleries and switching media
-[ ] Overlays - add content on top of your media
-[ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
-[ ] Interactive overlays
-[ ] Mobile support - iOS
-[ ] Mobile support - Windows Phone
-[x] video on Internet Exporer/Edge
-[ ] Smaller footprint
-[ ] 3d glasses stereoscopic display support (line by line, red cyan)
+- [x] Standalone web component
+- [x] Mobile support - Android
+- [ ] Posters - flat thumbnails for spherical video
+- [ ] Multi-resolution video ("HD" button)
+- [ ] Support built-in media galleries and switching media
+- [ ] Overlays - add content on top of your media
+- [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
+- [ ] Interactive overlays
+- [ ] Mobile support - iOS
+- [ ] Mobile support - Windows Phone
+- [x] video on Internet Exporer/Edge
+- [ ] Smaller footprint
+- [ ] 3d glasses stereoscopic display support (line by line, red cyan)
 
 Please post suggestions using the issue function of GitHub, always provide a valid use case.
 
@@ -550,15 +599,15 @@ License
 
 There are two separate licenses to choose from:
 
-1. [The free license][92] - use for web sites that are non commercial
-2. [The paid license][93] - use for commercial web sites, one license per domain (contact [sales][94] for payment).
+1. [The free license][license-free] - use for web sites that are non commercial
+2. [The paid license][license-paid] - use for commercial web sites, one license per domain (contact [sales][email-sales] for payment).
 
-If you want to remove or replace our branding or are unsure about which license applies to you, please [contact us for help and additional licensing options][91].
+If you want to remove or replace our branding or are unsure about which license applies to you, please [contact us for help and additional licensing options][email-licensing].
 
-[91]: TODO: mailto:licensing
-[92]: LICENSE-free.txt
-[93]: LICENSE-paid.txt
-[94]: TODO: mailto:sales 
+[email-licensing]: TODO:mailto:licensing
+[license-free]: LICENSE-free.md
+[license-paid]: LICENSE-paid.md
+[email-sales]: TODO:mailto:sales 
 
 
 
@@ -573,7 +622,7 @@ Third party libraries
 
 The Bivrost Web Player uses third party libraries:
 
-* [THREE.js][99] (MIT license)
+* [THREE.js][threejs] (MIT license)
 
 
-[99]: http://threejs.org
+[threejs]: http://threejs.org
