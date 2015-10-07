@@ -374,6 +374,7 @@ $transition-time: 0.5s;
 		transform-origin: 100% 0%;
 		filter: grayscale(0);
 		opacity: 1;
+		cursor: pointer;
 	}
 	&.hide-ui .bivrost-logo {
 		-webkit-transform: scale(0.75);

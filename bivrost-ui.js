@@ -78,9 +78,8 @@
 		domElement.addEventListener("touchmove", cancel);
 		domElement.addEventListener("touchend", cancel);
 
-		var logo=document.createElement("a");
-		logo.setAttribute("target", "_blank");
-		logo.setAttribute("href", "http://bivrost360.com");
+		var logo=document.createElement("div");
+		logo.addEventListener("click", function() { window.open("http://bivrost360.com", "_blank"); })
 		logo.className="bivrost-logo";
 		player.container.appendChild(logo);
 

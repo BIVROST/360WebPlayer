@@ -206,7 +206,6 @@
 				);
 
 				var orderPresets={
-					//"horizontal":"bfudrl<90",
 					"horizontal":"fbu*2d*2lr",
 					"two-by-three":"bfu,drl",
 					"facebook":"bfu,drl+0.01>90",
@@ -258,7 +257,7 @@
 					
 				break;
 				
-			default: throw "only equirectangular media implemented (got: "+media.projection+")";
+			default: throw "only equirectangular and cubemap projection implemented (got: "+media.projection+")";
 		}
 	};
 
