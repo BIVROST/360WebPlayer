@@ -3,6 +3,13 @@
 
 	<header>
 		<h1>{{ title }}</h1>
+		{{ #minification_visible }}
+		<p>
+			({{ #minified }}<a href="{{ minified }}">{{ /minified }}minified{{ #minified }}</a>{{ /minified }}
+			|
+			{{ #unminified }}<a href="{{ unminified }}">{{ /unminified }}unminified{{ #unminified }}</a>{{ /unminified }})
+		</p>
+		{{ /minification_visible }}
 	</header>
 
 	<article>

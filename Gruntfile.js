@@ -39,20 +39,36 @@ module.exports = function (grunt) {
 			},
 			examples: {
 				files: (function() {
+//					grunt.file.copy("output/bivrost.js", "demo/bivrost.js");
+//					grunt.file.copy("output/bivrost.css", "demo/bivrost.css");
+					
+					var extend=function(proto, ext) {
+						var o=Object.create(proto);
+						for(var i in ext) 
+							if(ext.hasOwnProperty(i))
+								o[i]=ext[i];
+						return o;
+					}
+					
 					var r=[];
 					grunt.file.readJSON("demo-source/examples.json").forEach(function(data, i) {
-						if(data["override-scripts"])
-							data.scripts=grunt.file.readJSON("scripts.json");
+						data.bivrost_dir="../output/";
+						data.minification_visible=true;
 						r.push({
 							template: "demo-source/tag-template.mustache",
 							dest: "demo/"+data.slug+".html",
-							data: data
+							data: extend(data, {
+								unminified: data.slug+"-unminified.html" 
+							})
 						});
-//						r.push({
-//							template: "demo-source/data-template.mustache",
-//							dest: "demo/"+data.slug+"-data.html",
-//							data: data
-//						});
+						r.push({
+							template: "demo-source/tag-template.mustache",
+							dest: "demo/"+data.slug+"-unminified.html",
+							data: extend(data, {
+								minified: data.slug+".html",
+								scripts: grunt.file.readJSON("scripts.json")
+							})
+						});
 					});
 					return r;
 				})()
@@ -63,14 +79,14 @@ module.exports = function (grunt) {
 						template: "demo-source/index.mustache",
 						dest: "demo/index.html",
 						data: {
+							minification_visible: true,
 							examples: grunt.file.readJSON("demo-source/examples.json"),
 							title: "documentation index"
 						}
 					}
 				]
 			}
-		}
-
+		},
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-sass');
@@ -78,8 +94,15 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-closure-compiler');
 	grunt.loadNpmTasks('grunt-mustache-render');
 
+	grunt.registerTask('readme-github-preview', function() {
+		var marked=require("marked");
+		var markdown=grunt.file.read("README.md");
+		var html=marked(markdown);
+		grunt.file.write("README.html", html);
+	});
+
 	grunt.registerTask('default', ['sass', 'closure-compiler', "mustache_render"]);
-	grunt.registerTask('build', ['sass', 'closure-compiler', "mustache_render"]);
+	grunt.registerTask('build', ["default"]);
 };
 
 // scss -> css

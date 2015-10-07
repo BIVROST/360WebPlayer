@@ -1,10 +1,17 @@
 {{ >_head }}
 
-		<h1>Demo index</h1>
+		<h1>Demo index for the BIVROST 360WebPlayer</h1>
 
+		This is an appendix for our <a href="http://github.com/Bivrost/360WebPlayer">GitHub page</a>, please look there for the documentation.
+		
 		<ul>
 		{{ #examples }}
-		<li><a href="{{ slug }}.html">{{ title }}</a></li>
+		<li>
+			<a href="{{ slug }}.html">{{ title }}</a>
+			{{ #minification_visible }}
+			(<a href="{{ slug }}-unminified.html">unminified</a>)
+			{{ /minification_visible }}
+		</li>
 		{{ /examples }}
 		</ul>
 		

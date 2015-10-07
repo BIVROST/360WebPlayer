@@ -51,100 +51,16 @@
 	},
 	
 	{
-		"slug": "cubemap",
-		"title": "Cubemap",
-		"override-scripts": true,
-		"description": "Panorama in the less common cubemap format.",
-		"options": [
-			{"attr": "projection", "value": "cubemap"},
-			{"attr": "stereoscopy", "value": "mono"}
-		],
-		"src": [
-			"KeloidVR-mono.jpeg"
-		]
-	},
-	{
-		"slug": "cubemap-stereo",
-		"title": "Cubemap stereo (side-by-side)",
-		"override-scripts": true,
-		"description": "Panorama in the less common cubemap format. Stereoscopic version.",
-		"options": [
-			{"attr": "projection", "value": "cubemap"},
-			{"attr": "stereoscopy", "value": "side-by-side"}
-		],
-		"src": [
-			"KeloidVR-SbS.png"
-		]
-	},
-	
-	{
-		"slug": "cubemap-stereo-facebook",
-		"title": "Cubemap stereo (faceook two by three)",
-		"override-scripts": true,
-		"description": "Panorama in the less common cubemap format. Facebook version.",
-		"options": [
-			{"attr": "projection", "value": "cubemap:facebook"},
-			{"attr": "stereoscopy", "value": "mono"}
-		],
-		"src": [
-			"output_01181.jpg"
-		]
-	},	
-	
-	{
 		"slug": "cubemap-hcross",
 		"title": "Cubemap horizontal cross",
 		"override-scripts": true,
-		"description": "Panorama in the less common cubemap format. Horizontal cross.",
+		"description": "Panorama in the less common cubemap format. Horizontal cross version.",
 		"options": [
 			{"attr": "projection", "value": "cubemap:horizontal-cross"},
 			{"attr": "stereoscopy", "value": "mono"}
 		],
 		"src": [
 			"Skybox_example.png"
-		]
-	},
-		
-	{
-		"slug": "cubemap-vcross",
-		"title": "Cubemap vertical cross",
-		"override-scripts": true,
-		"description": "Panorama in the less common cubemap format. Vertical cross.",
-		"options": [
-			{"attr": "projection", "value": "cubemap:vertical-cross"},
-			{"attr": "stereoscopy", "value": "mono"}
-		],
-		"src": [
-			"maxresdefault.jpg"
-		]
-	},
-	
-	{
-		"slug": "cubemap-stereo-custom",
-		"title": "Cubemap stereo (custom)",
-		"override-scripts": true,
-		"description": "Panorama in the less common cubemap format. Facebook version.",
-		"options": [
-			{"attr": "projection", "value": "cubemap:horizontal"},
-			{"attr": "stereoscopy", "value": "side-by-side"}
-		],
-		"src": [
-			"Space_Station_76_Hallway-SbS.png"
-		]
-	},	
-	
-	{
-		"slug": "cubemap-facebook-movie",
-		"title": "Cubemap facebook movie",
-		"override-scripts": true,
-		"description": "Panorama in the less common cubemap format. The format used by Facebook",
-		"options": [
-			{"attr": "projection", "value": "cubemap:facebook"},
-			{"attr": "stereoscopy", "value": "mono"}
-		],
-		"src": [
-			"11969984_870751996307656_847599406_n.mp4 "
-			
 		]
 	},
 	
@@ -191,17 +107,6 @@
 			{"attr": "stereoscopy", "value":"top-and-bottom-reversed"}
 		],
 		"src": ["blood-TaB.png"]
-	},
-	
-	{
-		"slug": "unminified",
-		"override-scripts": true,
-		"title": "Unminified javascript",
-		"description": "This is a development copy without javascript compilation by closure compiler.",
-		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
-		]
 	},
 	
 	{

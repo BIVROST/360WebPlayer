@@ -5,16 +5,16 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=800, initial-scale=1.0">
 		{{#styles}}
-		<link href="../{{.}}" rel="stylesheet" />
+		<link href="{{.}}" rel="stylesheet" />
 		{{/styles}}
 		{{^styles}}
-		<link href="../output/bivrost.css" rel="stylesheet" />
+		<link href="{{{bivrost_dir}}}bivrost.css" rel="stylesheet" />
 		{{/styles}}
 		{{#scripts}}
 		<script src="../{{.}}"></script>
 		{{/scripts}}
 		{{^scripts}}
-		<script src="../output/bivrost.js"></script>
+		<script src="{{{bivrost_dir}}}bivrost.js"></script>
 		{{/scripts}}
 	</head>
 	<body style="width: 750px; margin: 1em auto">
