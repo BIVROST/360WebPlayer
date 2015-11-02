@@ -126,19 +126,6 @@
 	},
 	
 	{
-		"slug": "theme-winter",
-		"title": "Winter theme",
-		"description": "A gray-bluish theme",
-		"options": [
-			{"attr": "class", "value": "bivrost-theme-winter", "unescaped": true}
-		],
-		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
-		]
-	},
-	
-	{
 		"slug": "theme-spring",
 		"title": "Spring theme",
 		"description": "A black and green theme",
@@ -162,18 +149,6 @@
 			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
 			"Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
-	},
-	
-	{
-		"slug": "theme-turquoise",
-		"title": "Turquoise theme",
-		"description": "A blue-pinkish theme",
-		"options": [
-			{"attr": "class", "value": "bivrost-theme-turquoise", "unescaped": true}
-		],
-		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
-		]
 	}
+
 ]
