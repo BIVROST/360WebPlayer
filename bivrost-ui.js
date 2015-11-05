@@ -108,9 +108,9 @@
 		
 		rightAligned.appendChild(makeButton("bivrost", function() { 
 			window.open(bivrostButtonLink, "_blank", "width=600, height=400, toolbar=no, scrollbars=no, resizable=yes");	
-		}, "powered by Bivrost"));
+		}, Bivrost.lang.bivrostButtonLabel));
 		
-		rightAligned.appendChild(makeButton("oculus", function() { thisRef.player.vrModeEnterOrCycle(); }, "VR" ));
+		rightAligned.appendChild(makeButton("oculus", function() { thisRef.player.vrModeEnterOrCycle(); }, Bivrost.lang.vrButtonLabel ));
 		
 		// hide on picture
 		if(!media.video) {
@@ -179,7 +179,7 @@
 			window.addEventListener("resize", rangeChange);
 
 
-			var playButton=makeButton("play", media.play.bind(media), "play");
+			var playButton=makeButton("play", media.play.bind(media), Bivrost.lang.playButtonLabel);
 
 			var pauseCheck=function() {
 				if(video.paused || video.ended) {
@@ -271,7 +271,7 @@
 					lastVolume=video.volume;
 					video.volume=0;
 				}
-			}, Math.round(video.volume*100)+"%");
+			}, Bivrost.lang.volumeButtonLabel(video.volume));
 			
 			var volumeActive=false;
 			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); volumeActive=true; });
@@ -313,13 +313,13 @@
 			gyroButton=makeButton("gyro", function() {
 				thisRef.player.input.enableGyro=!thisRef.player.input.enableGyro; 
 				gyroButton.changeIcons(thisRef.player.input.enableGyro ? "gyrooff" : "gyro");
-			}, "gyroscope");
+			}, Bivrost.lang.gyroscopeButtonLabel);
 			rightAligned.insertBefore(gyroButton, fullscreenButton);
 			window.removeEventListener("deviceorientation", listenGyro);
 		};
 		window.addEventListener("deviceorientation", listenGyro);
 
-		var fullscreenButton=makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, "fullscreen" );
+		var fullscreenButton=makeButton("fullscreen", function() { thisRef.player.fullscreen=!thisRef.player.fullscreen; }, Bivrost.lang.fullscreenButtonLabel );
 		rightAligned.appendChild(fullscreenButton);
 
 		var onFullscreenChange=function() {

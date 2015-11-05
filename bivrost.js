@@ -41,6 +41,16 @@ var Bivrost={
 				return k;
 		// throw "const value "+k+" not found";
 		return undefined;
+	},
+	
+	
+	lang: {
+		bivrostButtonLabel: "powered by Bivrost",
+		vrButtonLabel: "VR",
+		playButtonLabel: "play",
+		volumeButtonLabel: function(vol) { return Math.round(vol*100)+"%"; },
+		gyroscopeButtonLabel: "gyroscope",
+		fullscreenButtonLabel: "fullscreen"
 	}
 	
 };
