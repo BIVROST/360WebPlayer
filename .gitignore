@@ -16,3 +16,6 @@ compiler.jar
 .sass-cache
 
 bivrost-icon-*png
+
+demo/httpd-app
+demo/*

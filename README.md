@@ -13,7 +13,7 @@ Please view the [live demo][live-demo].
 [bivrost-website]: http://bivrost360.com
 [camera]: TODO:camera
 [stitcher]: TODO:sticher
-[live-demo]: http://bivrost360.com/webplayer-docs
+[live-demo]: http://tools/bivrost360.com/webplayer-docs
 
 
 
@@ -154,6 +154,7 @@ Following configuration options are allowed:
 
 	Example: `-u--,blfr,-d*2-->90+0.002`
 	
+	Please note that with cubemaps, seams can be visible due to texture filtering - this is most visible on horizontal and vertical crosses. It's best you fix them on picture by duplicating some border into the unused part of the image. The 1% zoom with facebook is to prevent this from happening.
 
 Apart from that, you can tune down the player console information with `Bivrost.verbose=false` in a script.
 
@@ -348,14 +349,6 @@ There are five themes available:
 
 
 
-## The winter theme
-
-![The winter theme](README-skin-winter.jpeg)
-
-You can change the theme by adding a `bivrost-theme-winter` class to the `bivrost-player` tag.
-
-
-
 ## The spring theme
 
 ![The spring theme](README-skin-spring.jpeg)
@@ -369,14 +362,6 @@ You can change the theme by adding a `bivrost-theme-spring` class to the `bivros
 ![The autumn theme](README-skin-autumn.jpeg)
 
 You can change the theme by adding a `bivrost-theme-autumn` class to the `bivrost-player` tag.
-
-
-
-## The turquoise theme
-
-![The winter theme](README-skin-turquoise.jpeg)
-
-You can change the theme by adding a `bivrost-theme-turquoise` class to the `bivrost-player` tag.
 
 
 
@@ -521,7 +506,7 @@ When you have a working setup, press ` V ` or the "eye" button to go to VR mode.
 [webvr]: http://webvr.info/
 
 
-### Virtual Reality in mobile with Google Cardboard
+### Virtual Reality on mobile with Google Cardboard
 
 It is possible to use the Bivrost 360Player with Google Cardboard and it's many clones. Just press the "eye" button to go to VR mode.
 

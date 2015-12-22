@@ -1,5 +1,8 @@
+var minification_visible=true;
+	
+
+	
 module.exports = function (grunt) {
-	var mustache;
 	
 	grunt.initConfig({
 		
@@ -39,8 +42,6 @@ module.exports = function (grunt) {
 			},
 			examples: {
 				files: (function() {
-//					grunt.file.copy("output/bivrost.js", "demo/bivrost.js");
-//					grunt.file.copy("output/bivrost.css", "demo/bivrost.css");
 					
 					var extend=function(proto, ext) {
 						var o=Object.create(proto);
@@ -52,23 +53,25 @@ module.exports = function (grunt) {
 					
 					var r=[];
 					grunt.file.readJSON("demo-source/examples.json").forEach(function(data, i) {
-						data.bivrost_dir="../output/";
-						data.minification_visible=true;
+						data.bivrost_dir="";
 						r.push({
 							template: "demo-source/tag-template.mustache",
 							dest: "demo/"+data.slug+".html",
 							data: extend(data, {
+								minification_visible: minification_visible,
 								unminified: data.slug+"-unminified.html" 
 							})
 						});
-						r.push({
-							template: "demo-source/tag-template.mustache",
-							dest: "demo/"+data.slug+"-unminified.html",
-							data: extend(data, {
-								minified: data.slug+".html",
-								scripts: grunt.file.readJSON("scripts.json")
-							})
-						});
+						if(minification_visible)
+							r.push({
+								template: "demo-source/tag-template.mustache",
+								dest: "demo/"+data.slug+"-unminified.html",
+								data: extend(data, {
+									minified: data.slug+".html",
+									scripts: grunt.file.readJSON("scripts.json"),
+									minification_visible: minification_visible
+								})
+							});
 					});
 					return r;
 				})()
@@ -79,7 +82,7 @@ module.exports = function (grunt) {
 						template: "demo-source/index.mustache",
 						dest: "demo/index.html",
 						data: {
-							minification_visible: true,
+							minification_visible: minification_visible,
 							examples: grunt.file.readJSON("demo-source/examples.json"),
 							title: "documentation index"
 						}
@@ -95,14 +98,38 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-mustache-render');
 
 	grunt.registerTask('readme-github-preview', function() {
-		var marked=require("marked");
-		var markdown=grunt.file.read("README.md");
-		var html=marked(markdown);
-		grunt.file.write("README.html", html);
+		var Marked=require("marked");
+		var Mustache=require("mustache");
+		
+		var html=[
+			Mustache.render(grunt.file.read("demo-source/_head.mustache"), { title: "Bivrost 360WebPlayer README" }),
+			Marked(grunt.file.read("README.md")),
+			Mustache.render(grunt.file.read("demo-source/_foot.mustache"), { })
+		].join("\n\n");
+		grunt.file.write("demo/github-readme.html", html);
+		
+		(["README-player.png", "README-skin-autumn.jpeg", "README-skin-default.jpeg", "README-skin-spring.jpeg"]).forEach(function(fn) {
+			grunt.file.copy(fn, "demo/"+fn);
+		});	
 	});
 
-	grunt.registerTask('default', ['sass', 'closure-compiler', "mustache_render"]);
-	grunt.registerTask('build', ["default"]);
+	grunt.registerTask("docs-clean", function() {
+		grunt.file.expand({matchBase:true}, [ "demo/*", "!demo/httpd-app.conf" ])
+			.forEach(function(fn) { console.log("remove:",fn); grunt.file.delete(fn); });
+	});
+	
+	grunt.registerTask("docs-copy-files", function() {
+		grunt.file.expand({matchBase:true}, "demo-source/media/*")
+			.forEach(function(fn) { grunt.file.copy(fn, fn.replace(/^demo-source[/]/, "demo/")); });
+		grunt.file.copy("output/bivrost.js", "demo/bivrost.js");
+		grunt.file.copy("output/bivrost.css", "demo/bivrost.css");
+	});
+
+	grunt.registerTask('app', ['sass', 'closure-compiler']);
+	grunt.registerTask('docs', ['docs-clean', 'readme-github-preview', 'mustache_render', 'docs-copy-files'])
+	
+	grunt.registerTask('default', ["app", "docs"]);
+	grunt.registerTask('build', ['default']);
 };
 
 // scss -> css

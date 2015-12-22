@@ -53,14 +53,26 @@
 	{
 		"slug": "cubemap-hcross",
 		"title": "Cubemap horizontal cross",
-		"override-scripts": true,
 		"description": "Panorama in the less common cubemap format. Horizontal cross version.",
 		"options": [
 			{"attr": "projection", "value": "cubemap:horizontal-cross"},
 			{"attr": "stereoscopy", "value": "mono"}
 		],
 		"src": [
-			"Skybox_example.png"
+			"cubemap-hcross.jpeg"
+		]
+	},
+	
+	{
+		"slug": "cubemap-facebook",
+		"title": "Cubemap facebook",
+		"description": "Panorama in the less common cubemap format. Facebook 360 video version.",
+		"options": [
+			{"attr": "projection", "value": "cubemap:facebook"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			"cubemap-facebook.jpeg"
 		]
 	},
 	
@@ -104,9 +116,9 @@
 		"title": "Top And Bottom stereoscopy",
 		"description": "A stereoscopic render using an top-and-bottom oriented image.",
 		"options": [
-			{"attr": "stereoscopy", "value":"top-and-bottom-reversed"}
+			{"attr": "stereoscopy", "value":"top-and-bottom"}
 		],
-		"src": ["blood-TaB.png"]
+		"src": ["blood (TaB).jpeg"]
 	},
 	
 	{
