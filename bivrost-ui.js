@@ -79,7 +79,7 @@
 		domElement.addEventListener("touchend", cancel);
 
 		var logo=document.createElement("div");
-		logo.addEventListener("click", function() { window.open("http://bivrost360.com", "_blank"); })
+		logo.addEventListener("click", function() { window.open("https://bivrost360.com", "_blank"); })
 		logo.className="bivrost-logo";
 		player.container.appendChild(logo);
 
@@ -98,7 +98,7 @@
 		var thisRef=this;
 		this.media=media;
 		
-		var bivrostButtonLink="http://bivrost360.com/open-in-native/";
+		var bivrostButtonLink="http://tools.bivrost360.com/open-in-native/";
 		
 		var leftAligned=document.createElement("div");
 		leftAligned.className="bivrost-aligned bivrost-left-aligned";
