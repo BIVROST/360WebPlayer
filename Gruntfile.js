@@ -1,4 +1,4 @@
-var minification_visible=true;
+var minification_visible=false;
 	
 
 	
