@@ -153,7 +153,7 @@
 	{
 		"slug": "theme-autumn",
 		"title": "Autumn theme",
-		"description": "An orange theme with a floral design",
+		"description": "A red and black theme",
 		"options": [
 			{"attr": "class", "value": "bivrost-theme-autumn", "unescaped": true}
 		],

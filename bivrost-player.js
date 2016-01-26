@@ -47,11 +47,9 @@
 			
 		
 		// renderer
-		this.renderer=new THREE.WebGLRenderer();		
+		this.renderer=new THREE.WebGLRenderer();
 		container.appendChild(this.renderer.domElement);
 		
-		this.riftRenderer=new THREE.OculusRiftEffect(this.renderer);
-
 
 		// UI
 		var uiDiv=document.createElement("div");
@@ -116,9 +114,12 @@
 				switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
 					//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
 					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
+						if(!thisRef.riftRenderer)
+							thisRef.riftRenderer=new THREE.OculusRiftEffect(thisRef.renderer, undefined, thisRef.input.hmdVrDevice);
 						thisRef.view.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
 						break;
 					case Bivrost.VRMODE_NONE:
+						thisRef.riftRenderer=null;
 						thisRef.view.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.input, pos);
 						break;
 				}
@@ -337,7 +338,7 @@
 					|| elem.mozRequestFullScreen
 					|| elem.webkitRequestFullscreen 
 					|| function() {throw "fullscreen not supported";}
-				).call(elem);			/// TODO: use HMD if available - , {vrDisplay: this.hmd}
+				).call(elem, {vrDisplay: this.input.hmdVrDevice});
 			}
 			else { // turn off
 				this.input.enableGyro=false;

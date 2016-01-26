@@ -1,4 +1,4 @@
-/* global Bivrost, THREE, PositionSensorVRDevice */
+/* global Bivrost, THREE, PositionSensorVRDevice, HMDVRDevice, VREye */
 "use strict";
 
 (function() {
@@ -235,39 +235,50 @@
 		
 		
 		
-		
-		
-		// VR controls; based on VRContols.js by dmarcos and mrdoob
-		if(navigator.getVRDevices)
+		if(!navigator.getVRDevices)
+			log("no VR API available, try http://webvr.info for implementations");
+		else
 			navigator.getVRDevices().then(function(devices) {
-				for(var i in devices)
-					if(devices.hasOwnProperty(i)) {
-						if(devices[i] instanceof PositionSensorVRDevice && devices[i].getState().hasOrientation) {
-							thisRef.vrDevice=devices[i];
-							log(
-								"found VR device",
-								"state=", thisRef.vrDevice.getState(),
-								"hardwareUnitId=", thisRef.vrDevice.hardwareUnitId, 
-								"deviceId=", thisRef.vrDevice.deviceId, 
-								"deviceName=", thisRef.vrDevice.deviceName,
-								"(using and ignoring other)"
-							);
-							return;
-						}
-						else {
-							log(
-								"found VR device, but no orientation",
-								"hardwareUnitId=", devices[i].hardwareUnitId, 
-								"deviceId=", devices[i].deviceId, 
-								"deviceName=", devices[i].deviceName,
-								"(ignored)"
-							);
+				log("navigator.getVRDevices devices follow:");
+				if(console.table)
+					console.table(devices);
+				
+				for(var i in devices) {
+					if(devices[i] instanceof HMDVRDevice) {
+						var hmd=devices[i];
+						var pos=null;
+						for(var j in devices)
+							if(devices[j] instanceof PositionSensorVRDevice && hmd.hardwareUnitId === devices[j].hardwareUnitId) {
+								if(pos)
+									log("second sensor with same hardwareUnitId?", pos, "vs", devices[j], "hmdDevice:", hmd);
+								pos=devices[j];
+							}
+						
+						// use this always if the pair exists, and has orientation; also use if it's the only option but there is no orientation 
+						if(thisRef.hmdVrDevice === null || (pos && pos.getState().hasOrientation) ) {
+							log("using HMDVRDevice", hmd, "with matching PositionSensorVRDevice", pos, "hasOrientation=", pos && pos.getState().hasOrientation);
+							thisRef.hmdVrDevice=hmd;
+							thisRef.vrDevice=pos;
+							var left=hmd.getEyeParameters("left");
+							var right=hmd.getEyeParameters("right");
+							if(console.table) {
+								var transFov=function(f) { return { up: f.upDegrees, right: f.rightDegrees, down: f.downDegrees, left: f.leftDegrees}; };
+								console.group("getEyeParameters");
+								console.table({
+									min_l: transFov(left.minimumFieldOfView),
+									current_l: transFov(left.currentFieldOfView),
+									max_l: transFov(left.maximumFieldOfView),
+									min_r: transFov(right.minimumFieldOfView),
+									current_r: transFov(right.currentFieldOfView),
+									max_r: transFov(right.maximumFieldOfView)
+								});
+								console.groupEnd();
+							}
 						}
 					}
+				}
+				log("end of vr devices list");
 			});
-		else
-			log("no VR API available, try http://webvr.info");
-
 
 
 		// gyroscope controls
@@ -350,7 +361,14 @@
 	 * Currently used position sensor
 	 * @type {PositionSensorVRDevice}
 	 */
-	Bivrost.Input.prototype.vrDevice=null;
+	Bivrost.Input.prototype.positionSensorVrDevice=null;
+		
+		
+	/**
+	 * Currently used hmd device
+	 * @type {HMDVRDevice}
+	 */
+	Bivrost.Input.prototype.hmdVrDevice=null;
 	
 	
 	/**
@@ -396,8 +414,8 @@
 		
 		this.lookQuaternion.setFromEuler(this.lookEuler);
 		
-		if(this.vrDevice) {
-			var vrState=this.vrDevice.getState();
+		if(this.positionSensorVrDevice) {
+			var vrState=this.positionSensorVrDevice.getState();
 			if(vrState.hasOrientation) {
 				this.vrLookQuaternion.copy(vrState.orientation);
 				this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this.vrLookQuaternion);
