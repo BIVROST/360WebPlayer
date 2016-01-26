@@ -1,12 +1,12 @@
 [
-	"three.js",
-	"OculusRiftEffect.js",
-	"IEVideoTexture.js",
-	"bivrost.js",
-	"bivrost-player.js",
-	"bivrost-view.js",
-	"bivrost-media.js",
-	"bivrost-input.js",
-	"bivrost-ui.js",
-	"bivrost-loader.js"
+	"src/three.js",
+	"src/OculusRiftEffect.js",
+	"src/IEVideoTexture.js",
+	"src/bivrost.js",
+	"src/bivrost-player.js",
+	"src/bivrost-view.js",
+	"src/bivrost-media.js",
+	"src/bivrost-input.js",
+	"src/bivrost-ui.js",
+	"src/bivrost-loader.js"
 ]
