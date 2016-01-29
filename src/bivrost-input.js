@@ -35,7 +35,8 @@
 		 */
 		var thisRef=this;
 		
-		
+		this.onMove=new Bivrost.Observable();
+
 		this.lookEuler=new THREE.Euler(0, -Math.PI/2, 0, 'YXZ');
 		this.lookEulerDelta=new THREE.Euler();
 		this.lookQuaternion=new THREE.Quaternion();
@@ -94,8 +95,10 @@
 			thisRef.lookEuler.y=originEulerY+scale*dx*revSize;
 			thisRef._mouseLookInProgress=true;
 			
-			if(dx*dx + dy*dy > dragSize*dragSize)
+			if(dx*dx + dy*dy > dragSize*dragSize && !inDrag) {
 				inDrag=true;
+				thisRef.onMove.publish();
+			}
 		}
 		
 		function mouseover(e) { isIn=true; }
@@ -516,6 +519,14 @@
 		},
 		get: function() { return this._enableGyro; }
 	});
+	
+	
+	
+	/**
+	 * Event handler that fires when the position is changed by mouse, keyboard or touch
+	 * @type {Bivrost.Observable}
+	 */
+	Bivrost.Input.prototype.onMove;
 
 	
 })();

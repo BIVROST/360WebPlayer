@@ -359,7 +359,7 @@
 				thisRef.player.fullscreen=true; 
 		} );
 		this.player.container.appendChild(bigPlay);
-
+		this.player.input.onMove.subscribeOnce(bigPlay.hide);
 
 
 		// protocol

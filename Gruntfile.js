@@ -1,4 +1,4 @@
-var minification_visible=false;
+var minification_visible=true;
 	
 
 	
@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 					trace: true
 				},
 				files: {
-					'output/bivrost.css': 'bivrost.scss'
+					'output/bivrost.css': 'src/bivrost.scss'
 				}
 			}
 		},
