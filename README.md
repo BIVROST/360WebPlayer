@@ -9,11 +9,11 @@ This player is a part of the family of [immersive video players][player-windows]
 
 Please view the [live demo][live-demo].
 
-[player-windows]: TODO:player-windows
-[bivrost-website]: http://bivrost360.com
+[player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
+[bivrost-website]: https://bivrost360.com
 [camera]: TODO:camera
 [stitcher]: TODO:sticher
-[live-demo]: http://tools/bivrost360.com/webplayer-docs
+[live-demo]: https://tools.bivrost360.com/webplayer-docs
 
 
 
@@ -81,7 +81,7 @@ Installation
 <script type="text/javascript" src="bivrost-min.js"></script>
 ```
 Don't forget to set the correct paths.
-3. [Configure][configuration] the player
+3. [Configure the player][configuration]
 4. [Encode the media][media-preparation-guide]
 
 [download-link]: TODO:download-link
@@ -341,7 +341,7 @@ Some interesting API methods:
 Themes
 ------
 
-There are five themes available:
+There are three themes available:
 
 ## The default theme
 
@@ -390,7 +390,8 @@ And as always there is some **random stuff** to remember:
 
 Here at Bivrost we use [ffmpeg][ffmpeg] with these options for web/mobile:
 
-    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -b:v 10M -bufsize 20M -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
+    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -b:v 10M -bufsize 20M -vf scale=1920:1080 \
+		-movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
 
     ffmpeg -i input.mp4 -codec:v libvpx -vb 10M -bufsize 20M -vf scale=1920:1080 -g 5 -c:a libvorbis -b:a 128k output.webm
 
@@ -524,7 +525,7 @@ We try to make the player run on as many platforms as possible, but we still hav
 
 * iOS - only pictures work, videos are distorted and without a user interface
 * Windows Phone - only pictures work, videos are black
-* GearVR - currently no way to run a web browser
+* GearVR - currently no way to run in the Samsung web browser
 
 If you're experiencing problems with any other recent platform, please let us know.
 
@@ -547,7 +548,7 @@ Either your webserver doesn't support [Content-Range][content-range] or your vid
 [content-range]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
 
 
-### Where can I submit feature requests or bug reports? Where can I find the unminified version? =
+### Where can I submit feature requests or bug reports? Where can I find the unminified version?
 
 Please send bugs and feature requests to our GitHub at http://github.com/Bivrost/360WebPlayer the sources are located there too. Thanks.
 
@@ -590,14 +591,13 @@ License
 There are two separate licenses to choose from:
 
 1. [The free license][license-free] - use for web sites that are non commercial
-2. [The paid license][license-paid] - use for commercial web sites, one license per domain (contact [sales][email-sales] for payment).
+		2. [The paid license][license-commercial] - use for commercial web sites, one license per domain ([contact sales][email-sales] for payment).
 
-If you want to remove or replace our branding or are unsure about which license applies to you, please [contact us for help and additional licensing options][email-licensing].
+If you want to remove or replace our branding or are unsure about which license applies to you, please [contact us for help and additional licensing options][email-sales].
 
-[email-licensing]: TODO:mailto:licensing
+[email-sales]: mailto:contact@bivrost360.com
 [license-free]: LICENSE-free.md
-[license-paid]: LICENSE-paid.md
-[email-sales]: TODO:mailto:sales 
+[license-commercial]: LICENSE-commercial.md
 
 
 

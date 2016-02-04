@@ -1,4 +1,4 @@
-var minification_visible=true;
+var minification_visible=false;
 	
 
 	
@@ -101,12 +101,28 @@ module.exports = function (grunt) {
 		var Marked=require("marked");
 		var Mustache=require("mustache");
 		
-		var html=[
-			Mustache.render(grunt.file.read("demo-source/_head.mustache"), { title: "Bivrost 360WebPlayer README" }),
-			Marked(grunt.file.read("README.md")),
-			Mustache.render(grunt.file.read("demo-source/_foot.mustache"), { })
-		].join("\n\n");
-		grunt.file.write("demo/github-readme.html", html);
+		var files=["README.md"];
+		var fileconv=function(fn) { return "github-"+fn.replace(/[.]md$/, ".html").toLowerCase(); }
+		for(var i=0; i < files.length; i++) {	
+			var html=[
+				Mustache.render(grunt.file.read("demo-source/_head.mustache"), { title: "Bivrost 360WebPlayer "+files[i].replace('.md', '') }),
+				"\t\n<article>\n",
+				Marked(grunt.file.read(files[i]))
+					.replace(/"(.+\.md)"/g, function(t,fn) { 
+						if(files.indexOf(fn) === -1) {
+							console.log("adding "+fn+" to process queue");
+							files.push(fn);
+						}
+						return fileconv(fn); 
+					})
+					.replace(/\[ \]/g, "&#9744;")
+					.replace(/\[x\]/g, "&#9745;")
+				,
+				"\t\n</article>\n",
+				Mustache.render(grunt.file.read("demo-source/_foot.mustache"), { })
+			].join("\n\n");
+			grunt.file.write("demo/"+fileconv(files[i]), html);
+		}
 		
 		(["README-player.png", "README-skin-autumn.jpeg", "README-skin-default.jpeg", "README-skin-spring.jpeg"]).forEach(function(fn) {
 			grunt.file.copy(fn, "demo/"+fn);

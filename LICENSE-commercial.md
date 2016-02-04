@@ -7,13 +7,13 @@ Section 1
 ---------
 
 For the purposes of this licence, the following terms are defined as follows:
-1)	BIVROST 360WebPlayer – computer software created by the Bivrost Developer and used for displaying panoramic videos; BIVROST 360WebPlayer offers features and specifications listed in its Documentation; to be operational, BIVROST 360WebPlayer requires third-party software listed in the Documentation, specifically: a browser, operating system, drivers and libraries;
-2)	Documentation – a description of operation, hardware and software requirements, intended use and features of BIVROST 360WebPlayer, provided together with BIVROST 360WebPlayer or contained on Bivrost’s Website;
-3)	Domain Name – a single string of characters available be registered by domain name registrars; in the context of this Licence, the domain name refers to a top-level domain available to be registered for commercial use; for example: domains example.com.pl, example.pl, example.org are separate domains, whereas domains example.pl and foo.example.pl are not separate domains.
-4)	Client – a natural person engaged in economic activity, an entity without legal personality, granted legal capacity under the provisions of separate law, or a legal person, who purchased the Licence; the Licence is not intended for consumer use;
-5)	Licence – the licence for BIVROST 360WebPlayer; Clients can purchase the Licence via Bivrost’s Website;
-6)	Bivrost’s Website – an Internet service run by the Bivrost Developer, currently hosted at: www.bivrost360.com; the Bivrost Developer reserves the right to change the URL address of the website, notifying its users by means of leaving an appropriate notice under the previous address at least one month in advance;
-7)	Bivrost Developer – [provide the name of the entity: company, partnership or a natural person engaged in economic activity under the business name of ...; TODO: provide NIP No., registered office, KRS No., etc.]
+1.	BIVROST 360WebPlayer – computer software created by the Bivrost Developer and used for displaying panoramic videos; BIVROST 360WebPlayer offers features and specifications listed in its Documentation; to be operational, BIVROST 360WebPlayer requires third-party software listed in the Documentation, specifically: a browser, operating system, drivers and libraries;
+2.	Documentation – a description of operation, hardware and software requirements, intended use and features of BIVROST 360WebPlayer, provided together with BIVROST 360WebPlayer or contained on Bivrost’s Website;
+3.	Domain Name – a single string of characters available be registered by domain name registrars; in the context of this Licence, the domain name refers to a top-level domain available to be registered for commercial use; for example: domains example.com.pl, example.pl, example.org are separate domains, whereas domains example.pl and foo.example.pl are not separate domains.
+4.	Client – a natural person engaged in economic activity, an entity without legal personality, granted legal capacity under the provisions of separate law, or a legal person, who purchased the Licence; the Licence is not intended for consumer use;
+5.	Licence – the licence for BIVROST 360WebPlayer; Clients can purchase the Licence via Bivrost’s Website;
+6.	Bivrost’s Website – an Internet service run by the Bivrost Developer, currently hosted at: www.bivrost360.com; the Bivrost Developer reserves the right to change the URL address of the website, notifying its users by means of leaving an appropriate notice under the previous address at least one month in advance;
+7.	Bivrost Developer – [provide the name of the entity: company, partnership or a natural person engaged in economic activity under the business name of ...; TODO: provide NIP No., registered office, KRS No., etc.]
 
 
 Section 2
@@ -32,21 +32,21 @@ Section 4
 ---------
 
 1.	Under this Licence, the Client is entitled to use BIVROST 360WebPlayer in accordance with its intended use and within the following scope of activities:
-1)	utilizing BIVROST 360WebPlayer (including its entry into memory, display, transfer via networks and storage) within the scope defined by its intended use and the Client’s activity, whereby utilization shall mean hosting BIVROST 360WebPlayer by the Client on a web server under a single Domain Name;
-2)	making BIVROST 360WebPlayer available to third parties via a computer network under a single Domain Name with the use of a bowser for displaying panoramic videos delivered by the Client;
-3)	utilizing BIVROST 360WebPlayer (including its entry into memory, display, transfer via networks and storage) to design, develop and test an on-line service, without making it available to third parties;
-4)	creating backup copies for the Client’s own purposes, while making the simultaneous use of the backup copy impossible.
+  1.	utilizing BIVROST 360WebPlayer (including its entry into memory, display, transfer via networks and storage) within the scope defined by its intended use and the Client’s activity, whereby utilization shall mean hosting BIVROST 360WebPlayer by the Client on a web server under a single Domain Name;
+  2.	making BIVROST 360WebPlayer available to third parties via a computer network under a single Domain Name with the use of a bowser for displaying panoramic videos delivered by the Client;
+  3.	utilizing BIVROST 360WebPlayer (including its entry into memory, display, transfer via networks and storage) to design, develop and test an on-line service, without making it available to third parties;
+  4.	creating backup copies for the Client’s own purposes, while making the simultaneous use of the backup copy impossible.
 2.	The scope of the Licence covers:
-1)	entire world;
-2)	indefinite time;
-3)	using BIVROST 360WebPlayer under a single Domain Name.
+  1.	entire world;
+  2.	indefinite time;
+  3.	using BIVROST 360WebPlayer under a single Domain Name.
 3.	Without written consent from the Bivrost Developer, the Client shall not:
-1)	make BIVROST 360WebPlayer available to third parties in its entirety or in parts otherwise than specified in Item 1.2 hereinabove, specifically make it downloadable via the Internet so that it can be used by third parties in other on-line services.
-2)	modify BIVROST 360WebPlayer in a way that falls outside of permitted configuration specified in the Documentation;
-3)	create any BIVROST 360WebPlayer-based derivative products other than on-line services using BIVROST 360WebPlayer as a panoramic video player.
-4)	apply Bivrost Desktop or its part within another computer software, regardless of its form, except for the use described in Item 1.3 hereinabove;
-5)	make BIVROST 360WebPlayer available to third parties via Software as a Service;
-6)	sublicense third parties or transfer rights granted and duties imposed under this Licence to third parties.
+  1.	make BIVROST 360WebPlayer available to third parties in its entirety or in parts otherwise than specified in Item 1.2 hereinabove, specifically make it downloadable via the Internet so that it can be used by third parties in other on-line services.
+  2.	modify BIVROST 360WebPlayer in a way that falls outside of permitted configuration specified in the Documentation;
+  3.	create any BIVROST 360WebPlayer-based derivative products other than on-line services using BIVROST 360WebPlayer as a panoramic video player.
+  4.	apply Bivrost Desktop or its part within another computer software, regardless of its form, except for the use described in Item 1.3 hereinabove;
+  5.	make BIVROST 360WebPlayer available to third parties via Software as a Service;
+  6.	sublicense third parties or transfer rights granted and duties imposed under this Licence to third parties.
 4.	The Client can purchase more than one Licence, with each additional Licence granting him the right to use BIVROST 360WebPlayer under another single Domain Name (one domain name is permitted per licence).
 
 
@@ -88,7 +88,7 @@ Section 10
 ---------
 
 To be fully operational, BIVROST 360WebPlayer requires the following libraries distributed under the following licences:
-1)	three.js – MIT licence published at: https://github.com/mrdoob/three.js/blob/master/LICENSE
+1.	three.js – MIT licence published at: https://github.com/mrdoob/three.js/blob/master/LICENSE
 
 
 Section 11
