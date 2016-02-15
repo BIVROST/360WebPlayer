@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 		
 		"closure-compiler": {
 			frontend: {
-				closurePath: './compiler.jar',
+				closurePath: 'node_modules/grunt-closure-compiler/',
 				js: grunt.file.readJSON("scripts.json"),
 				jsOutputFile: 'output/bivrost.js',
 //				maxBuffer: 5000,
