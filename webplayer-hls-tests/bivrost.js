@@ -1,1 +1,1 @@
-/Users/chanibal/Desktop/bivrost-player-web/output/bivrost.js
+../output/bivrost.js
