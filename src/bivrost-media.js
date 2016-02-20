@@ -199,20 +199,27 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			case Bivrost.SOURCE_VIDEO:
 				this.title="video:"+Object.keys(url).join("/");
 				log("video loading", url);
-				
-				var video=this.video=document.createElement("video");
-				video.setAttribute("width", "32");	// any number will be ok
-				video.setAttribute("height", "32");	// any number will be ok
-				if(loop)
-					video.setAttribute("loop", "true");
-				video.setAttribute("webkit-playsinline", "webkit-playsinline");
-				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
-				this._setLoop=function(value) { 
-					if(value)
+					
+				var video;
+				if(window.override_bivrost_video) {
+					log("VIDEO OVERRIDE!");
+					video=window.override_bivrost_video;
+				}
+				else {
+					video=this.video=document.createElement("video");
+					video.setAttribute("width", "32");	// any number will be ok
+					video.setAttribute("height", "32");	// any number will be ok
+					if(loop)
 						video.setAttribute("loop", "true");
-					else
-						video.removeAttribute("loop");
-				};
+					video.setAttribute("webkit-playsinline", "webkit-playsinline");
+					// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+					this._setLoop=function(value) { 
+						if(value)
+							video.setAttribute("loop", "true");
+						else
+							video.removeAttribute("loop");
+					};
+				}
 
 				this.play=function() { video.play(); };
 				this.pause=function() { video.pause(); };
@@ -268,18 +275,24 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				});
 				
 				// last to prevent event before load
-				Object.keys(url).forEach(function(e) {
-					var sourceTag=document.createElement("source");
-					sourceTag.setAttribute("src", e);
-					if(url[e])
-						sourceTag.setAttribute("type", url[e]);
-					video.appendChild(sourceTag);
-				});
+				if(!window.override_bivrost_video) {
+					Object.keys(url).forEach(function(e) {
+						var sourceTag=document.createElement("source");
+						sourceTag.setAttribute("src", e);
+						if(url[e])
+							sourceTag.setAttribute("type", url[e]);
+						video.appendChild(sourceTag);
+					});
 				
-				video.load();
-				
-				if(video.readyState > video.HAVE_CURRENT_DATA)
-					videoLoaded(ev);
+					video.load();
+
+					if(video.readyState > video.HAVE_CURRENT_DATA)
+						videoLoaded(ev);
+				}
+				else {
+					log("VIDEO OVERRIDEN - source");
+					window.bivrost_video_override_loaded=function() { videoLoaded({type:"override"}); };
+				}
 				
 				break;
 				

@@ -1,6 +1,7 @@
 [
 	"src/three.js",
 	"src/OculusRiftEffect.js",
+	"node_modules/hls.js/dist/hls.js",
 	"src/IEVideoTexture.js",
 	"src/bivrost.js",
 	"src/bivrost-observable.js",

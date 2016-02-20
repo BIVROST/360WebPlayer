@@ -1,6 +1,9 @@
 {
   "name": "bivrost-web-player",
+  "license": "(LicenseRef-LICENSE-free.md OR LicenseRef-LICENSE-commercial.md)",
+  "repository": "gitolite@redmine.bivrost360.com:bivrost-player-web.git",
   "version": "1.0.0",
+  "private": true,
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-closure-compiler": "0.0.21",
@@ -8,5 +11,9 @@
     "grunt-mustache-render": "^1.9.0",
     "marked": "^0.3.5",
     "mustache": "^2.2.0"
+  },
+  "dependencies": {
+    "dash.js": "^2.0.0-grant-access",
+    "hls.js": "^0.5.7"
   }
 }

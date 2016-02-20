@@ -161,6 +161,15 @@
 			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
 			"Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
+	},
+	
+	{
+		"slug": "HLS",
+		"title": "HLS streaming",
+		"description": [
+			"Quick and dirty HLS",
+			"<video id='video'></video><script type='text/javascript'>if(Hls.isSupported()) {  var video = document.getElementById('video');  window.override_bivrost_video=video;  var hls = new Hls();  hls.loadSource('http://demo.live-fstreams.rambla.be/live-demo/360.stream/playlist.m3u8');  hls.attachMedia(video);  hls.on(Hls.Events.MANIFEST_PARSED,function() {    video.play();  });}else alert(\"HLS not supported\");</script>"
+		]
 	}
 
 ]
