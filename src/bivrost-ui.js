@@ -61,10 +61,24 @@
 		this.player=player;
 		
 		var loading=this.loading=document.createElement("div");
-		var loadingVisible=true;
+		var loading_visible=true;
 		loading.className="bivrost-loading";
-		loading.show=function() { if(!loadingVisible) loading.classList.remove("hidden"); loadingVisible=true; };
-		loading.hide=function() { if(loadingVisible) loading.classList.add("hidden"); loadingVisible=false; };
+		var loading_indicator_timeout_id;
+		// loading indicator has a some added lag so it doesn't flash if the change is quick
+		var loading_indicator=function(visible) {
+			if(visible === loading_visible)
+				return;
+			loading_visible=visible;
+			clearTimeout(loading_indicator_timeout_id);
+			loading_indicator_timeout_id=setTimeout(function() {
+				if(loading_visible)
+					loading.classList.remove("hidden"); 
+				else
+					loading.classList.add("hidden"); 
+			}, 200);
+		};
+		loading.show=loading_indicator.bind(null, true); 
+		loading.hide=loading_indicator.bind(null, false); 
 		loading.appendChild(document.createElement("div"));
 		player.container.appendChild(loading);
 		

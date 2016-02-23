@@ -322,8 +322,6 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					if(url[e])
 						sourceTag.setAttribute("type", url[e]);
 					video.appendChild(sourceTag);
-					
-					log("add video: src=", e, "type=", url[e]);
 				});
 
 				video.load();
@@ -380,7 +378,6 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 						texture.minFilter = THREE.LinearFilter;
 						texture.magFilter = THREE.LinearFilter;
 						thisRef.gotTexture(texture);
-						texture.force_enough_data=true;
 						video.play();
 					});
 				});

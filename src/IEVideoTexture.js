@@ -1,3 +1,5 @@
+/* global Bivrost */
+
 THREE.IEVideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 
 	/**
@@ -5,7 +7,11 @@ THREE.IEVideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFi
 	 * to a WebGL Texture. But it is capable of rendering a video to a canvas and
 	 * a canvas to a texture.
 	 * 
+	 * This now badly named class also fixes an firefox bug with HLS streaming.
+	 * 
 	 * TODO: feature detection of not being able to set texture, not UA
+	 * 
+	 * @author Krzysztof Bociurko
 	 */
 	var isIE=/\b(Trident|IEMobile|Edge)\b/.test(navigator.userAgent);
 	var canvas, ctx;
@@ -36,19 +42,23 @@ THREE.IEVideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFi
 
 	var scope = this;
 	
-	var have_enough_data_notified = false;
+	// firefox hack for not receiving video.HAVE_ENOUGH_DATA with HLS.js
 	var force_enough_data = false;
+	var have_enough_data_hack=function() {
+		video.removeEventListener("timeupdate", have_enough_data_hack);
+		if(video.readyState === video.HAVE_ENOUGH_DATA)
+			return;
+		Bivrost.log("haveEnoughDataHack used on timeupdate, video.readyState=", video.readyState);
+		force_enough_data=true;
+	};
+	video.addEventListener("timeupdate", have_enough_data_hack);
+
 	
 	var update = function () {
 
 		requestAnimationFrame( update );
 		
-		if ( video.readyState === video.HAVE_ENOUGH_DATA || scope.force_enough_data ) {
-			
-			if(!have_enough_data_notified) {
-				have_enough_data_notified=true;
-				console.log("IEVideoTexture.HAVE_ENOUGH_DATA");
-			}
+		if ( video.readyState === video.HAVE_ENOUGH_DATA || force_enough_data ) {
 			
 			if(isIE)
 				ctx.drawImage(video, 0, 0);
