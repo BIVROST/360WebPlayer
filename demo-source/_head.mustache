@@ -16,6 +16,9 @@
 		{{^scripts}}
 		<script src="{{{bivrost_dir}}}bivrost.js"></script>
 		{{/scripts}}
+		{{#scripts_additional}}
+		<script src="{{{.}}}"></script>
+		{{/scripts_additional}}
 		<style type="text/css">
 			.back { text-decoration:none; text-align:center; padding: 0 1ex; border: 1px solid; margin-right: 1ex; }
 		</style>

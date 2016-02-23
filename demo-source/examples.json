@@ -26,8 +26,8 @@
 			{"attr": "source", "value": "autodetect"}
 		],
 		"src": [
-			{"url": "Morskie%20Oko%205s%20(mono,%201080p).mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
-			{"url": "Morskie%20Oko%205s%20(mono,%201080p).webm", "type": "video/webm; codecs=vp8.0"}
+			{"url": "media/Morskie%20Oko%205s%20(mono,%201080p).mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "media/Morskie%20Oko%205s%20(mono,%201080p).webm", "type": "video/webm; codecs=vp8.0"}
 		]
 	},
 	
@@ -45,8 +45,8 @@
 			 {"attr": "source", "value": "video"}
 		],
 		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4", 
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+			"media/Morskie%20Oko%205s%20(mono,%201080p).mp4", 
+			"media/Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
 	},
 	
@@ -59,7 +59,7 @@
 			{"attr": "stereoscopy", "value": "mono"}
 		],
 		"src": [
-			"cubemap-hcross.jpeg"
+			"media/cubemap-hcross.jpeg"
 		]
 	},
 	
@@ -72,7 +72,7 @@
 			{"attr": "stereoscopy", "value": "mono"}
 		],
 		"src": [
-			"cubemap-facebook.jpeg"
+			"media/cubemap-facebook.jpeg"
 		]
 	},
 	
@@ -82,8 +82,8 @@
 		"description": ["Example with looping enabled"],
 		"options": { "attr": "loop", "value": "true" },
 		"src": [
-			{"url": "Morskie%20Oko%205s%20(mono,%201080p).mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
-			{"url": "Morskie%20Oko%205s%20(mono,%201080p).webm", "type": "video/webm; codecs=vp8.0"}
+			{"url": "media/Morskie%20Oko%205s%20(mono,%201080p).mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "media/Morskie%20Oko%205s%20(mono,%201080p).webm", "type": "video/webm; codecs=vp8.0"}
 		]
 	},
 	
@@ -97,8 +97,8 @@
 			{"attr": "style", "value": "width: 400px; height: 500px", "unescaped": true}
 		],
 		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+			"media/Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"media/Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
 	},
 		
@@ -107,7 +107,7 @@
 		"title": "Static panoramas",
 		"description": "The 360WebPlayer can also display pictures",
 		"src": [
-			"Field%20(mono).jpeg"
+			"media/Field%20(mono).jpeg"
 		]
 	},
 	
@@ -118,7 +118,7 @@
 		"options": [
 			{"attr": "stereoscopy", "value":"top-and-bottom"}
 		],
-		"src": ["blood (TaB).jpeg"]
+		"src": ["media/blood (TaB).jpeg"]
 	},
 	
 	{
@@ -132,8 +132,8 @@
 			{"attr": "class", "value": "bivrost-theme-default", "unescaped": true}
 		],
 		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+			"media/Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"media/Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
 	},
 	
@@ -145,8 +145,8 @@
 			{"attr": "class", "value": "bivrost-theme-spring", "unescaped": true}
 		],
 		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+			"media/Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"media/Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
 	},
 	
@@ -158,8 +158,8 @@
 			{"attr": "class", "value": "bivrost-theme-autumn", "unescaped": true}
 		],
 		"src": [
-			"Morskie%20Oko%205s%20(mono,%201080p).mp4",
-			"Morskie%20Oko%205s%20(mono,%201080p).webm"
+			"media/Morskie%20Oko%205s%20(mono,%201080p).mp4",
+			"media/Morskie%20Oko%205s%20(mono,%201080p).webm"
 		]
 	},
 	
@@ -167,8 +167,16 @@
 		"slug": "HLS",
 		"title": "HLS streaming",
 		"description": [
-			"Quick and dirty HLS",
-			"<video id='video'></video><script type='text/javascript'>if(Hls.isSupported()) {  var video = document.getElementById('video');  window.override_bivrost_video=video;  var hls = new Hls();  hls.loadSource('http://demo.live-fstreams.rambla.be/live-demo/360.stream/playlist.m3u8');  hls.attachMedia(video);  hls.on(Hls.Events.MANIFEST_PARSED,function() {    video.play();  });}else alert(\"HLS not supported\");</script>"
+			"Quick and dirty HLS"
+		],
+		"options": [
+			{"attr": "source", "value": "stream-hls"}
+		],
+		"scripts_additional": [
+			"https://cdn.rawgit.com/dailymotion/hls.js/master/dist/hls.min.js"
+		],
+		"src": [
+			"http://demo.live-fstreams.rambla.be/live-demo/360.stream/playlist.m3u8"
 		]
 	}
 

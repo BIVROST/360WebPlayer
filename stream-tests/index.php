@@ -7,7 +7,7 @@
 
 	$HLS='http://demo.live-fstreams.rambla.be/live-demo/360.stream/playlist.m3u8';
 	$DASH='http://demo.live-fstreams.rambla.be/live-demo/360.stream/manifest.mpd';
-	$MP4_LOCAL='morskie.mp4';
+	$MP4_LOCAL='../demo-source/media/Morskie Oko 5s (mono, 1080p).mp4';
 	$MP4_CORS='http://tools.bivrost360.com/webplayer-docs/media/Morskie%20Oko%205s%20(mono,%201080p).mp4';
 
 	// sample content
@@ -67,8 +67,8 @@
 		<script src="../<?=$js?>" type="text/javascript"></script>
 		<?php endforeach ?>
 		<?php else: ?>
-		<link href="bivrost.css" rel="stylesheet" />
-		<script src="bivrost.js" type="text/javascript"></script>
+		<link href="../output/bivrost.css" rel="stylesheet" />
+		<script src="../output/bivrost.js" type="text/javascript"></script>
 		<?php endif ?>
 		
 		<style type="text/css">
@@ -147,6 +147,15 @@
 						return (v[prev] || 0 > v[curr] || 0) ? prev : curr;
 					}, "no")
 			);
+			
+			var vsi=setInterval(function() { 
+				if(!(video.videoWidth > 0)) {
+					log("video size: still unknown...");
+					return;
+				}
+				log("video size:", video.videoWidth, "x", video.videoHeight); 
+				clearInterval(vsi);
+			}, 2500);
 		</script>
 
 
@@ -230,7 +239,7 @@
 			
 			
 		<?php break; case 'hls.js': ?>
-			<script src="hls.js"></script>
+			<script src="https://cdn.rawgit.com/dailymotion/hls.js/master/dist/hls.min.js"></script>
 			public demo: <a href="http://dailymotion.github.io/hls.js/demo">http://dailymotion.github.io/hls.js/demo</a>
 
 			<video id="video" width="640" height="480" crossorigin="anonymous" controls></video>

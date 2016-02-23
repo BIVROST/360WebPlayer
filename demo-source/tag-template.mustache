@@ -23,7 +23,7 @@
 		
 		<bivrost-player{{ #options }} {{attr}}="{{value}}"{{ /options }}>
 			{{ #src }}
-			<bivrost-media url="media/{{url}}{{ ^url }}{{ . }}{{ /url }}"{{ #type }} type="{{ type }}"{{ /type }}></bivrost-media>
+			<bivrost-media url="{{url}}{{ ^url }}{{ . }}{{ /url }}"{{ #type }} type="{{ type }}"{{ /type }}></bivrost-media>
 			{{ /src }}
 		</bivrost-player>
 		
@@ -34,7 +34,7 @@
 		{{ #src }}
 		<br />&nbsp;	&lt;bivrost-media 
 				{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	{{ /type }}
-				url="<a href="media/{{url}}{{ ^url }}{{ . }}{{ /url }}">media/{{url}}{{ ^url }}{{ . }}{{ /url }}</a>"{{!
+				url="<a href="{{url}}{{ ^url }}{{ . }}{{ /url }}">{{url}}{{ ^url }}{{ . }}{{ /url }}</a>"{{!
 				}}{{ #type }}<br/>&nbsp;	&nbsp;	 &nbsp;	type="{{ type }}"{{ /type }}{{!
 				}}&gt;&lt;/bivrost-media&gt;
 		{{ /src }}
@@ -48,7 +48,7 @@
 		{{ #src }}
 		<br />&nbsp;	&lt;div data-bivrost-media 
 				{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	{{ /type }}
-				data-bivrost-url="<a href="media/{{url}}{{ ^url }}{{ . }}{{ /url }}">media/{{url}}{{ ^url }}{{ . }}{{ /url }}</a>"{{!
+				data-bivrost-url="<a href="{{url}}{{ ^url }}{{ . }}{{ /url }}">{{url}}{{ ^url }}{{ . }}{{ /url }}</a>"{{!
 				}}{{ #type }}<br/>&nbsp;	&nbsp;	&nbsp;	data-bivrost-type="{{ type }}"{{ /type }}{{!
 				}}&gt;&lt;/div&gt;
 		{{ /src }}
@@ -56,5 +56,12 @@
 		</code>
 		
 	</article>
+
+	<script type="text/javascript">
+		var player;
+		addEventListener("load", function() {
+			player=document.getElementsByTagName("bivrost-player")[0].bivrost;
+		});
+	</script>
 		
 {{ >_foot }}

@@ -90,6 +90,21 @@ module.exports = function (grunt) {
 				]
 			}
 		},
+		
+		rsync: {
+			options: {
+				exclude: [".DS_Store"],
+				recursive: true,
+				args: ["--verbose", "-a"]
+			},
+			"tools.bivrost360.com/webplayer-docs/": {
+				options: {
+					src: "demo/",
+					dest: "~/public_html/bivrost-tools/webplayer-docs",
+					host: "krzysztof.bociurko@vizao.pl@bivrost360.com"
+				}
+			}
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-sass');
@@ -140,9 +155,12 @@ module.exports = function (grunt) {
 		grunt.file.copy("output/bivrost.js", "demo/bivrost.js");
 		grunt.file.copy("output/bivrost.css", "demo/bivrost.css");
 	});
+	
+	grunt.loadNpmTasks('grunt-rsync');
+	grunt.registerTask("docs-deploy", ['docs', 'rsync']);
 
 	grunt.registerTask('app', ['sass', 'closure-compiler']);
-	grunt.registerTask('docs', ['docs-clean', 'readme-github-preview', 'mustache_render', 'docs-copy-files'])
+	grunt.registerTask('docs', ['docs-clean', 'readme-github-preview', 'mustache_render', 'docs-copy-files']);
 	
 	grunt.registerTask('default', ["app", "docs"]);
 	grunt.registerTask('build', ['default']);
