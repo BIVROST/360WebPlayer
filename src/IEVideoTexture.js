@@ -36,13 +36,19 @@ THREE.IEVideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFi
 
 	var scope = this;
 	
+	var have_enough_data_notified = false;
+	var force_enough_data = false;
 	
-
 	var update = function () {
 
 		requestAnimationFrame( update );
-
-		if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+		
+		if ( video.readyState === video.HAVE_ENOUGH_DATA || scope.force_enough_data ) {
+			
+			if(!have_enough_data_notified) {
+				have_enough_data_notified=true;
+				console.log("IEVideoTexture.HAVE_ENOUGH_DATA");
+			}
 			
 			if(isIE)
 				ctx.drawImage(video, 0, 0);

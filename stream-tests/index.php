@@ -148,7 +148,8 @@
 					}, "no")
 			);
 			
-			var vsi=setInterval(function() { 
+			var vsi=setInterval(function() {
+				var video=document.getElementById("video");
 				if(!(video.videoWidth > 0)) {
 					log("video size: still unknown...");
 					return;
@@ -224,12 +225,15 @@
 		<?php break; case 'dash.js': ?>
 			  
 			<script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
-			<script type="text/javascript">
+<!--			<script type="text/javascript">
 				document.body.addEventListener("load", function() { Dash.createAll(); });
 			</script>
 			<video class="dashjs-player" autoplay preload="none" controls="true" id="video">
 				<source src="<?=  htmlspecialchars($DASH)?>" type="application/dash+xml"/>
-			</video>
+			</video>-->
+			
+			
+			<video id="video" data-dashjs-player autoplay src="<?=  htmlspecialchars($DASH)?>" controls></video>
 			
 			  
 			  

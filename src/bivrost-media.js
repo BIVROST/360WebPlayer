@@ -1,4 +1,4 @@
-/* global Bivrost, THREE */
+/* global Bivrost, THREE, Hls */
 "use strict";
 
 
@@ -380,15 +380,12 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 						texture.minFilter = THREE.LinearFilter;
 						texture.magFilter = THREE.LinearFilter;
 						thisRef.gotTexture(texture);
-
+						texture.force_enough_data=true;
 						video.play();
 					});
 				});
 				
 				hls.on(Hls.Events.ERROR,function(event,data) {
-					var errorType = data.type;
-					var errorDetails = data.details;
-					var errorFatal = data.fatal;
 					log(data.fatal?"HLS fatal error":"HLS recoverable error:", data.type, "details=", data.details);
 					if(data.fatal) {	// try to recover
 						switch(data.type) {
