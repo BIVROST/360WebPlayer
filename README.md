@@ -121,7 +121,7 @@ Following configuration options are allowed:
 	optional, default: "autodetect".
 
 *	`source`: is this a video or picture?
-	Allowed values: "video", "picture", "autodetect";
+	Allowed values: "video", "picture", "stream-hls", "stream-dash", "autodetect";
 	optional, default: "autodetect"
 	
 *	`projection`: reserved for future use; what is the projection (mapping from 2d to 3d) of the media?
@@ -267,6 +267,8 @@ var player=new Bivrost.Player(
 	//  Bivrost.SOURCE_AUTODETECT,
 	//  Bivrost.SOURCE_VIDEO,
 	//  Bivrost.SOURCE_PICTURE
+	//  Bivrost.SOURCE_STREAM_HLS
+	//  Bivrost.SOURCE_STREAM_DASH
 	// or ommit/provide undefined for autodetect
 	Bivrost.SOURCE_AUTODETECT,
 

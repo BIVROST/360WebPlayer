@@ -122,61 +122,75 @@
 			
 			var video=media.video;
 
-			var currentTime=document.createElement("span");
-			currentTime.textContent=timeFormat(media.time);
 
-			var separator=document.createElement("span");
-			separator.textContent=" / ";
-
-			var duration=document.createElement("span");
-			duration.textContent=timeFormat(media.duration);
-
-			var status=document.createElement("span");
-			status.className="bivrost-status";
-			status.appendChild(currentTime);
-			status.appendChild(separator);
-			status.appendChild(duration);
-
-			var range=document.createElement("input");
-			range.setAttribute("type", "range");
-			range.setAttribute("min", 0);
-			range.setAttribute("max", media.duration || 1);
-			range.setAttribute("step", 0.025);
-			range.setAttribute("value", 0);
-
-			var rangeBackground=document.createElement("div");
-			rangeBackground.className="bivrost-range-background";
-			this.domElement.appendChild(rangeBackground);
-
-			var rangeForeground=document.createElement("div");
-			rangeForeground.className="bivrost-range-foreground";
-			rangeBackground.appendChild(rangeForeground);
-			rangeForeground.setValue01=function(value01) {
-				var thumbWidth=15;
-				rangeForeground.style.width=Math.round(value01 * (rangeBackground.offsetWidth-thumbWidth) + thumbWidth/2)+"px";
-			};
-
-			rangeBackground.appendChild(range);
-
-
-			video.addEventListener("timeupdate", function(e) {
+			// status bar
+			if(isFinite(media.duration)) {
+				var currentTime=document.createElement("span");
 				currentTime.textContent=timeFormat(media.time);
-				range.value=media.time;
-				rangeForeground.setValue01(media.time/media.duration);
-			});
 
-			video.addEventListener("durationchange", function(e) {
+				var separator=document.createElement("span");
+				separator.textContent=" / ";
+
+				var duration=document.createElement("span");
 				duration.textContent=timeFormat(media.duration);
-				range.setAttribute("max", media.duration || 1);
-			});
 
-			var rangeChange=function() {
-				rangeForeground.setValue01(range.value/media.duration);
-				media.time=range.value; 
-			};
-			range.addEventListener("change", rangeChange);
-			range.addEventListener("input", rangeChange);		
-			window.addEventListener("resize", rangeChange);
+				var status=document.createElement("span");
+				status.className="bivrost-status";
+				status.appendChild(currentTime);
+				status.appendChild(separator);
+				status.appendChild(duration);
+
+				video.addEventListener("durationchange", function(e) {
+					duration.textContent=timeFormat(media.duration);
+				});
+
+				video.addEventListener("timeupdate", function(e) {
+					currentTime.textContent=timeFormat(media.time);
+				});
+			}
+
+
+			// media range
+			if(isFinite(media.duration)) {
+				var range=document.createElement("input");
+				range.setAttribute("type", "range");
+				range.setAttribute("min", 0);
+				range.setAttribute("max", media.duration || 1);
+				range.setAttribute("step", 0.025);
+				range.setAttribute("value", 0);
+
+				var rangeBackground=document.createElement("div");
+				rangeBackground.className="bivrost-range-background";
+				this.domElement.appendChild(rangeBackground);
+
+				var rangeForeground=document.createElement("div");
+				rangeForeground.className="bivrost-range-foreground";
+				rangeBackground.appendChild(rangeForeground);
+				rangeForeground.setValue01=function(value01) {
+					var thumbWidth=15;
+					rangeForeground.style.width=Math.round(value01 * (rangeBackground.offsetWidth-thumbWidth) + thumbWidth/2)+"px";
+				};
+
+				rangeBackground.appendChild(range);
+
+
+				video.addEventListener("timeupdate", function(e) {
+					range.value=media.time;
+					rangeForeground.setValue01(media.time/media.duration);
+				});
+
+				video.addEventListener("durationchange", function(e) {
+					range.setAttribute("max", media.duration || 1);
+				});
+
+				var rangeChange=function() {
+					rangeForeground.setValue01(range.value/media.duration);
+					media.time=range.value; 
+				};
+				range.addEventListener("change", rangeChange);
+				range.addEventListener("input", rangeChange);		
+				window.addEventListener("resize", rangeChange);
+			}
 
 
 			var playButton=makeButton("play", media.play.bind(media), Bivrost.lang.playButtonLabel);
@@ -206,7 +220,14 @@
 			leftAligned.appendChild(playButton);
 			// this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
 
-			rightAligned.insertBefore(status, rightAligned.childNodes[0]);
+
+			// add status as first right element
+			if(status) {
+				if(rightAligned.childNodes.length > 0)
+					rightAligned.insertBefore(status, rightAligned.childNodes[0]);
+				else
+					rightAligned.appendChild(status);
+			}
 			
 			
 			// loading
@@ -224,7 +245,7 @@
 			
 			// volume
 			var volumebar=document.createElement("div");
-			volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; })
+			volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; });
 			volumebar.className="bivrost-volume hidden";
 			var ticks=[];
 			var inVolumeDrag=false;

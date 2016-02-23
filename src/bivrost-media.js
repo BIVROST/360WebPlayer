@@ -57,13 +57,29 @@ Bivrost.SOURCE_PICTURE="picture";
 
 
 /**
+ * The source is a HLS stream
+ * @type String
+ */
+Bivrost.SOURCE_STREAM_HLS="stream-hls";
+
+
+/**
+ * The source is an MPEG-DASH stream
+ * @type String
+ */
+Bivrost.SOURCE_STREAM_DASH="stream-dash";
+
+
+/**
  * All available sources
  * @type Array<string>
  */
 Bivrost.AVAILABLE_SOURCES=[
 	Bivrost.SOURCE_AUTODETECT,
 	Bivrost.SOURCE_VIDEO,
-	Bivrost.SOURCE_PICTURE
+	Bivrost.SOURCE_PICTURE,
+	Bivrost.SOURCE_STREAM_HLS,
+	Bivrost.SOURCE_STREAM_DASH
 ];
 
 
@@ -165,18 +181,49 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 		this.stereoscopy=stereoscopy=stereoscopy || Bivrost.STEREOSCOPY_AUTODETECT;
 		
 		if(!source || source === Bivrost.SOURCE_AUTODETECT) {
-			source=(/\.(jpe?g|png|bmp|tiff|gif)$/i.test(Object.keys(url)[0]))
-				?Bivrost.SOURCE_PICTURE
-				:Bivrost.SOURCE_VIDEO;
+			var ext=(/\.([a-zA-Z0-9]+)$/.exec(Object.keys(url)[0]) || ["", ""])[1].toLowerCase();
+			switch(ext) {
+				case "jpeg":
+				case "jpg":
+				case "png":
+				case "tiff":
+				case "gif":
+				case "bmp":
+					source=Bivrost.SOURCE_PICTURE;
+					break;
+					
+				case "mp4":
+				case "webm":
+				case "avi":
+				case "ogv":
+				case "ogg":
+				case "wmv":
+					source=Bivrost.SOURCE_VIDEO;
+					break;
+					
+				case "m3u":
+				case "m3u8":
+					source=Bivrost.SOURCE_STREAM_HLS;
+					break;
+					
+				case "mpd":
+					source=Bivrost.SOURCE_STREAM_DASH;
+					break;
+					
+				default:
+					log("unknown extension during autodetect: "+ext+", hoping it's video...");
+					source=Bivrost.SOURCE_VIDEO;
+					break;
+			}
 			log("detected source: "+Bivrost.reverseConstToName(source));
 		}
 		
 		switch(source) {
 			case Bivrost.SOURCE_PICTURE:
 				if(Object.keys(url).length !== 1)
-					throw "still supports only one url at this time";
-				this.title="still:"+Object.keys(url)[0];
-				log("still loading", url);
+					throw "picture supports only one url at this time";
+				this.title="picture:"+Object.keys(url)[0];
+				log("picture loading", url);
 				
 				var loader=new THREE.TextureLoader();
 				loader.load(
@@ -198,28 +245,22 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				
 			case Bivrost.SOURCE_VIDEO:
 				this.title="video:"+Object.keys(url).join("/");
-				log("video loading", url);
+				log("video loading", Object.keys(url));
 					
 				var video;
-				if(window.override_bivrost_video) {
-					log("VIDEO OVERRIDE!");
-					video=window.override_bivrost_video;
-				}
-				else {
-					video=this.video=document.createElement("video");
-					video.setAttribute("width", "32");	// any number will be ok
-					video.setAttribute("height", "32");	// any number will be ok
-					if(loop)
+				video=this.video=document.createElement("video");
+				video.setAttribute("width", "32");	// any number will be ok
+				video.setAttribute("height", "32");	// any number will be ok
+				if(loop)
+					video.setAttribute("loop", "true");
+				video.setAttribute("webkit-playsinline", "webkit-playsinline");
+				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+				this._setLoop=function(value) { 
+					if(value)
 						video.setAttribute("loop", "true");
-					video.setAttribute("webkit-playsinline", "webkit-playsinline");
-					// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
-					this._setLoop=function(value) { 
-						if(value)
-							video.setAttribute("loop", "true");
-						else
-							video.removeAttribute("loop");
-					};
-				}
+					else
+						video.removeAttribute("loop");
+				};
 
 				this.play=function() { video.play(); };
 				this.pause=function() { video.pause(); };
@@ -275,26 +316,105 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				});
 				
 				// last to prevent event before load
-				if(!window.override_bivrost_video) {
-					Object.keys(url).forEach(function(e) {
-						var sourceTag=document.createElement("source");
-						sourceTag.setAttribute("src", e);
-						if(url[e])
-							sourceTag.setAttribute("type", url[e]);
-						video.appendChild(sourceTag);
-					});
-				
-					video.load();
+				Object.keys(url).forEach(function(e) {
+					var sourceTag=document.createElement("source");
+					sourceTag.setAttribute("src", e);
+					if(url[e])
+						sourceTag.setAttribute("type", url[e]);
+					video.appendChild(sourceTag);
+					
+					log("add video: src=", e, "type=", url[e]);
+				});
 
-					if(video.readyState > video.HAVE_CURRENT_DATA)
-						videoLoaded(ev);
-				}
-				else {
-					log("VIDEO OVERRIDEN - source");
-					window.bivrost_video_override_loaded=function() { videoLoaded({type:"override"}); };
-				}
+				video.load();
+
+				if(video.readyState > video.HAVE_CURRENT_DATA)
+					videoLoaded({type:"loaded-before"});
 				
 				break;
+				
+				
+			case Bivrost.SOURCE_STREAM_HLS:
+				if(!window.Hls)
+					throw "HLS streaming requires an external library HLS.js, please add https://github.com/dailymotion/hls.js"
+				// TODO: add native HLS
+				
+				this.title="stream:"+Object.keys(url).join("/");
+				var firstUrl=Object.keys(url)[0];
+				log("hls stream loading", firstUrl);
+					
+				var video;
+				video=this.video=document.createElement("video");
+				video.setAttribute("width", "32");	// any number will be ok
+				video.setAttribute("height", "32");	// any number will be ok
+				video.setAttribute("webkit-playsinline", "webkit-playsinline");
+				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+
+				this.play=function() { video.play(); };
+				this.pause=function() { video.pause(); };
+				this.pauseToggle=function() {
+					if(video.paused)
+						video.play();
+					else
+						video.pause();
+				};
+				this._setTime=function(val) { throw "setting time in streams is not supported"; };
+				this._getTime=function() { return video.currentTime; };
+				this._getDuration=function() { return Infinity; };
+
+				var hls=new Hls({debug:log});
+				hls.attachMedia(video);
+				var videoLoadedDone=false;
+				hls.on(Hls.Events.MEDIA_ATTACHED, function() {
+					log("HLS MEDIA_ATTACHED");
+					hls.loadSource(firstUrl);
+					hls.on(Hls.Events.MANIFEST_PARSED, function(e,d) {
+						log("HLS MANIFEST_PARSED", d);
+						
+						if(videoLoadedDone)
+							return;
+						videoLoadedDone=true;
+						log("video loaded by HLS manifest parse");
+						var texture = new THREE.IEVideoTexture(video);
+						texture.name=thisRef.title;
+						texture.minFilter = THREE.LinearFilter;
+						texture.magFilter = THREE.LinearFilter;
+						thisRef.gotTexture(texture);
+
+						video.play();
+					});
+				});
+				
+				hls.on(Hls.Events.ERROR,function(event,data) {
+					var errorType = data.type;
+					var errorDetails = data.details;
+					var errorFatal = data.fatal;
+					log(data.fatal?"HLS fatal error":"HLS recoverable error:", data.type, "details=", data.details);
+					if(data.fatal) {	// try to recover
+						switch(data.type) {
+							case Hls.ErrorTypes.NETWORK_ERROR:
+								log("HLS trying to recover NETWORK_ERROR...");
+								hls.startLoad();
+								break;
+							case Hls.ErrorTypes.MEDIA_ERROR:
+								log("HLS trying to recover MEDIA_ERROR...");
+								hls.recoverMediaError();
+								break;
+							default:
+								log("HLS unrecoverable error, stopping HLS");
+								thisRef.onerror("HLS unrecoverable error: "+data.details);
+								hls.destroy();
+								break;
+						}
+					}
+				});
+
+				break;
+			
+			
+			case Bivrost.SOURCE_STREAM_DASH:
+				throw "MPEG-DASH not yet implemented";
+				
 				
 			default:
 				throw "unknown source type: "+source;
