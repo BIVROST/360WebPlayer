@@ -21,10 +21,9 @@ var Bivrost={
 	 */
 	log: function(module, args) {
 		if(Bivrost.verbose && window.console) {
-			if(console.table)	// advanced console
-				console.log.bind(console, "["+module+"]").apply(null, args);
-			else	// simple console impl.
-				console.log("["+module+"] "+Array.prototype.map.call(args, JSON.stringify).join(" ")); 
+			var a=[].slice.call(args, 0);
+			a.unshift("["+module+"]");
+			console.log.apply(console, a);
 		}
 	},
 	

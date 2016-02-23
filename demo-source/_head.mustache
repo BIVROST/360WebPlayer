@@ -10,15 +10,15 @@
 		{{^styles}}
 		<link href="{{{bivrost_dir}}}bivrost.css" rel="stylesheet" />
 		{{/styles}}
+		{{#scripts_additional}}
+		<script src="{{{.}}}"></script>
+		{{/scripts_additional}}
 		{{#scripts}}
 		<script src="../{{{.}}}"></script>
 		{{/scripts}}
 		{{^scripts}}
 		<script src="{{{bivrost_dir}}}bivrost.js"></script>
 		{{/scripts}}
-		{{#scripts_additional}}
-		<script src="{{{.}}}"></script>
-		{{/scripts_additional}}
 		<style type="text/css">
 			.back { text-decoration:none; text-align:center; padding: 0 1ex; border: 1px solid; margin-right: 1ex; }
 		</style>

@@ -167,16 +167,17 @@
 		"slug": "HLS",
 		"title": "HLS streaming",
 		"description": [
-			"Quick and dirty HLS"
+			"HLS support demo, please note that the stream might be down."
 		],
 		"options": [
 			{"attr": "source", "value": "stream-hls"}
 		],
 		"scripts_additional": [
 			"https://cdn.rawgit.com/dailymotion/hls.js/master/dist/hls.min.js"
+
 		],
 		"src": [
-			"http://demo.live-fstreams.rambla.be/live-demo/360.stream/playlist.m3u8"
+			"http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8"
 		]
 	}
 

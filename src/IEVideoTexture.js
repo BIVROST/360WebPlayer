@@ -14,16 +14,17 @@ THREE.IEVideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFi
 	 * @author Krzysztof Bociurko
 	 */
 	var isIE=/\b(Trident|IEMobile|Edge)\b/.test(navigator.userAgent);
-	var canvas, ctx;
+	var canvas, ctx, ctxWidth, ctxHeight;
 	if(isIE) {
-		Bivrost.log("IEVideoTexture", "using IE video rendering");
+		Bivrost.log("IEVideoTexture", ["using IE video rendering hack"]);
 		
 		canvas=document.createElement("canvas");
 		ctx=canvas.getContext("2d");
 
 		var setCanvasVideoSize=function() {
-			canvas.width=video.videoWidth;
-			canvas.height=video.videoHeight;
+			canvas.width=ctxWidth=video.videoWidth;
+			canvas.height=ctxHeight=video.videoHeight;
+			Bivrost.log("IEVideoTexture", ["canvas resize", ctxWidth, ctxHeight]);
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 		};
 		if(video.videoHeight)
@@ -43,25 +44,28 @@ THREE.IEVideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFi
 	var scope = this;
 	
 	// firefox hack for not receiving video.HAVE_ENOUGH_DATA with HLS.js
-	var force_enough_data = false;
-	var have_enough_data_hack=function() {
-		video.removeEventListener("timeupdate", have_enough_data_hack);
+	var forceEnoughData = false;
+	var haveEnoughDataHack=function() {
+		video.removeEventListener("timeupdate", haveEnoughDataHack);
 		if(video.readyState === video.HAVE_ENOUGH_DATA)
 			return;
-		Bivrost.log("haveEnoughDataHack used on timeupdate, video.readyState=", video.readyState);
-		force_enough_data=true;
+		Bivrost.log("IEVideoTexture", ["haveEnoughDataHack used on timeupdate, video.readyState=", video.readyState]);
+		forceEnoughData=true;
 	};
-	video.addEventListener("timeupdate", have_enough_data_hack);
+	video.addEventListener("timeupdate", haveEnoughDataHack);
 
 	
 	var update = function () {
 
 		requestAnimationFrame( update );
 		
-		if ( video.readyState === video.HAVE_ENOUGH_DATA || force_enough_data ) {
+		if ( video.readyState === video.HAVE_ENOUGH_DATA || forceEnoughData ) {
 			
-			if(isIE)
+			if(isIE) {
+				if(video.videoWidth !== ctxWidth || video.videoHeight !== ctxHeight)
+					setCanvasVideoSize();
 				ctx.drawImage(video, 0, 0);
+			}
 
 			scope.needsUpdate = true;
 

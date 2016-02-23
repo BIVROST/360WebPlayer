@@ -9,8 +9,234 @@ http://stackoverflow.com/questions/10104301/hls-streaming-video-url-need-for-tes
 https://fish.schou.me/
 http://www.dash-player.com/blog/2015/04/10-free-public-mpeg-dash-teststreams-and-datasets/
 http://dashif.org/test-vectors/
+multi res HLS: http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8
 
 Wowza says HLS not supported on most platforms (like Chrome)
+
+Nice HLS intro: http://www.encoding.com/http-live-streaming-hls/
+
+
+Stream 2016-02-23
+-----------------
+
+JSON.stringify(hls.levelController.levels, "\t", 2)
+"[
+  {
+    "attrs": {
+      "BANDWIDTH": "1000000",
+      "RESOLUTION": "854x480"
+    },
+    "url": [
+      "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/chunklist_w685640248_b1000000.m3u8"
+    ],
+    "width": 854,
+    "height": 480,
+    "bitrate": 1000000,
+    "urlId": 0,
+    "details": {
+      "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/chunklist_w685640248_b1000000.m3u8",
+      "fragments": [
+        {
+          "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/media_w685640248_b1000000_149.ts",
+          "duration": 10.002,
+          "start": 0,
+          "sn": 149,
+          "level": 0,
+          "cc": 0,
+          "decryptdata": {
+            "method": null,
+            "key": null,
+            "iv": null,
+            "uri": null
+          },
+          "programDateTime": null,
+          "autoLevel": true,
+          "expectedLen": 1250000,
+          "trequest": 8331.090000000002,
+          "loadCounter": 1,
+          "loadIdx": 0,
+          "loaded": 1613792,
+          "startPTS": 0,
+          "endPTS": 10.002
+        },
+        {
+          "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/media_w685640248_b1000000_150.ts",
+          "duration": 10,
+          "start": 10.002,
+          "sn": 150,
+          "level": 0,
+          "cc": 0,
+          "byteRangeStartOffset": null,
+          "decryptdata": {
+            "method": null,
+            "key": null,
+            "iv": null,
+            "uri": null
+          },
+          "programDateTime": null
+        },
+        {
+          "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/media_w685640248_b1000000_151.ts",
+          "duration": 10,
+          "start": 20.002000000000002,
+          "sn": 151,
+          "level": 0,
+          "cc": 0,
+          "byteRangeStartOffset": null,
+          "decryptdata": {
+            "method": null,
+            "key": null,
+            "iv": null,
+            "uri": null
+          },
+          "programDateTime": null
+        }
+      ],
+      "live": true,
+      "startSN": 149,
+      "targetduration": 10,
+      "totalduration": 30,
+      "endSN": 151,
+      "PTSKnown": true
+    }
+  },
+  {
+    "attrs": {
+      "BANDWIDTH": "2500000",
+      "RESOLUTION": "1280x720"
+    },
+    "url": [
+      "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/chunklist_w685640248_b2500000.m3u8"
+    ],
+    "width": 1280,
+    "height": 720,
+    "bitrate": 2500000,
+    "urlId": 0
+  },
+  {
+    "attrs": {
+      "BANDWIDTH": "3500000",
+      "RESOLUTION": "1920x1080"
+    },
+    "url": [
+      "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/chunklist_w685640248_b3500000.m3u8"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "bitrate": 3500000,
+    "urlId": 0,
+    "details": {
+      "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/chunklist_w685640248_b3500000.m3u8",
+      "fragments": [
+        {
+          "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/media_w685640248_b3500000_159.ts",
+          "duration": 10.036999999999992,
+          "start": 99.968,
+          "sn": 159,
+          "level": 2,
+          "cc": 0,
+          "decryptdata": {
+            "method": null,
+            "key": null,
+            "iv": null,
+            "uri": null
+          },
+          "programDateTime": null,
+          "startPTS": 99.968,
+          "endPTS": 110.016
+        },
+        {
+          "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/media_w685640248_b3500000_160.ts",
+          "duration": 9.995000000000005,
+          "start": 110.005,
+          "sn": 160,
+          "level": 2,
+          "cc": 0,
+          "byteRangeStartOffset": null,
+          "decryptdata": {
+            "method": null,
+            "key": null,
+            "iv": null,
+            "uri": null
+          },
+          "programDateTime": null,
+          "startPTS": 110.005,
+          "endPTS": 120.005
+        },
+        {
+          "url": "http://zendster.live-fstreams.cdn01.rambla.be/adlive-zendster/voice360.smil/media_w685640248_b3500000_161.ts",
+          "duration": 10.004999999999995,
+          "start": 120,
+          "sn": 161,
+          "level": 2,
+          "cc": 0,
+          "byteRangeStartOffset": null,
+          "decryptdata": {
+            "method": null,
+            "key": null,
+            "iv": null,
+            "uri": null
+          },
+          "programDateTime": null,
+          "autoLevel": true,
+          "expectedLen": 4375000,
+          "trequest": 99704.80500000001,
+          "loadCounter": 1,
+          "loadIdx": 12,
+          "loaded": 4847768,
+          "startPTS": 120,
+          "endPTS": 130.005
+        }
+      ],
+      "live": true,
+      "startSN": 159,
+      "targetduration": 11,
+      "totalduration": 30,
+      "endSN": 161,
+      "PTSKnown": true
+    }
+  }
+]"
+
+Stats Display
+
+{
+	"autoLevelAvg": 1.75,
+	"autoLevelCappingLast": 1,
+	"autoLevelCappingMax": 2,
+	"autoLevelCappingMin": -1,
+	"autoLevelLast": 2,
+	"autoLevelMax": 2,
+	"autoLevelMin": 0,
+	"autoLevelSwitch": 2,
+	"fragAvgKbps": 19483,
+	"fragAvgLatency": 75,
+	"fragAvgProcess": 1611,
+	"fragBuffered": 24,
+	"fragBufferedBytes": 88047732,
+	"fragChangedAuto": 12,
+	"fragChangedManual": 3,
+	"fragLastKbps": 20441,
+	"fragLastProcess": 1638.5100000000093,
+	"fragMaxKbps": 29711,
+	"fragMaxLatency": 147.1349999999802,
+	"fragMaxProcess": 2439.3800000000047,
+	"fragMinKbps": 9433,
+	"fragMinLatency": 48.28499999999622,
+	"fragMinProcess": 445.83499999999185,
+	"fraglastLatency": 57.86999999996624,
+	"levelNb": 3,
+	"levelStart": 0,
+	"manualLevelLast": 0,
+	"manualLevelMax": 0,
+	"manualLevelMin": 0,
+	"manualLevelSwitch": 0
+}
+Duration:170.047999
+Buffered:[80.034977,170.033021]
+Seekable:[0,170.047999]
+Played:[0.034977,139.415446]
+Dropped Frames:70
 
 
 

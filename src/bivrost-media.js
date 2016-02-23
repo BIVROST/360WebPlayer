@@ -343,10 +343,12 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					
 				var video;
 				video=this.video=document.createElement("video");
-				video.setAttribute("width", "32");	// any number will be ok
-				video.setAttribute("height", "32");	// any number will be ok
+				video.setAttribute("width", "800");	// any number will be ok
+				video.setAttribute("height", "400");	// any number will be ok
 				video.setAttribute("webkit-playsinline", "webkit-playsinline");
 				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+
+				document.body.appendChild(video);
 
 				this.play=function() { video.play(); };
 				this.pause=function() { video.pause(); };
@@ -360,7 +362,8 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				this._getTime=function() { return video.currentTime; };
 				this._getDuration=function() { return Infinity; };
 
-				var hls=new Hls({debug:log});
+				var hls=new Hls({debug:Bivrost.verbose?log:false});
+				this.hls=hls;
 				hls.attachMedia(video);
 				var videoLoadedDone=false;
 				hls.on(Hls.Events.MEDIA_ATTACHED, function() {
