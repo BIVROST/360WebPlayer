@@ -136,8 +136,15 @@ THREE.OculusRiftEffect = function ( renderer, options, webVrHmd ) {
 		right.tranform = (new THREE.Matrix4()).makeTranslation( worldFactor * HMD.interpupillaryDistance/2, 0.0, 0.0 );
 
 		// Compute Viewport
-		left.viewport = [0, 0, HMD.hResolution/2, HMD.vResolution];
-		right.viewport = [HMD.hResolution/2, 0, HMD.hResolution/2, HMD.vResolution];
+		if(screen.width > screen.height) { // landscape
+			left.viewport = [0, 0, HMD.hResolution/2, HMD.vResolution];
+			right.viewport = [HMD.hResolution/2, 0, HMD.hResolution/2, HMD.vResolution];
+		} else { // portrait
+			left.viewport = [0, 0, HMD.hResolution, HMD.vResolution/2];
+			right.viewport = [0, HMD.vResolution/2, HMD.hResolution, HMD.vResolution/2];
+		}
+
+
 
 		// Distortion shader parameters
 		var lensShift = 4 * (HMD.hScreenSize/4 - HMD.lensSeparationDistance/2) / HMD.hScreenSize;
@@ -160,8 +167,16 @@ THREE.OculusRiftEffect = function ( renderer, options, webVrHmd ) {
 	this.setHMD(HMD);
 
 	this.setSize = function ( width, height ) {
-		left.viewport = [width/2 - HMD.hResolution/2, height/2 - HMD.vResolution/2, HMD.hResolution/2, HMD.vResolution];
-		right.viewport = [width/2, height/2 - HMD.vResolution/2, HMD.hResolution/2, HMD.vResolution];
+//			left.viewport = [width/2 - HMD.hResolution/2, height/2 - HMD.vResolution/2, HMD.hResolution/2, HMD.vResolution];
+//			right.viewport = [width/2, height/2 - HMD.vResolution/2, HMD.hResolution/2, HMD.vResolution];
+		
+		if(screen.width > screen.height) { // landscape
+			left.viewport = [0, 0, HMD.hResolution/2, HMD.vResolution];
+			right.viewport = [HMD.hResolution/2, 0, HMD.hResolution/2, HMD.vResolution];
+		} else { // portrait
+			left.viewport = [0, 0, HMD.hResolution, HMD.vResolution/2];
+			right.viewport = [0, HMD.vResolution/2, HMD.hResolution, HMD.vResolution/2];
+		}
 
 		renderer.setSize( width, height );
 	};
