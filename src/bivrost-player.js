@@ -91,8 +91,10 @@
 				
 		// resize handling
 		// http://stackoverflow.com/a/14139497/785171
-		window.addEventListener("resize", this.resize.bind(this));
+		var resizeBound=this.resize.bind(this);
+		window.addEventListener("resize", resizeBound);
 		this.resize();
+//		setInterval(resizeBound, 100);
 
 		
 		// load media if provided
@@ -114,8 +116,10 @@
 				switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
 					//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
 					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
-						if(!thisRef.riftRenderer)
+						if(!thisRef.riftRenderer) {
 							thisRef.riftRenderer=new THREE.OculusRiftEffect(thisRef.renderer, undefined, thisRef.input.hmdVrDevice);
+							thisRef.resize();
+						}
 						thisRef.view.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
 						break;
 					case Bivrost.VRMODE_NONE:
@@ -198,16 +202,18 @@
 		
 		
 	/**
-	 * Resizes the player window
+	 * Updates the size of the player window to current fullscreen and stylesheet settings
 	 * @private
 	 */
 	Bivrost.Player.prototype.resize=function() {
 		var width=this.container.offsetWidth;
 		var height=this.container.offsetHeight;
-//		if(this.fullscreen) {
-//			width=window.innerWidth;
-//			height=window.innerHeight;
-//		}
+		
+		log("resize", {
+			"fullscreen:": this.fullscreen,
+			"container size:": width+"x"+height,
+			"window size:": window.innerWidth+"x"+window.innerHeight
+		});
 
 		if(this.fullscreen)
 			delete this.container.style.height;
@@ -217,24 +223,21 @@
 			height=width/this.aspect;
 			this.container.style.height=height+"px";
 		}
-		log("size/1", width, height, this.fullscreen);
 
+		// update values after css changes
+		width=this.container.offsetWidth;
+		height=this.container.offsetHeight;
 
-		var width=this.container.offsetWidth;
-		var height=this.container.offsetHeight;
-
-		log("size/2", width, height, this.fullscreen);
+		// update rift renderer size after size change
 		if(this.riftRenderer) {
 			this.riftRenderer.HMD.hResolution=width;
 			this.riftRenderer.HMD.vResolution=height;
 			this.riftRenderer.setSize(width, height);
 		}
-		this.renderer.setSize(width, height, false);
-		//this.container.style.width=width+"px";
+		this.renderer.setSize(width, height, true);
 		this.aspect=width/height;
 		if(this.view)
 			this.view.aspect=this.aspect;
-//			this.renderer.setViewport(0, 0, width, height);
 
 		// TODO: find a better place for this
 		if(this.vrMode === Bivrost.VRMODE_NONE || !this.fullscreen)
@@ -275,6 +278,7 @@
 				this.input.enableGyro=true;
 			
 			this._vrMode=value;
+			
 			this.resize();
 		}
 	});
