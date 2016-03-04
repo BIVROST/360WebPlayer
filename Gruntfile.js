@@ -54,6 +54,7 @@ module.exports = function (grunt) {
 					var r=[];
 					grunt.file.readJSON("demo-source/examples.json").forEach(function(data, i) {
 						data.bivrost_dir="";
+						data.cachebuster="?cb="+(new Date()).toISOString();
 						r.push({
 							template: "demo-source/tag-template.mustache",
 							dest: "demo/"+data.slug+".html",
@@ -82,6 +83,7 @@ module.exports = function (grunt) {
 						template: "demo-source/index.mustache",
 						dest: "demo/index.html",
 						data: {
+							cachebuster: "?cb="+(new Date()).toISOString(),
 							minification_visible: minification_visible,
 							examples: grunt.file.readJSON("demo-source/examples.json"),
 							title: "documentation index"

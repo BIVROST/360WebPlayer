@@ -5,19 +5,19 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=800, initial-scale=1.0">
 		{{#styles}}
-		<link href="{{.}}" rel="stylesheet" />
+		<link href="{{.}}{{cachebuster}}" rel="stylesheet" />
 		{{/styles}}
 		{{^styles}}
-		<link href="{{{bivrost_dir}}}bivrost.css" rel="stylesheet" />
+		<link href="{{{bivrost_dir}}}bivrost.css{{cachebuster}}" rel="stylesheet" />
 		{{/styles}}
 		{{#scripts_additional}}
-		<script src="{{{.}}}"></script>
+		<script src="{{{.}}}{{cachebuster}}"></script>
 		{{/scripts_additional}}
 		{{#scripts}}
-		<script src="../{{{.}}}"></script>
+		<script src="../{{{.}}}{{cachebuster}}"></script>
 		{{/scripts}}
 		{{^scripts}}
-		<script src="{{{bivrost_dir}}}bivrost.js"></script>
+		<script src="{{{bivrost_dir}}}bivrost.js{{cachebuster}}"></script>
 		{{/scripts}}
 		<style type="text/css">
 			.back { text-decoration:none; text-align:center; padding: 0 1ex; border: 1px solid; margin-right: 1ex; }
