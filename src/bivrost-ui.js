@@ -112,7 +112,7 @@
 		var thisRef=this;
 		this.media=media;
 		
-		var bivrostButtonLink="http://tools.bivrost360.com/open-in-native/";
+		var bivrostButtonLink="https://tools.bivrost360.com/open-in-native/";
 		
 		var leftAligned=document.createElement("div");
 		leftAligned.className="bivrost-aligned bivrost-left-aligned";
