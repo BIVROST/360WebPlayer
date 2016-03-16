@@ -12,7 +12,9 @@ You can watch a demo of the video player [here][live-demo].
 [player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
 [bivrost-website]: https://bivrost360.com
 [live-demo]: https://tools.bivrost360.com/webplayer-docs
-
+[camera]: https://bivrost360.com#TODO
+[stitcher]: https://bivrost360.com#TODO
+[wordpress-plugin]: https://bivrost360.com#TODO
 
 
 
@@ -29,13 +31,11 @@ Features
 * Works on all major browsers.
 * Possible to embed more than one player on the same page.
 * Mono and stereoscopic video and pictures.
-* HLS (Apple Streaming) and DASH streaming.
+* HTTP Live Streaming (HLS).
 * [WebVR][webvr] (MozVR) support - works with Oculus Rift, Cardboard and more.
 * Supports watching content in external native players ([by Bivrost][player-windows]).
 * Available as a [WordPress plugin][wordpress-plugin].
 * We want to hear your feedback and ideas for new features, to make it even better.
-
-[wordpress-plugin]: TODO:wordpress-plugin
 
 
 
@@ -46,7 +46,7 @@ Features
 Quickstart
 ----------
 
-1.	[Download][download-link] the web player and unpack it to `bivrost_dir`
+1.	[Download][download-link] the 360WebPlayer and unpack it to `bivrost_dir`
 2.	Copy / paste:
 
 	```html
@@ -59,7 +59,7 @@ Quickstart
 
 ### How does it work?
 
-All configurations are autodetected, from the `.mp4` extension and the `SbS` keyword. Equirectangular projections is the default.
+All configurations are autodetected. For example the `.mp4` extension means it's a video and the `SbS` keyword says it's side by side stereoscopy. Equirectangular projection is the default.
 
 Everything is included in the css and js files. There are no additional downloads.
 
@@ -242,16 +242,17 @@ var player=new Bivrost.Player(
 		"video-2.mp4": null		// no type provided
 	},
 
-	// Projection - currently only equirectangular is supported
-	// Optional, ommit/provide undefined for equirectangular
+	// Projection - how is the media projected (mapping from 2d to 3d)?
+	// Optional, available choices are:
+	// Bivrost.PROJECTION_EQUIRECTANGULAR
+	// Bivrost.PROJECTION_CUBEMAP
+	// "cubemap:<cubemap definition>"
+	// or ommit/provide undefined for equirectangular
 	Bivrost.PROJECTION_EQUIRECTANGULAR,
-
-TODO /\
-
 
 	// What kind of Stereoscopy is the media in?
 	// Optional, available choices are:
-	// 	Bivrost.STEREOSCOPY_AUTODETECT,
+	//	Bivrost.STEREOSCOPY_AUTODETECT,
 	//	Bivrost.STEREOSCOPY_MONO,
 	//	Bivrost.STEREOSCOPY_SIDE_BY_SIDE,
 	//	Bivrost.STEREOSCOPY_TOP_AND_BOTTOM,
@@ -407,10 +408,10 @@ If you want to know more, here are some good manuals to look into:
 
 For **static pictures**, use jpeg or png. Hugin's equirectangular or Google's Photo Sphere pictures work well if you stay below 4096 x 4096.
 
-For examples click [here] TODO
+For examples [click here][live-demo].
 
 Stereoscopy types
------------------
+----------------- 
 
 Stereoscopy is about which part of the media goes to which eye. This is done before projection.
 
@@ -517,10 +518,8 @@ Some tips:
 ### Platform availability
 
 We try to make the player run on as many platforms as possible. 
-Supported platforms are:
-TODO
 
-Unsupported platforms are:
+Currently unsupported platforms are:
 
 * iOS
 * Windows Phone
@@ -549,12 +548,12 @@ Either your webserver doesn't support [Content-Range][content-range] or there ar
 
 ### Where can I submit feature requests or bug reports? Where can I find the unminified version?
 
-Please send bugs and feature requests to our GitHub at http://github.com/Bivrost/360WebPlayer. The sources are located there too. Thanks a lot in advance for any and all feedback.
+Please send bugs and feature requests to our [GitHub][github]. The sources are located there too. Thanks a lot in advance for any and all feedback.
+
+[github]: http://github.com/Bivrost/360WebPlayer
 
 
-
-Standalone players
-------------------
+### Standalone players
 
 Although browsers are the most accessible platforms, they are not all fully ready for VR - that is why we created a whole family of video players.
 
@@ -570,6 +569,7 @@ Roadmap
 - [x] Mobile support - Android
 - [ ] Posters - flat thumbnails for spherical video
 - [ ] Multi-resolution video ("HD" button)
+- [ ] MPEG-DASH support
 - [ ] Support built-in media galleries and switching media
 - [ ] Overlays - add content on top of your media
 - [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
@@ -590,7 +590,7 @@ License
 There are two separate licenses to choose from:
 
 1. [The free license][license-free] - for web sites that are non commercial
-		2. [The paid license][license-commercial] - for commercial web sites, one license per domain ([contact sales][email-sales] for payment).
+2. [The paid license][license-commercial] - for commercial web sites, one license per domain ([contact sales][email-sales] for payment).
 
 If you want to remove or replace our branding, are unsure about which license applies to you, please [contact us for help and additional licensing options][email-sales].
 
@@ -603,7 +603,7 @@ If you want to remove or replace our branding, are unsure about which license ap
 Changelog
 ---------
 
-2016-11-03: initial release TODO
+2016-03-14: initial public release
 
 
 Third party libraries
