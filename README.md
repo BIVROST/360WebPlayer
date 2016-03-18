@@ -390,10 +390,12 @@ Some other tips:
 
 At Bivrost we use [ffmpeg][ffmpeg] in combination with these options for both web & mobile:
 
-    ffmpeg -i input.mp4 -codec:v libx264 -profile:v high -b:v 10M -bufsize 20M -vf scale=1920:1080 \
-		-movflags +faststart -pix_fmt yuv420p -g 5 -strict experimental -codec:a aac -b:a 128k output.mp4
+	ffmpeg -i input.mp4 -c:v libx264 -preset slow -crf 23 -vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p -g 5 -c:a aac -b:a 128k output.mp4
 
-    ffmpeg -i input.mp4 -codec:v libvpx -vb 10M -bufsize 20M -vf scale=1920:1080 -g 5 -c:a libvorbis -b:a 128k output.webm
+	ffmpeg -i input.mp4 -codec:v libvpx -b:v 10M -crf 10 -vf scale=1920:1080 -g 5 -c:a libvorbis -b:a 128k output.webm
+
+
+
 
 If you want to know more, here are some good manuals to look into:
 
