@@ -26,6 +26,7 @@ $transition-time: 0.5s;
 
 
 @mixin themed {
+	// #ffffff #00a7f5
 	$skin: "style-skin-default" !global;
 	$ui-background: rgba(0,0,0, 0.5) !global;
 	$text-color: #ffffff !global;
