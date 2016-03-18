@@ -115,8 +115,10 @@ Following configuration options are allowed:
 	optional, default: "autodetect".
 
 *	`source`: is it a video or picture?
-	Allowed values: "video", "picture", "stream-hls", "stream-dash", "autodetect";
+	Allowed values: "video", "picture", "stream-hls", "autodetect";
 	optional, default: "autodetect"
+
+	Warning: When using HLS, you have to include the [HLS.js][hls-js] third party library.
 	
 *	`projection`: how is the media projected (mapping from 2d to 3d)?
 	Allowed value: "equirectangular", "cubemap", "cubemap:configuration...";
@@ -154,9 +156,7 @@ Apart from that, you can tune down the player console information with `Bivrost.
 
 The player can be run and configured in two ways:
 
-
-
-
+[hls-js]: https://github.com/dailymotion/hls.js/#dependencies
 
 
 
@@ -266,7 +266,6 @@ var player=new Bivrost.Player(
 	//  Bivrost.SOURCE_VIDEO,
 	//  Bivrost.SOURCE_PICTURE
 	//  Bivrost.SOURCE_STREAM_HLS
-	//  Bivrost.SOURCE_STREAM_DASH
 	// or ommit/provide undefined for autodetect
 	Bivrost.SOURCE_AUTODETECT,
 
