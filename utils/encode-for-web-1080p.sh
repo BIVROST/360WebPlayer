@@ -32,11 +32,11 @@ shift
 
 if [[ $mp4 = "true" ]]; then
 	echo "Encoding mp4 (crf: $mp4_crf bitrate a: $bitrate_audio, resolution: $resolution)";
-	ffmpeg -i $IN \
+	ffmpeg -i "$IN" \
 		$* \
 		-c:v libx264 -preset slow -crf "$mp4_crf" \
 		-vf scale=1920:1080 -movflags +faststart -pix_fmt yuv420p  -g 5 \
-		-c:a aac -b:a "$bitrate_audio" \
+		-strict -2 -c:a aac -b:a "$bitrate_audio" \
 		"$OUT.mp4"
 else
 	echo "mp4 skipped";

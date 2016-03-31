@@ -348,7 +348,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				video.setAttribute("webkit-playsinline", "webkit-playsinline");
 				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
 
-				document.body.appendChild(video);
+				// document.body.appendChild(video);
 
 				this.play=function() { video.play(); };
 				this.pause=function() { video.pause(); };
