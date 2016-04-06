@@ -77,7 +77,7 @@ $transition-time: 0.5s;
 	cursor: -moz-grab;
 	cursor: grab;
 	
-	&.grabbing {
+	&.bivrost-grabbing {
 		cursor: -webkit-grabbing;
 		cursor: -moz-grabbing;
 		cursor: grabbing;
@@ -91,10 +91,10 @@ $transition-time: 0.5s;
 		top:0; left:0; right:0; bottom:0;
 	}
 	
-	&.no-ui .bivrost-ui,
-	&.no-ui .bivrost-bigplay,
-	&.no-ui .bivrost-logo,
-	&.no-ui .bivrost-loading {
+	&.bivrost-no-ui .bivrost-ui,
+	&.bivrost-no-ui .bivrost-bigplay,
+	&.bivrost-no-ui .bivrost-logo,
+	&.bivrost-no-ui .bivrost-loading {
 		display: none !important; 
 	}
 	
@@ -129,7 +129,7 @@ $transition-time: 0.5s;
 			animation: bivrost-logo-anim 1s steps($frames) infinite;
 		}
 		
-		&.hidden { display: none; opacity: 0; }
+		&.bivrost-hidden { /*display: none;*/ opacity: 0; }
 		
 	}
 	
@@ -222,7 +222,7 @@ $transition-time: 0.5s;
 			-webkit-transform-origin: 50% 130%;
 			transform-origin: 50% 130%;
 		
-			&.hidden { transform: scale(0); opacity: 0; }
+			&.bivrost-hidden { transform: scale(0); opacity: 0; }
 		}
 		
 		
@@ -321,7 +321,7 @@ $transition-time: 0.5s;
 	}
 
 	
-	&.hide-ui .bivrost-ui {
+	&.bivrost-hide-ui .bivrost-ui {
 		bottom: - $ui-height;
 
 		input[type="range"]::-webkit-slider-thumb { opacity: 0; background-size: 0 0; }
@@ -348,7 +348,7 @@ $transition-time: 0.5s;
 		opacity: 1;
 		cursor: pointer;
 	}
-	&.hide-ui .bivrost-logo {
+	&.bivrost-hide-ui .bivrost-logo {
 		-webkit-transform: scale(0.75);
 		-webkit-filter: grayscale(1);
 		transform: scale(0.75);
@@ -369,7 +369,7 @@ $transition-time: 0.5s;
 		margin-left: image-width($playBig)/-2;
 		margin-top: image-height($playBig)/-2;
 		
-		&.hidden {
+		&.bivrost-hidden {
 			display: none;
 		}
 	}

@@ -64,7 +64,7 @@
 			window.addEventListener("mousemove", mousemove);
 			window.addEventListener("selectstart", cancel);
 			
-			domElement.classList.add("grabbing");
+			domElement.classList.add("bivrost-grabbing");
 			
 			return false;
 		}
@@ -81,7 +81,7 @@
 			window.removeEventListener("move", mousemove);
 			window.removeEventListener("selectstart", cancel);
 			thisRef._mouseLookInProgress=false;
-			domElement.classList.remove("grabbing");
+			domElement.classList.remove("bivrost-grabbing");
 		}
 
 		function mousemove(e) {

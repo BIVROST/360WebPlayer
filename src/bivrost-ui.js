@@ -72,9 +72,9 @@
 			clearTimeout(loading_indicator_timeout_id);
 			loading_indicator_timeout_id=setTimeout(function() {
 				if(loading_visible)
-					loading.classList.remove("hidden"); 
+					loading.classList.remove("bivrost-hidden"); 
 				else
-					loading.classList.add("hidden"); 
+					loading.classList.add("bivrost-hidden"); 
 			}, 200);
 		};
 		loading.show=loading_indicator.bind(null, true); 
@@ -260,7 +260,7 @@
 			// volume
 			var volumebar=document.createElement("div");
 			volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; });
-			volumebar.className="bivrost-volume hidden";
+			volumebar.className="bivrost-volume bivrost-hidden";
 			var ticks=[];
 			var inVolumeDrag=false;
 			for(var i=8; i--; ) {
@@ -273,7 +273,7 @@
 					return true;
 				}; })((i+1)/8);
 				var setVolumeBreak=(function(vol) { return function() { 
-					volumebar.classList.add("hidden");
+					volumebar.classList.add("bivrost-hidden");
 //					log("break", arguments[0].type, inVolumeDrag);
 					video.volume=vol; 
 					inVolumeDrag=false;
@@ -309,8 +309,8 @@
 			}, Bivrost.lang.volumeButtonLabel(video.volume));
 			
 			var volumeActive=false;
-			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("hidden"); volumeActive=true; });
-			volumebutton.addEventListener("mouseleave", function() { volumebar.classList.add("hidden"); inVolumeDrag=volumeActive=false; });
+			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("bivrost-hidden"); volumeActive=true; });
+			volumebutton.addEventListener("mouseleave", function() { volumebar.classList.add("bivrost-hidden"); inVolumeDrag=volumeActive=false; });
 			
 			// on first touch cancel click, so it doesn't mute automaticaly
 			volumebutton.addEventListener("touchstart", function(ev) {
@@ -384,12 +384,12 @@
 		// big play
 		var bigPlay=this.bigPlay=document.createElement("div");
 		bigPlay.className="bivrost-bigplay";
-		bigPlay.hide=function() { bigPlay.classList.add("hidden"); };
-		bigPlay.show=function() { bigPlay.classList.remove("hidden"); };
+		bigPlay.hide=function() { bigPlay.classList.add("bivrost-hidden"); };
+		bigPlay.show=function() { bigPlay.classList.remove("bivrost-hidden"); };
 		bigPlay.addEventListener("click", function() {
 			media.play();
 			bigPlay.hide();
-			log("thisRef.isTouchInterface", thisRef.isTouchInterface);
+			log("is touch interface", thisRef.isTouchInterface);
 			if(thisRef.isTouchInterface)
 				thisRef.player.fullscreen=true; 
 		} );
@@ -453,7 +453,7 @@
 	
 	Bivrost.UI.prototype.show=function() {
 		var thisRef=this;
-		this.player.container.classList.remove("hide-ui");
+		this.player.container.classList.remove("bivrost-hide-ui");
 		if(this._hideTimeoutId)
 			clearTimeout(this._hideTimeoutId);
 //		log("shown pause timeout, paused=", this._paused);
@@ -471,7 +471,7 @@
 	
 	
 	Bivrost.UI.prototype.hide=function() {
-		this.player.container.classList.add("hide-ui");
+		this.player.container.classList.add("bivrost-hide-ui");
 //		log("hidden, paused=", this._paused);
 		clearTimeout(this._hideTimeoutId);
 	};
