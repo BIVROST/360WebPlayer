@@ -6,6 +6,9 @@ var Bivrost={
 	version: "1",
 	
 	
+	version_build: "development",
+	
+	
 	/**
 	 * When on, there is some debug information on the console.log
 	 * @type Boolean
@@ -53,7 +56,6 @@ var Bivrost={
 	}
 	
 };
-
 
 Bivrost.VRMODE_NONE=501;
 //Bivrost.VRMODE_OCULUS_RIFT_DK1=502;
