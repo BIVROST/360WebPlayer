@@ -289,7 +289,8 @@
 
 	/**
 	 * Camera aspect ratio
-	 * @type {number}
+	 * @property {number} aspect
+	 * @name Bivrost.View#aspect
 	 * @member {number} aspect
 	 * @memberOf Bivrost.View#
 	 */
@@ -307,7 +308,8 @@
 
 	/**
 	 * Camera zoom
-	 * @type {number}
+	 * @property {number} zoom
+	 * @name Bivrost.View#zoom
 	 * @member {number} zoom
 	 * @memberOf Bivrost.View#
 	 */

@@ -264,7 +264,8 @@
 	
 	/**
 	 * Change VR mode
-	 * @param {string} mode, see Bivrost.VRMODE_*
+	 * @property {string} vrMode, see Bivrost.VRMODE_*
+	 * @name Bivrost.Player#vrMode
 	 * @member {string} vrMode
 	 * @memberOf Bivrost.Player#
 	 */

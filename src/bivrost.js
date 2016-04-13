@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * The BIVROST 360WebPlayer
+ * @preserve Copyright 2016 Bivrost Sp. Z O. O.
+ * @license dual licensed, see http://github.com/Bivrost/360WebPlayer/ for full license
+ */
 var Bivrost={
 	
 	
