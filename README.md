@@ -418,17 +418,12 @@ Stereoscopy is about which part of the media goes to which eye. This is done bef
 
 When stereoscopy is set to "autodetect", it does so based on keywords in the filename and (if that fails) the image ratio.
 
+![Stereoscopy types](README-stereoscopy-types.png)
+
 Parts of the filename are separated by "_", "-" or other non-word characters. For example "stereoscopic-video_LR.mp4" has parts: "stereoscopic", "video", "LR" of which only "LR" is recognized and parsed.
 
 
 #### Side By Side
-
-```
-[       |       ]
-[ left  | right ]
-[ eye   | eye   ]
-[       |       ]
-```
 
 1. stereoscopy is set to "side-by-side" (or `Bivrost.STEREOSCOPY_SIDE_BY_SIDE`)
 2. there is a "LR" or "SbS" part in the image filename
@@ -437,41 +432,17 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 
 #### Top And Bottom (over under)
 
-```
-[      left     ]
-[      eye      ]
------------------
-[      right    ]
-[      eye      ]
-```
-
 1. stereoscopy is set to "top-and-bottom" (or `Bivrost.STEREOSCOPY_TOP_AND_BOTTOM`)
 2. there is a "TB" or "TaB" part in the image filename
 3. the image ratio is 1:1
 
 
-
 #### Top And Bottom Reversed
-
-```
-[      right    ]
-[      eye      ]
------------------
-[      left     ]
-[      eye      ]
-```
 
 1. stereoscopy is set to "top-and-bottom-reversed" (or `Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED`)
 
 
 #### Mono
-
-```
-[               ]
-[      both     ]
-[      eyes     ]
-[               ]
-```
 
 1. stereoscopy is set to "mono" (or `Bivrost.STEREOSCOPY_MONO`)
 2. no other detection succeeded
@@ -533,7 +504,7 @@ If you're experiencing problems with other recent platforms, please let us know.
 
 Potential fixes:
 
-1. Check if your device supports this kind of video by playing it directly in the browser. Some devices support only up to 1920x1080 resolution.
+1. Check if your device supports this kind of video by playing it directly in the browser. Some popular devices support only up to 1920x1080 resolution.
 
 2. Videos or pictures have to be served from the same domain or provide [Cross-Origin Resource Sharing][cors] headers.
 

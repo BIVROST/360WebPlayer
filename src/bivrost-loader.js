@@ -134,7 +134,7 @@ Bivrost.Loader=function(dom) {
 
 		var stereoscopy=attrEnum(container, "stereoscopy", Bivrost.STEREOSCOPY_AUTODETECT, Bivrost.AVAILABLE_STEREOSCOPIES);
 
-		var projection=attrString(container, "projection") || Bivrost.PROJECTION_EQUIRECTANGULAR;
+		var projection=attrString(container, "projection", Bivrost.PROJECTION_EQUIRECTANGULAR);
 		assert(projection.replace(/:.+/, ""), Bivrost.AVAILABLE_PROJECTIONS, "projection must be "+Bivrost.AVAILABLE_PROJECTIONS.join(" or "));
 		
 		var source=attrEnum(container, "source", Bivrost.SOURCE_AUTODETECT, Bivrost.AVAILABLE_SOURCES);
