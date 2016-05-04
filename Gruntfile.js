@@ -43,7 +43,23 @@ module.exports = function (grunt) {
 		minified=minified.replace(/version_build:\s*"[^"]*"/, "version_build:\"+"+new Date().toISOString()+"\"");
 		grunt.file.write("output/bivrost-min.js", minified);
 	});
+	
+	// TODO: defines don't want to work
+	grunt.registerTask("build-debug", function() {
+		var buildver=new Date().toISOString();
+		var scripts=grunt.file.readJSON("scripts.json").map(function(fn) {
+			return "// ORIGINAL FILE: " + fn + ":\n\n" + grunt.file.read(fn) + "\n";
+		}).join("\n\n\n\n").replace(/version_build:\s*"[^"]*"/, "version_build:\"+"+buildver+"\"");
 
-	grunt.registerTask('default', ['sass', 'closure-compiler', 'fix-closure-compiler']);
+		grunt.file.write("output/bivrost-debug.js", 
+			 "// 360WebPlayer DEBUG BUILD "+buildver+" \n// PLEASE DO NOT DISTRIBUTE OR USE IN PRODUCTION"
+			+"\n----------------------------------------------------\n\n"
+			+scripts
+			+"\nBivrost.verbose=true; console.log(\"BIVROST 360WebPlayer DEBUG\", Bivrost.version_build, \"PLEASE DO NOT DISTRIBUTE OR USE IN PRODUCTION\");"
+		);
+	});
+
+	grunt.registerTask('default', ['sass', 'closure-compiler', 'fix-closure-compiler', 'build-debug']);
+	grunt.registerTask('debug', ['sass', 'build-debug']);
 	grunt.registerTask('build', ['default']);
 };
