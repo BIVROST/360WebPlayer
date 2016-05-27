@@ -430,6 +430,11 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 3. the image ratio is 4:1
 
 
+#### Side By Side reversed
+
+1. stereoscopy is set to "side-by-side-reversed" (or `Bivrost.STEREOSCOPY_SIDE_BY_SIDE_REVERSED`)
+
+
 #### Top And Bottom (over under)
 
 1. stereoscopy is set to "top-and-bottom" (or `Bivrost.STEREOSCOPY_TOP_AND_BOTTOM`)
@@ -510,7 +515,7 @@ Potential fixes:
 
 Some browsers do not support CORS well, for example Safari - for them you have to serve the content from the same subdomain, port and protocol as the HTML.
 
-It is possible that with a CORS issue the audio will play, but the video will not. Check your web development console for details.
+It is possible that with a CORS issue the audio will play, but the video will not. This is exactly how a CORS issue looks like - secure parts of the browser (displaying images, raw video) have access to the file while unsecure (scripting, WebGL) don't. Check your web development console for details.
 
 [cors]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 

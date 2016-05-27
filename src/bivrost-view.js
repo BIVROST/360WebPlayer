@@ -133,6 +133,11 @@
 				right=[1,0, -0.5,1];
 				center=left;
 				break;
+			case Bivrost.STEREOSCOPY_SIDE_BY_SIDE_REVERSED:
+				left=[1,0, -0.5,1];
+				right=[0.5,0, -0.5,1];
+				center=left;
+				break;
 			case Bivrost.STEREOSCOPY_TOP_AND_BOTTOM:
 				left=[1,.5, -1,.5];
 				right=[1,0, -1,.5];

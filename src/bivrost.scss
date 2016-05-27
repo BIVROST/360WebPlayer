@@ -41,7 +41,7 @@ $transition-time: 0.5s;
 	// #ffffff #86c239
 	$skin: "style-skin-spring" !global;
 	$ui-background: transparentize(#000000, 0.5) !global;
-	$text-color: #1C140D !global;
+	$text-color: #ffffff !global;
 	@at-root #{theme(".bivrost-theme-spring")} { @content; }
 	
 	// #ffffff #f53753
