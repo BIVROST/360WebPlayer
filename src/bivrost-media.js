@@ -226,6 +226,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				log("picture loading", url);
 				
 				var loader=new THREE.TextureLoader();
+				loader.setCrossOrigin("anonymous");
 				loader.load(
 					Object.keys(url)[0],
 					function(texture) {
@@ -247,10 +248,11 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 				this.title="video:"+Object.keys(url).join("/");
 				log("video loading", Object.keys(url));
 					
-				var video;
-				video=this.video=document.createElement("video");
+				var video=document.createElement("video");
+				this.video=video;
 				video.setAttribute("width", "32");	// any number will be ok
 				video.setAttribute("height", "32");	// any number will be ok
+				video.setAttribute("crossOrigin", "anonymous");
 				if(loop)
 					video.setAttribute("loop", "true");
 				video.setAttribute("webkit-playsinline", "webkit-playsinline");
@@ -335,7 +337,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 			case Bivrost.SOURCE_STREAM_HLS:
 				if(!window.Hls)
 					throw "HLS streaming requires an external library HLS.js, please add https://github.com/dailymotion/hls.js"
-				// TODO: add native HLS
+				// TODO: add native HLS as an alternative?
 				
 				this.title="stream:"+Object.keys(url).join("/");
 				var firstUrl=Object.keys(url)[0];

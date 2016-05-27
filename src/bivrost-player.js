@@ -1,4 +1,4 @@
-/* global THREE, Bivrost */
+/* global THREE, Bivrost, DOMException, chrome */
 "use strict";
 
 
@@ -110,24 +110,34 @@
 			thisRef.input.update(dt);
 			var pos=0;
 
-			// TODO: don't do this not every frame
-			if(thisRef.view) {
-				// VR mode is only valid in fullscreen
-				switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
-					//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
-					case Bivrost.VRMODE_OCULUS_RIFT_DK2:
-						if(!thisRef.riftRenderer) {
-							thisRef.riftRenderer=new THREE.OculusRiftEffect(thisRef.renderer, undefined, thisRef.input.hmdVrDevice);
-							thisRef.resize();
-						}
-						thisRef.view.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
-						break;
-					case Bivrost.VRMODE_NONE:
-						thisRef.riftRenderer=null;
-						thisRef.view.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.input, pos);
-						break;
+			try {
+				// TODO: don't do this not every frame
+				if(thisRef.view) {
+					// VR mode is only valid in fullscreen
+					switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
+						//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
+						case Bivrost.VRMODE_OCULUS_RIFT_DK2:
+							if(!thisRef.riftRenderer) {
+								thisRef.riftRenderer=new THREE.OculusRiftEffect(thisRef.renderer, undefined, thisRef.input.hmdVrDevice);
+								thisRef.resize();
+							}
+							thisRef.view.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
+							break;
+						case Bivrost.VRMODE_NONE:
+							thisRef.riftRenderer=null;
+							thisRef.view.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.input, pos);
+							break;
+					}
 				}
 			}
+			catch(e) {
+				if(window.DOMException && e instanceof DOMException && window.console && console.error && e.code === 18) {
+					console.error("Cross origin (CORS) error, try to add the header 'Access-Control-Allow-Origin: *' on your server. See http://enable-cors.org/ for more info.");
+				}
+				throw e;
+			}
+			
+		
 
 			requestAnimationFrame(mainloop);
 		};

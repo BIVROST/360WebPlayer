@@ -1,4 +1,5 @@
 [
+	"src/three.js",
 	"src/bivrost.js",
 	"src/bivrost-observable.js",
 	"src/bivrost-player.js",
@@ -7,7 +8,6 @@
 	"src/bivrost-input.js",
 	"src/bivrost-ui.js",
 	"src/bivrost-loader.js",
-	"src/three.js",
 	"src/OculusRiftEffect.js",
 	"src/IEVideoTexture.js"
 ]
