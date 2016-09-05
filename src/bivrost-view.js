@@ -12,19 +12,6 @@
 	function log(/*vargs...*/) { Bivrost.log("Bivrost.View", arguments); };
 
 
-	function scaleUV(mesh, scale, materialIndex) {
-		materialIndex=materialIndex || 0;
-		var uvs=mesh.geometry.faceVertexUvs[materialIndex];
-		for(var faceIndex=uvs.length-1; faceIndex >= 0; faceIndex--) {
-			for(var vertexIndex=uvs[faceIndex].length-1; vertexIndex >= 0; vertexIndex--) {
-				/** @type {THREE.Vector2} uvs */
-				var uv=uvs[faceIndex][vertexIndex];
-				uv.x=scale[0]+uv.x*scale[2];
-				uv.y=scale[1]+uv.y*scale[3];
-			}
-		}
-		mesh.geometry.uvsNeedUpdate=true;
-	};
 
 	/**
 	 * Parses order string to order object
@@ -111,7 +98,8 @@
 		
 		return pos;
 	}
-
+	
+	
 
 
 	/**
@@ -124,33 +112,7 @@
 		// mesh transform declaration: [left, top, width, height] for eyes:
 		var left, right, center;
 		
-		switch(media.stereoscopy) {
-			case Bivrost.STEREOSCOPY_MONO:
-				left=right=center=[1,0, -1,1];
-				break;
-			case Bivrost.STEREOSCOPY_SIDE_BY_SIDE:
-				left=[0.5,0, -0.5,1];
-				right=[1,0, -0.5,1];
-				center=left;
-				break;
-			case Bivrost.STEREOSCOPY_SIDE_BY_SIDE_REVERSED:
-				left=[1,0, -0.5,1];
-				right=[0.5,0, -0.5,1];
-				center=left;
-				break;
-			case Bivrost.STEREOSCOPY_TOP_AND_BOTTOM:
-				left=[1,.5, -1,.5];
-				right=[1,0, -1,.5];
-				center=left;
-				break;
-			case Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED:
-				left=[1,0, -1,.5];
-				right=[1,.5, -1,.5];
-				center=left;
-				break;
-			default:
-				throw "stereoscopy mode "+(Bivrost.reverseConstToName(media.stereoscopy) || media.stereoscopy)+" unknown";
-		}
+		
 
 		this._leftCamera=new THREE.PerspectiveCamera(90, 3/4, 0.1, 1000);
 		this._leftCamera.position.setZ(0);

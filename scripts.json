@@ -4,6 +4,7 @@
 	"src/bivrost-observable.js",
 	"src/bivrost-player.js",
 	"src/bivrost-view.js",
+	"src/bivrost-stereoscopy.js",
 	"src/bivrost-media.js",
 	"src/bivrost-input.js",
 	"src/bivrost-ui.js",

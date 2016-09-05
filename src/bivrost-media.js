@@ -83,68 +83,6 @@ Bivrost.AVAILABLE_SOURCES=[
 ];
 
 
-/**
- * Autodetect stereoscopy by keywords and size
- * @type string
- */
-Bivrost.STEREOSCOPY_AUTODETECT="autodetect";
-
-
-/**
- * Mono, no stereoscopy, default
- * keyword: mono
- * @type string
- */
-Bivrost.STEREOSCOPY_MONO="mono";
-
-
-/**
- * Top and Bottom stereoscopy
- * Left frame is top half, right is bottom
- * keyword: TaB, TB
- * @type string
- */
-Bivrost.STEREOSCOPY_TOP_AND_BOTTOM="top-and-bottom";
-
-
-/**
- * Side by side stereoscopy
- * keyword: SbS, LR
- * @type string
- */
-Bivrost.STEREOSCOPY_SIDE_BY_SIDE="side-by-side";
-
-
-/**
- * Side by side stereoscopy, reversed (left eye on the right, right on the left)
- * @type string
- */
-Bivrost.STEREOSCOPY_SIDE_BY_SIDE_REVERSED="side-by-side-reversed";
-
-
-/**
- * Top and Bottom stereoscopy, reversed
- * Right frame is top half, left is bottom
- * @type string
- */
-Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED="top-and-bottom-reversed";
-
-
-/**
- * All available stereoscopy types
- * @type Array
- */
-Bivrost.AVAILABLE_STEREOSCOPIES=[
-	Bivrost.STEREOSCOPY_AUTODETECT,
-	Bivrost.STEREOSCOPY_MONO,
-	Bivrost.STEREOSCOPY_SIDE_BY_SIDE,
-	Bivrost.STEREOSCOPY_SIDE_BY_SIDE_REVERSED,
-	Bivrost.STEREOSCOPY_TOP_AND_BOTTOM,
-	Bivrost.STEREOSCOPY_TOP_AND_BOTTOM_REVERSED
-];
-
-
-
 (function() {
 
 	/**
@@ -265,7 +203,7 @@ Bivrost.AVAILABLE_STEREOSCOPIES=[
 					video.setAttribute("loop", "true");
 				video.setAttribute("webkit-playsinline", "webkit-playsinline");
 				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
-				this._setLoop=function(value) { 
+				this._setLoop=function(value) {
 					if(value)
 						video.setAttribute("loop", "true");
 					else

@@ -52,11 +52,14 @@ module.exports = function (grunt) {
 		}).join("\n\n\n\n").replace(/version_build:\s*"[^"]*"/, "version_build:\"+"+buildver+"\"");
 
 		grunt.file.write("output/bivrost-debug.js", 
-			 "// 360WebPlayer DEBUG BUILD "+buildver+" \n// PLEASE DO NOT DISTRIBUTE OR USE IN PRODUCTION"
-			+"\n----------------------------------------------------\n\n"
+			   "// 360WebPlayer DEBUG BUILD "+buildver
+		    +"\n// PLEASE DO NOT DISTRIBUTE OR USE IN PRODUCTION"
+			+"\n// ----------------------------------------------------\n\n"
 			+scripts
 			+"\nBivrost.verbose=true; console.log(\"BIVROST 360WebPlayer DEBUG\", Bivrost.version_build, \"PLEASE DO NOT DISTRIBUTE OR USE IN PRODUCTION\");"
 		);
+        
+                
 	});
 
 	grunt.registerTask('default', ['sass', 'closure-compiler', 'fix-closure-compiler', 'build-debug']);
