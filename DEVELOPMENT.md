@@ -17,6 +17,7 @@ mkdir node_modules/grunt-closure-compiler/build
 pushd node_modules/grunt-closure-compiler/build
 wget https://dl.google.com/closure-compiler/compiler-latest.zip
 7z x compiler-latest.zip
+mv closure-compiler*jar compiler.jar
 rm compiler-latest.zip
 popd
 
