@@ -367,18 +367,12 @@ Bivrost.AVAILABLE_SOURCES=[
 		
 		
 		// phase one autodetect - by keywords
-		Object.keys(url).forEach(function(url) {
-			if(thisRef.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
-				if(/\b(SbS|LR)\b/.test(url))
-					thisRef.stereoscopy=Bivrost.STEREOSCOPY_SIDE_BY_SIDE;
-				else if(/\b(TaB|TB)\b/.test(url))
-					thisRef.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
-				else if(/\bmono\b/.test(url))
-					thisRef.stereoscopy=Bivrost.STEREOSCOPY_MONO;
-				// else: detect in phase 2, by resolution
+		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
+			for(var fn in url) {
+				this.stereoscopy = Bivrost.Stereoscopy.detectByFilename(fn);
 				log("detected stereoscopy from uri: ", Bivrost.reverseConstToName(thisRef.stereoscopy));
-			}
-		});
+			};
+		}
 	};
 	
 	
@@ -433,14 +427,7 @@ Bivrost.AVAILABLE_SOURCES=[
 		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
 			var w=texture.image.videoWidth || texture.image.width;
 			var h=texture.image.videoHeight || texture.image.height;
-			if(w === h)
-				this.stereoscopy=Bivrost.STEREOSCOPY_TOP_AND_BOTTOM;
-			if(w === h*4)
-				this.stereoscopy=Bivrost.STEREOSCOPY_SIDE_BY_SIDE;
-			else // if(w === 2*h)
-				this.stereoscopy=Bivrost.STEREOSCOPY_MONO;
-
-			// TODO: guess frame
+			this.stereoscopy = Bivrost.Stereoscopy.detectByProperties(this, w, h);
 			log("guessed stereoscopy from ratio: ", Bivrost.reverseConstToName(this.stereoscopy));
 		}
 		log("got texture", texture);

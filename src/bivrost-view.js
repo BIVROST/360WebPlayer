@@ -144,8 +144,7 @@
 					})
 				);
 
-				scaleUV(sphereLeft, left);
-				scaleUV(sphereRight, right);
+				Bivrost.Stereoscopy.transform(media.stereoscopy, sphereLeft, sphereRight, null);
 				
 				this._leftScene.add(sphereLeft);
 				this._rightScene.add(sphereRight);
@@ -216,8 +215,7 @@
 					cube.rotation.y=THREE.Math.degToRad(order.rotate);
 				}
 				
-				scaleUV(cubeLeft, left);
-				scaleUV(cubeRight, right);
+				Bivrost.Stereoscopy.transform(media.stereoscopy, cubeLeft, cubeRight, null);
 				
 				this._leftScene.add(cubeLeft);
 				this._rightScene.add(cubeRight);
