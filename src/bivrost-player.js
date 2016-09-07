@@ -99,7 +99,10 @@
 		
 		// load media if provided
 		if(url) {
-			this.media_loading=new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source, loop);
+			if(source === Bivrost.SOURCE_VIDEO || Bivrost.Media.detectFromFilename(Object.keys(url)[0]) === Bivrost.SOURCE_VIDEO)
+				this.media_loading=new Bivrost.VideoMedia(url, this.setMedia.bind(this), projection, stereoscopy, loop);
+			else	
+				this.media_loading=new Bivrost.Media(url, this.setMedia.bind(this), projection, stereoscopy, source, loop);
 		}
 		
 		

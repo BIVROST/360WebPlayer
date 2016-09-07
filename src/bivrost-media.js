@@ -126,41 +126,16 @@ Bivrost.AVAILABLE_SOURCES=[
 		this.projection=projection=projection || Bivrost.PROJECTION_EQUIRECTANGULAR;
 		this.stereoscopy=stereoscopy=stereoscopy || Bivrost.STEREOSCOPY_AUTODETECT;
 		
+		// phase one autodetect - by keywords
+		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
+			var fn = Object.keys(url)[0];
+			this.stereoscopy = Bivrost.Stereoscopy.detectByFilename(fn);
+			log("detected stereoscopy from uri: ", Bivrost.reverseConstToName(thisRef.stereoscopy));
+		}
+		
+		// autodetect source type
 		if(!source || source === Bivrost.SOURCE_AUTODETECT) {
-			var ext=(/\.([a-zA-Z0-9]+)$/.exec(Object.keys(url)[0]) || ["", ""])[1].toLowerCase();
-			switch(ext) {
-				case "jpeg":
-				case "jpg":
-				case "png":
-				case "tiff":
-				case "gif":
-				case "bmp":
-					source=Bivrost.SOURCE_PICTURE;
-					break;
-					
-				case "mp4":
-				case "webm":
-				case "avi":
-				case "ogv":
-				case "ogg":
-				case "wmv":
-					source=Bivrost.SOURCE_VIDEO;
-					break;
-					
-				case "m3u":
-				case "m3u8":
-					source=Bivrost.SOURCE_STREAM_HLS;
-					break;
-					
-				case "mpd":
-					source=Bivrost.SOURCE_STREAM_DASH;
-					break;
-					
-				default:
-					log("unknown extension during autodetect: "+ext+", hoping it's video...");
-					source=Bivrost.SOURCE_VIDEO;
-					break;
-			}
+			source = Bivrost.Media.detectFromFilename(Object.keys(url)[0]);
 			log("detected source: "+Bivrost.reverseConstToName(source));
 		}
 		
@@ -191,92 +166,6 @@ Bivrost.AVAILABLE_SOURCES=[
 				break;
 				
 			case Bivrost.SOURCE_VIDEO:
-				this.title="video:"+Object.keys(url).join("/");
-				log("video loading", Object.keys(url));
-					
-				var video=document.createElement("video");
-				this.video=video;
-				video.setAttribute("width", "32");	// any number will be ok
-				video.setAttribute("height", "32");	// any number will be ok
-				video.setAttribute("crossOrigin", "anonymous");
-				if(loop)
-					video.setAttribute("loop", "true");
-				video.setAttribute("webkit-playsinline", "webkit-playsinline");
-				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
-				this._setLoop=function(value) {
-					if(value)
-						video.setAttribute("loop", "true");
-					else
-						video.removeAttribute("loop");
-				};
-
-				this.play=function() { video.play(); };
-				this.pause=function() { video.pause(); };
-				this.pauseToggle=function() {
-					if(video.paused)
-						video.play();
-					else
-						video.pause();
-				};
-				this._setTime=function(val) {video.currentTime=val;};
-				this._getTime=function() {return video.currentTime;};
-				this._getDuration=function() {return video.duration;};
-
-//				["loadstart", "progress", "suspend", "abort", "error", "emptied", "stalled", "loadedmetadata", "loadeddata", "canplay", 
-//				"canplaythrough", "playing", "waiting", "seeking", "seeked", "ended", "durationchange", "timeupdate", "play", "pause", 
-//				"ratechange", "resize", "volumechange"].forEach(function(n) {
-//					video.addEventListener(n, console.log.bind(console, "event:"+n));
-//				});
-
-				video.addEventListener("error", function(e) {
-					var description={
-						"-1": "unknown",
-						"1": "MEDIA_ERR_ABORTED - fetching process aborted by user",
-						"2": "MEDIA_ERR_NETWORK - error occurred when downloading",
-						"3": "MEDIA_ERR_DECODE - error occurred when decoding",
-						"4": "MEDIA_ERR_SRC_NOT_SUPPORTED - audio/video not supported"
-					}[(video.error || {code:-1}) && video.error.code];
-					console.error("error: ", description);
-					thisRef.onerror(description);
-				});
-				
-				var videoLoadedDone=false;
-				var videoLoaded=function(ev) {
-					if(videoLoadedDone)
-						return;
-					videoLoadedDone=true;
-					
-					log("video loaded by event", ev.type);
-					var texture = new THREE.IEVideoTexture(video);
-					texture.name=thisRef.title;
-					texture.minFilter = THREE.LinearFilter;
-					texture.magFilter = THREE.LinearFilter;
-					thisRef.gotTexture(texture);
-				};
-
-				video.addEventListener("loadeddata", videoLoaded);
-				video.addEventListener("load", videoLoaded);
-				video.addEventListener("canplay", videoLoaded);
-				video.addEventListener("canplaythrough", videoLoaded);
-				video.addEventListener("readystatechange", function(ev) {
-					if(video.readyState > video.HAVE_CURRENT_DATA)
-						videoLoaded(ev);
-				});
-				
-				// last to prevent event before load
-				Object.keys(url).forEach(function(e) {
-					var sourceTag=document.createElement("source");
-					sourceTag.setAttribute("src", e);
-					if(url[e])
-						sourceTag.setAttribute("type", url[e]);
-					video.appendChild(sourceTag);
-				});
-
-				video.load();
-
-				if(video.readyState > video.HAVE_CURRENT_DATA)
-					videoLoaded({type:"loaded-before"});
-				
 				break;
 				
 				
@@ -363,15 +252,6 @@ Bivrost.AVAILABLE_SOURCES=[
 				
 			default:
 				throw "unknown source type: "+source;
-		}
-		
-		
-		// phase one autodetect - by keywords
-		if(this.stereoscopy === Bivrost.STEREOSCOPY_AUTODETECT) {
-			for(var fn in url) {
-				this.stereoscopy = Bivrost.Stereoscopy.detectByFilename(fn);
-				log("detected stereoscopy from uri: ", Bivrost.reverseConstToName(thisRef.stereoscopy));
-			};
 		}
 	};
 	
@@ -461,4 +341,49 @@ Bivrost.AVAILABLE_SOURCES=[
 	
 	Bivrost.Media.prototype.url=null;
 	
+	/**
+	 * @static
+	 * @param {string} filename
+	 * @returns {String}
+	 */
+	Bivrost.Media.detectFromFilename=function(filename) {
+		var ext=(/\.([a-zA-Z0-9]+)$/.exec(filename) || ["", ""])[1].toLowerCase();
+		switch(ext) {
+			case "jpeg":
+			case "jpg":
+			case "png":
+			case "tiff":
+			case "gif":
+			case "bmp":
+				return Bivrost.SOURCE_PICTURE;
+				break;
+
+			case "mp4":
+			case "webm":
+			case "avi":
+			case "ogv":
+			case "ogg":
+			case "wmv":
+				return Bivrost.SOURCE_VIDEO;
+				break;
+
+			case "m3u":
+			case "m3u8":
+				return Bivrost.SOURCE_STREAM_HLS;
+				break;
+
+			case "mpd":
+				return Bivrost.SOURCE_STREAM_DASH;
+				break;
+
+			default:
+				log("unknown extension during autodetect: "+ext+", hoping it's video...");
+				return Bivrost.SOURCE_VIDEO;
+				break;
+		}
+	};
+
+
+
+
 })();
