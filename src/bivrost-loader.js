@@ -58,7 +58,7 @@ Bivrost.Loader=function(dom) {
 	 * @param {HTMLElement} element
 	 * @param {string} name
 	 * @param {?*|?{message:string, is_thrower:bool}} defaultValue - set value or use argumentIsRequiredHelper, note: the default value should be in string form
-	 * @returns {boolean|undefined}
+	 * @returns {boolean}
 	 */
 	function attrBool(element, name, defaultValue) {
 		var value=attrString(element, name, defaultValue);
@@ -135,7 +135,8 @@ Bivrost.Loader=function(dom) {
 		var stereoscopy=attrEnum(container, "stereoscopy", Bivrost.STEREOSCOPY_AUTODETECT, Bivrost.AVAILABLE_STEREOSCOPIES);
 
 		var projection=attrString(container, "projection", Bivrost.PROJECTION_EQUIRECTANGULAR);
-		assert(projection.replace(/:.+/, ""), Bivrost.AVAILABLE_PROJECTIONS, "projection must be "+Bivrost.AVAILABLE_PROJECTIONS.join(" or "));
+		var allProjections = Bivrost.Projection.store.allRegisteredNames();
+		assert(projection.replace(/:.+/, ""), allProjections, "projection must be " + allProjections.join(" or "));
 		
 		var source=attrEnum(container, "source", Bivrost.SOURCE_AUTODETECT, Bivrost.AVAILABLE_SOURCES);
 		
@@ -143,7 +144,7 @@ Bivrost.Loader=function(dom) {
 
 		var autoplay=attrBool(container, "autoplay", true);
 		
-		return new Bivrost.Player(container, urls, projection, stereoscopy, source, JSON.parse(loop), JSON.parse(autoplay));
+		return new Bivrost.Player(container, urls, projection, stereoscopy, source, loop, autoplay);
 	});
 	
 };
