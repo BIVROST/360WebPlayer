@@ -132,130 +132,7 @@ Bivrost.AVAILABLE_SOURCES=[
 			this.stereoscopy = Bivrost.Stereoscopy.detectByFilename(fn);
 			log("detected stereoscopy from uri: ", Bivrost.reverseConstToName(thisRef.stereoscopy));
 		}
-		
-		// autodetect source type
-		if(!source || source === Bivrost.SOURCE_AUTODETECT) {
-			source = Bivrost.Media.detectFromFilename(Object.keys(url)[0]);
-			log("detected source: "+Bivrost.reverseConstToName(source));
-		}
-		
-		switch(source) {
-			case Bivrost.SOURCE_PICTURE:
-				if(Object.keys(url).length !== 1)
-					throw "picture supports only one url at this time";
-				this.title="picture:"+Object.keys(url)[0];
-				log("picture loading", url);
-				
-				var loader=new THREE.TextureLoader();
-				loader.setCrossOrigin("anonymous");
-				loader.load(
-					Object.keys(url)[0],
-					function(texture) {
-						log("still loaded", thisRef);
-						texture.name=thisRef.title;
-//						texture.minFilter=THREE.LinearMipMapLinearFilter;
-//						texture.magFilter=THREE.LinearMipMapLinearFilter;
-						texture.anisotropy=16;
-						thisRef.gotTexture(texture);
-					},
-					function(xhr) {
-						thisRef.onprogress(xhr.loaded/xhr.total);
-					},
-					this.onerror
-				);
-				break;
-				
-			case Bivrost.SOURCE_VIDEO:
-				break;
-				
-				
-			case Bivrost.SOURCE_STREAM_HLS:
-				if(!window.Hls)
-					throw "HLS streaming requires an external library HLS.js, please add https://github.com/dailymotion/hls.js"
-				// TODO: add native HLS as an alternative?
-				
-				this.title="stream:"+Object.keys(url).join("/");
-				var firstUrl=Object.keys(url)[0];
-				log("hls stream loading", firstUrl);
-					
-				var video;
-				video=this.video=document.createElement("video");
-				video.setAttribute("width", "800");	// any number will be ok
-				video.setAttribute("height", "400");	// any number will be ok
-				video.setAttribute("webkit-playsinline", "webkit-playsinline");
-				// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
-
-				// document.body.appendChild(video);
-
-				this.play=function() { video.play(); };
-				this.pause=function() { video.pause(); };
-				this.pauseToggle=function() {
-					if(video.paused)
-						video.play();
-					else
-						video.pause();
-				};
-				this._setTime=function(val) { throw "setting time in streams is not supported"; };
-				this._getTime=function() { return video.currentTime; };
-				this._getDuration=function() { return Infinity; };
-
-				var hls=new Hls({debug:Bivrost.verbose?log:false});
-				this.hls=hls;
-				hls.attachMedia(video);
-				var videoLoadedDone=false;
-				hls.on(Hls.Events.MEDIA_ATTACHED, function() {
-					log("HLS MEDIA_ATTACHED");
-					hls.loadSource(firstUrl);
-					hls.on(Hls.Events.MANIFEST_PARSED, function(e,d) {
-						log("HLS MANIFEST_PARSED", d);
-						
-						if(videoLoadedDone)
-							return;
-						videoLoadedDone=true;
-						log("video loaded by HLS manifest parse");
-						var texture = new THREE.IEVideoTexture(video);
-						texture.name=thisRef.title;
-						texture.minFilter = THREE.LinearFilter;
-						texture.magFilter = THREE.LinearFilter;
-						thisRef.gotTexture(texture);
-						video.play();
-					});
-				});
-				
-				hls.on(Hls.Events.ERROR,function(event,data) {
-					log(data.fatal?"HLS fatal error":"HLS recoverable error:", data.type, "details=", data.details);
-					if(data.fatal) {	// try to recover
-						switch(data.type) {
-							case Hls.ErrorTypes.NETWORK_ERROR:
-								log("HLS trying to recover NETWORK_ERROR...");
-								hls.startLoad();
-								break;
-							case Hls.ErrorTypes.MEDIA_ERROR:
-								log("HLS trying to recover MEDIA_ERROR...");
-								hls.recoverMediaError();
-								break;
-							default:
-								log("HLS unrecoverable error, stopping HLS");
-								thisRef.onerror("HLS unrecoverable error: "+data.details);
-								hls.destroy();
-								break;
-						}
-					}
-				});
-
-				break;
-			
-			
-			case Bivrost.SOURCE_STREAM_DASH:
-				throw "MPEG-DASH not yet implemented";
-				
-				
-			default:
-				throw "unknown source type: "+source;
-		}
-	};
-	
-	
+	}
 
 	// TODO:
 	//	Bivrost.Media.prototype.width: 360,
@@ -380,6 +257,22 @@ Bivrost.AVAILABLE_SOURCES=[
 				log("unknown extension during autodetect: "+ext+", hoping it's video...");
 				return Bivrost.SOURCE_VIDEO;
 				break;
+		}
+	};
+	
+	
+	Bivrost.Media.mediaConstructorFromFilename=function(filename) {
+		switch(Bivrost.Media.detectFromFilename(filename)) {
+			case Bivrost.SOURCE_PICTURE:
+				return Bivrost.PictureMedia;
+			case Bivrost.SOURCE_VIDEO:
+				return Bivrost.VideoMedia;
+			case Bivrost.SOURCE_STREAM_HLS:
+				return Bivrost.HLSMedia;
+			case Bivrost.SOURCE_STREAM_DASH:
+				return Bivrost.Media;		// TODO
+			default:
+				throw "unknown constructor"
 		}
 	};
 
