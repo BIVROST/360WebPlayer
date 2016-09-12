@@ -140,8 +140,8 @@ THREE.OculusRiftEffect = function ( renderer, options, webVrHmd ) {
 			left.viewport = [0, 0, HMD.hResolution/2, HMD.vResolution];
 			right.viewport = [HMD.hResolution/2, 0, HMD.hResolution/2, HMD.vResolution];
 		} else { // portrait
-			left.viewport = [0, 0, HMD.hResolution, HMD.vResolution/2];
-			right.viewport = [0, HMD.vResolution/2, HMD.hResolution, HMD.vResolution/2];
+			left.viewport = [0, HMD.vResolution/2, HMD.hResolution, HMD.vResolution/2];
+			right.viewport = [0, 0, HMD.hResolution, HMD.vResolution/2];
 		}
 
 
@@ -174,8 +174,8 @@ THREE.OculusRiftEffect = function ( renderer, options, webVrHmd ) {
 			left.viewport = [0, 0, HMD.hResolution/2, HMD.vResolution];
 			right.viewport = [HMD.hResolution/2, 0, HMD.hResolution/2, HMD.vResolution];
 		} else { // portrait
-			left.viewport = [0, 0, HMD.hResolution, HMD.vResolution/2];
-			right.viewport = [0, HMD.vResolution/2, HMD.hResolution, HMD.vResolution/2];
+			right.viewport = [0, 0, HMD.hResolution, HMD.vResolution/2];
+			left.viewport = [0, HMD.vResolution/2, HMD.hResolution, HMD.vResolution/2];
 		}
 
 		renderer.setSize( width, height );
