@@ -95,6 +95,11 @@
 
 	Bivrost.extend(Bivrost.VideoMedia, Bivrost.Media);
 	
+	Bivrost.VideoMedia.extensions = ["mp4", "webm", "avi", "ogv", "ogg", "wmv"];
+	
+	Bivrost.Media.store.register(Bivrost.SOURCE_VIDEO, Bivrost.VideoMedia);
+
+	
 	Bivrost.VideoMedia.prototype._setLoop = function(value) {
 		if(value)
 			this.video.setAttribute("loop", "true");

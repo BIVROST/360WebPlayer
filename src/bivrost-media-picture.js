@@ -53,5 +53,9 @@
 	};
 
 	Bivrost.extend(Bivrost.PictureMedia, Bivrost.Media);
+	
+	Bivrost.PictureMedia.extensions = ["jpeg", "jpg", "png", "tiff", "gif", "bmp"];
+
+	Bivrost.Media.store.register(Bivrost.SOURCE_PICTURE, Bivrost.PictureMedia);
 
 })();

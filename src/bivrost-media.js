@@ -185,66 +185,29 @@ Bivrost.AVAILABLE_SOURCES=[
 	});
 	
 	Bivrost.Media.prototype.url=null;
+
 	
 	/**
 	 * @static
-	 * @param {string} filename
-	 * @returns {String}
 	 */
-	Bivrost.Media.detectFromFilename=function(filename) {
-		var ext=(/\.([a-zA-Z0-9]+)$/.exec(filename) || ["", ""])[1].toLowerCase();
-		switch(ext) {
-			case "jpeg":
-			case "jpg":
-			case "png":
-			case "tiff":
-			case "gif":
-			case "bmp":
-				return Bivrost.SOURCE_PICTURE;
-				break;
-
-			case "mp4":
-			case "webm":
-			case "avi":
-			case "ogv":
-			case "ogg":
-			case "wmv":
-				return Bivrost.SOURCE_VIDEO;
-				break;
-
-			case "m3u":
-			case "m3u8":
-				return Bivrost.SOURCE_STREAM_HLS;
-				break;
-
-			case "mpd":
-				return Bivrost.SOURCE_STREAM_DASH;
-				break;
-
-			default:
-				log("unknown extension during autodetect: "+ext+", hoping it's video...");
-				return Bivrost.SOURCE_VIDEO;
-				break;
-		}
-	};
+	Bivrost.Media.store = new Bivrost.Store("media source");
 	
 	
+	/**
+	 * @param {string} filename
+	 * @static
+	 * @returns {function}
+	 */
 	Bivrost.Media.mediaConstructorFromFilename=function(filename) {
-		switch(Bivrost.Media.detectFromFilename(filename)) {
-			case Bivrost.SOURCE_PICTURE:
-				return Bivrost.PictureMedia;
-			case Bivrost.SOURCE_VIDEO:
-				return Bivrost.VideoMedia;
-			case Bivrost.SOURCE_STREAM_HLS:
-				return Bivrost.HLSMedia;
-			case Bivrost.SOURCE_STREAM_DASH:
-				return Bivrost.Media;		// TODO
-			default:
-				throw "unknown constructor"
+		var ext=(/\.([a-zA-Z0-9]+)$/.exec(filename) || ["", ""])[1].toLowerCase();
+		var mediaConstructor = Bivrost.Media.store.find( function(o) {
+			return o.extensions.indexOf(ext) >= 0;
+		});
+		if(!mediaConstructor) {
+			log("unknown extension during autodetect: "+ext+", hoping it's video...");
+			mediaConstructor = Bivrost.Media.store.get(Bivrost.SOURCE_VIDEO);
 		}
+		return mediaConstructor;
 	};
-
-
-
 
 })();

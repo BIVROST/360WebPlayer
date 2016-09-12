@@ -99,7 +99,11 @@
 		
 		// load media if provided
 		if(url) {
-			var mediaConstructor = Bivrost.Media.mediaConstructorFromFilename(Object.keys(url)[0]);
+			var mediaConstructor;
+			if(source !== Bivrost.SOURCE_AUTODETECT)
+				mediaConstructor = Bivrost.Media.store.require(source);
+			else
+				mediaConstructor = Bivrost.Media.mediaConstructorFromFilename(Object.keys(url)[0]);
 			this.media_loading=new mediaConstructor(url, this.setMedia.bind(this), projection, stereoscopy, loop);
 		}
 		

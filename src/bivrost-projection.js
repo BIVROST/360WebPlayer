@@ -36,4 +36,4 @@ Bivrost.Projection.prototype.applyStereoscopy = function(stereoscopy) {
 	Bivrost.Stereoscopy.transform(stereoscopy, this.meshLeft, this.meshRight, null);
 };
 
-Bivrost.Projection.store = new Bivrost.Store();
+Bivrost.Projection.store = new Bivrost.Store("projection");

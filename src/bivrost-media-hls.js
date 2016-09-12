@@ -97,6 +97,10 @@
 
 	Bivrost.extend(Bivrost.HLSMedia, Bivrost.Media);
 	
+	Bivrost.HLSMedia.extensions = ["m3u", "m3u8"];
+	
+	Bivrost.Media.store.register(Bivrost.SOURCE_STREAM_HLS, Bivrost.HLSMedia);
+	
 	
 	/**
 	 * @type {HTMLVideoElement}

@@ -3,12 +3,21 @@
 
 (function() {
 	
-	Bivrost.Store = function() {
+	Bivrost.Store = function(storeName) {
+		if(storeName)
+			this.storeName = storeName;
 		this.registered = [];
 	};
 	
 	Bivrost.Store.prototype.get = function(name) {
 		return this.find(function(o, n) { console.log(o,n,n === name); return n === name; } );
+	};
+	
+	Bivrost.Store.prototype.require = function(name) {
+		var o = this.get(name);
+		if(!o)
+			throw "Unregistered " + this.storeName + ": " + name; 
+		return o;
 	};
 	
 	/**
@@ -18,15 +27,10 @@
 	Bivrost.Store.prototype.find = function(predicate) {
 		for(var i = this.registered.length-1; i >= 0; i--) {
 			var r = this.registered[i];
-						console.log("TRY", r,i);
-
 			if(predicate(r.object, r.name, r)) {
-				console.log("FOUND", r,i)
 				return r.object;
 			}
 		}
-		debugger;
-		
 		return undefined;
 	};
 	
@@ -49,6 +53,9 @@
 	 * @type {Array<{name:string, object:object}>}
 	 */
 	Bivrost.Store.prototype.registered = null;
+	
+	Bivrost.Store.prototype.storeName = "Object";
+	
 	
 	Bivrost.Store.prototype.isRegistered = function(name) {
 		return !!this.get(name);
