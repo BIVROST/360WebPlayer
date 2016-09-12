@@ -35,8 +35,9 @@ Bivrost.Stereoscopy={
 	 * @param {function(THREE.Mesh)} transformCenter - function modyfying an UV map of a mesh for it to be presented as a monoscopic view
 	 * @param {?Array<string>} keywords - keywords for filename autodetection of stereoscopy type from filename
 	 * @param {function(Bivrost.Media):string} detectFunc - function for autodetection of stereoscopy type from loaded file
+	 * @param {function(number):numer} aspectFunc - function modyfing the aspect ratio of the image, example: a 4096x4096 (aspect 1.0) image in SbS is really two 4096x2048 images (so aspect 2.0)
 	 */
-	register: function(name, transformLeft, transformRight, transformCenter, keywords, detectFunc) { 
+	register: function(name, transformLeft, transformRight, transformCenter, keywords, detectFunc, aspectFunc) {
 		if(this.isRegistered(name))
 			throw "stereoscopy " + name + " already registered";
 		this.registered.push({ 
@@ -45,7 +46,8 @@ Bivrost.Stereoscopy={
 			transformRight: transformRight,
 			transformCenter: transformCenter,
 			keywords: keywords,
-			detectFunc: detectFunc
+			detectFunc: detectFunc,
+			aspectFunc: aspectFunc
 		});
 		Bivrost.AVAILABLE_STEREOSCOPIES.push(name);
 		Bivrost.log("Bivrost.Stereoscopy", ["registered", name]);
@@ -92,7 +94,8 @@ Bivrost.Stereoscopy={
 			function(mesh) { return scaleUV_(mesh, scaleRight); },
 			function(mesh) { return scaleUV_(mesh, scaleCenter); },
 			keywords,
-			detectFunc
+			detectFunc,
+			function(aspect) { return aspect * Math.abs(scaleLeft[2]/scaleLeft[3]); }
 		);
 	},
 	
