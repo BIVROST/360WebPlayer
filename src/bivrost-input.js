@@ -1,4 +1,4 @@
-/* global Bivrost, THREE, PositionSensorVRDevice, HMDVRDevice, VREye */
+/* global Bivrost, THREE */
 "use strict";
 
 (function() {
@@ -22,7 +22,7 @@
 	
 	
 	/**
-	 * This class manages the input of the player - it handles mouse, keyboard, gyro and VR headset movement
+	 * This class manages the input of the player - it handles mouse, keyboard and gyro movement
 	 * @constructor
 	 * @class Bivrost.Input
 	 * @param {Bivrost.Player} player
@@ -40,7 +40,6 @@
 		this.lookEuler=new THREE.Euler(0, -Math.PI/2, 0, 'YXZ');
 		this.lookEulerDelta=new THREE.Euler();
 		this.lookQuaternion=new THREE.Quaternion();
-		this.vrLookQuaternion=new THREE.Quaternion();
 		
 		var isDown=false;
 		var isIn=false;
@@ -236,57 +235,10 @@
 			window.removeEventListener("touchmove", touchmove);
 		}
 		
-		
-		
-		if(!navigator.getVRDevices)
-			log("no VR API available, try http://webvr.info for implementations");
-		else
-			navigator.getVRDevices().then(function(devices) {
-				log("navigator.getVRDevices devices follow:");
-				if(console.table)
-					console.table(devices);
-				
-				for(var i in devices) {
-					if(devices[i] instanceof HMDVRDevice) {
-						var hmd=devices[i];
-						var pos=null;
-						for(var j in devices)
-							if(devices[j] instanceof PositionSensorVRDevice && hmd.hardwareUnitId === devices[j].hardwareUnitId) {
-								if(pos)
-									log("second sensor with same hardwareUnitId?", pos, "vs", devices[j], "hmdDevice:", hmd);
-								pos=devices[j];
-							}
-						
-						// use this always if the pair exists, and has orientation; also use if it's the only option but there is no orientation 
-						if(thisRef.hmdVrDevice === null || (pos && pos.getState().hasOrientation) ) {
-							log("using HMDVRDevice", hmd, "with matching PositionSensorVRDevice", pos, "hasOrientation=", pos && pos.getState().hasOrientation);
-							thisRef.hmdVrDevice=hmd;
-							thisRef.vrDevice=pos;
-							var left=hmd.getEyeParameters("left");
-							var right=hmd.getEyeParameters("right");
-							if(console.table) {
-								var transFov=function(f) { return { up: f.upDegrees, right: f.rightDegrees, down: f.downDegrees, left: f.leftDegrees}; };
-								console.group("getEyeParameters");
-								console.table({
-									min_l: transFov(left.minimumFieldOfView),
-									current_l: transFov(left.currentFieldOfView),
-									max_l: transFov(left.maximumFieldOfView),
-									min_r: transFov(right.minimumFieldOfView),
-									current_r: transFov(right.currentFieldOfView),
-									max_r: transFov(right.maximumFieldOfView)
-								});
-								console.groupEnd();
-							}
-						}
-					}
-				}
-				log("end of vr devices list");
-			});
-
 
 		// gyroscope controls
 		var orientation=new THREE.Quaternion();
-		var tempEuler=new THREE.Euler(0, DEG2RAD*(-window.orientation || 0), 0);
+		var tempEuler=new THREE.Euler(0, DEG2RAD*-(window.orientation || screen.orientation.angle || 0), 0);
 		orientation.setFromEuler(tempEuler);
 		
 		var lookForward=new THREE.Quaternion();
@@ -320,7 +272,7 @@
 		});
 		
 		window.addEventListener("orientationchange", function() { 
-			var orient=DEG2RAD*window.orientation;
+			var orient=DEG2RAD*(window.orientation || screen.orientation.angle || 0);
 			if(isNaN(orient))
 				throw "screen orientation? "+window.orientation;
 			tempEuler.set(0, -orient, 0);
@@ -358,20 +310,6 @@
 			this._keyboardShortcuts[keys[i]]=action;
 		return this;
 	};
-	
-	
-	/**
-	 * Currently used position sensor
-	 * @type {PositionSensorVRDevice}
-	 */
-	Bivrost.Input.prototype.positionSensorVrDevice=null;
-		
-		
-	/**
-	 * Currently used hmd device
-	 * @type {HMDVRDevice}
-	 */
-	Bivrost.Input.prototype.hmdVrDevice=null;
 	
 	
 	/**
@@ -417,15 +355,6 @@
 		
 		this.lookQuaternion.setFromEuler(this.lookEuler);
 		
-		if(this.positionSensorVrDevice) {
-			var vrState=this.positionSensorVrDevice.getState();
-			if(vrState.hasOrientation) {
-				this.vrLookQuaternion.copy(vrState.orientation);
-				this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this.vrLookQuaternion);
-				return;	// if vr was used, don't use the gyroscope
-			}
-		}
-		
 		if(this.enableGyro && this._gyroLookQuaternion) {
 //  			this.lookQuaternion.multiplyQuaternions(this.lookQuaternion, this._gyroLookQuaternion);
 //			this.lookQuaternion.multiplyQuaternions(this._gyroLookQuaternion, this.lookQuaternion);
@@ -466,14 +395,7 @@
 	 * @type {THREE.Quaternion}
 	 */
 	Bivrost.Input.prototype.lookQuaternion=new THREE.Quaternion();
-	
-	
-	/**
-	 * VR part of the look direction
-	 * @type {THREE.Quaternion}
-	 */
-	Bivrost.Input.prototype.vrLookQuaternion=new THREE.Quaternion();
-	
+
 	
 	/**
 	 * How much rotation per second of keyboard rotation, in radians

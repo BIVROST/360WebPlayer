@@ -10,7 +10,7 @@
 	};
 	
 	Bivrost.Store.prototype.get = function(name) {
-		return this.find(function(o, n) { console.log(o,n,n === name); return n === name; } );
+		return this.find(function(o, n) { return n === name; } );
 	};
 	
 	Bivrost.Store.prototype.require = function(name) {

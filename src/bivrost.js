@@ -78,12 +78,3 @@ var Bivrost={
 	}
 	
 };
-
-Bivrost.VRMODE_NONE=501;
-//Bivrost.VRMODE_OCULUS_RIFT_DK1=502;
-Bivrost.VRMODE_OCULUS_RIFT_DK2=503;
-//Bivrost.VRMODE_CARDBOARD=503;
-Bivrost.AVAILABLE_VRMODES=[
-	Bivrost.VRMODE_OCULUS_RIFT_DK2,
-	Bivrost.VRMODE_NONE
-];

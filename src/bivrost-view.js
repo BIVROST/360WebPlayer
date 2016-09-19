@@ -19,14 +19,14 @@
 	 * @param {Bivrost.Media} media
 	 */
 	Bivrost.View=function(media) {
-		this._leftCamera=new THREE.PerspectiveCamera(90, 3/4, 0.1, 1000);
-		this._leftCamera.position.setZ(0);
-		this._rightCamera=this._leftCamera.clone();
+		this.leftCamera=new THREE.PerspectiveCamera(90, 3/4, 0.1, 1000);
+		this.leftCamera.position.setZ(0);
+		this.rightCamera=this.leftCamera.clone();
 
-		this._leftScene=new THREE.Scene();
-		this._leftScene.add(this._leftCamera);
-		this._rightScene=new THREE.Scene();
-		this._rightScene.add(this._rightCamera);
+		this.leftScene=new THREE.Scene();
+		this.leftScene.add(this.leftCamera);
+		this.rightScene=new THREE.Scene();
+		this.rightScene.add(this.rightCamera);
 		
 		var projection_name=media.projection.split(":")[0];
 		var projection_args=media.projection.split(":")[1] || null;
@@ -34,32 +34,40 @@
 		var projection = new (Bivrost.Projection.store.get(projection_name));
 		projection.create(media.texture, projection_args);
 		projection.applyStereoscopy(media.stereoscopy);
-		projection.attach(this._leftScene, this._rightScene);
+		projection.attach(this.leftScene, this.rightScene);
 	};
+	
+	
+	/**
+	 * @type {THREE.PerspectiveCamera}
+	 */
+	Bivrost.View.prototype.leftCamera = null;
+	
+	
+	/**
+	 * @type {THREE.PerspectiveCamera}
+	 */
+	Bivrost.View.prototype.rightCamera = null;
+
+	
+	/**
+	 * @type {THREE.Scene}
+	 */
+	Bivrost.View.prototype.leftScene = null;
+
+	
+	/**
+	 * @type {THREE.Scene}
+	 */
+	Bivrost.View.prototype.rightScene = null;
 
 
 	/**
-	 * Renders one Media in the left and right eye of a stereo render delegate
-	 * @param {function(cameras[], scenes[])} renderDelegate, must be run immidiately
-	 * @param {Bivrost.Input} look
-	 * @param {number} position - 0 is current, -1 is previous, +1 is next, fractions occur during animations (currently unused)
+	 * @param {THREE.Quaternion} lookQuaternion
 	 */
-	Bivrost.View.prototype.renderStereo=function(renderStereoDelegate, look, position) {
-		this._leftCamera.quaternion.copy(look.lookQuaternion);
-		this._rightCamera.quaternion.copy(look.lookQuaternion);
-		renderStereoDelegate([this._leftScene,this._rightScene], [this._leftCamera,this._rightCamera]);
-	};
-
-
-	/**
-	 * Renders one Media from a mono perspective
-	 * @param {function(camera, scene)} renderMonoDelegate
-	 * @param {Bivrost.Input} look
-	 * @param {number} position - 0 is current, -1 is previous, +1 is next, fractions occur during animations (currently unused)
-	 */
-	Bivrost.View.prototype.renderMono=function(renderMonoDelegate, look, position) {
-		this._leftCamera.quaternion.copy(look.lookQuaternion);
-		renderMonoDelegate(this._leftScene, this._leftCamera);
+	Bivrost.View.prototype.updateRotation = function(lookQuaternion) {
+		this.leftCamera.quaternion.copy(lookQuaternion);
+		this.rightCamera.quaternion.copy(lookQuaternion);
 	};
 
 
@@ -74,10 +82,10 @@
 		get: function() { return this._leftCamera.aspect; },
 		set: function(value) {
 			log("set aspect: ", value);
-			this._leftCamera.aspect=value;
-			this._rightCamera.aspect=value;
-			this._leftCamera.updateProjectionMatrix();
-			this._rightCamera.updateProjectionMatrix();
+			this.leftCamera.aspect=value;
+			this.rightCamera.aspect=value;
+			this.leftCamera.updateProjectionMatrix();
+			this.rightCamera.updateProjectionMatrix();
 		}
 	});
 
@@ -94,10 +102,10 @@
 		set: function(value) {
 			if(value < 0.5) value=0.5;
 			if(value > 2.0) value=2.0;
-			this._leftCamera.zoom=value;
-			this._rightCamera.zoom=value;
-			this._leftCamera.updateProjectionMatrix();
-			this._rightCamera.updateProjectionMatrix();			
+			this.leftCamera.zoom=value;
+			this.rightCamera.zoom=value;
+			this.leftCamera.updateProjectionMatrix();
+			this.rightCamera.updateProjectionMatrix();			
 		}
 	});
 

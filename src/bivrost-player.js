@@ -27,7 +27,7 @@
 	 */
 	Bivrost.Player=function(container, url, projection, stereoscopy, source, loop, autoplay) {
 		/**
-		 * @type Bivrost.Player
+		 * @type {Bivrost.Player}
 		 */
 		var thisRef=this;
 		autoplay=typeof(autoplay) === "undefined" ? true : autoplay;
@@ -47,8 +47,8 @@
 			
 		
 		// renderer
-		this.renderer=new THREE.WebGLRenderer();
-		container.appendChild(this.renderer.domElement);
+		this.webglRenderer=new THREE.WebGLRenderer({ antialias: true });
+		container.appendChild(this.webglRenderer.domElement);
 		
 
 		// UI
@@ -83,7 +83,6 @@
 		container.addEventListener("dblclick", function() { thisRef.fullscreen=!thisRef.fullscreen; });
 		var onFullscreenChange=this._onFullscreenChange.bind(this);
 		document.addEventListener("fullscreenchange", onFullscreenChange);
-		document.addEventListener("fullscreenchange", onFullscreenChange);
 		document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 		document.addEventListener("mozfullscreenchange", onFullscreenChange);
 		document.addEventListener("MSFullscreenChange", onFullscreenChange);
@@ -108,47 +107,39 @@
 		}
 		
 		
+		this.renderer = new Bivrost.MonoRenderer();
+		
+		
 		// Main loop, executed every frame
 		var clock=new THREE.Clock();
-		function mainloop() {
+		function mainloopBound() {
 			var dt=clock.getDelta();
-			thisRef.input.update(dt);
-			var pos=0;
-
-			try {
-				// TODO: don't do this not every frame
-				if(thisRef.view) {
-					// VR mode is only valid in fullscreen
-					switch(thisRef.fullscreen ? thisRef.vrMode : Bivrost.VRMODE_NONE) {
-						//	case Bivrost.VRMODE_OCULUS_RIFT_DK1:	// TODO
-						case Bivrost.VRMODE_OCULUS_RIFT_DK2:
-							if(!thisRef.riftRenderer) {
-								thisRef.riftRenderer=new THREE.OculusRiftEffect(thisRef.renderer, undefined, thisRef.input.hmdVrDevice);
-								thisRef.resize();
-							}
-							thisRef.view.renderStereo(thisRef.riftRenderer.render2.bind(thisRef.riftRenderer), thisRef.input, pos);
-							break;
-						case Bivrost.VRMODE_NONE:
-							thisRef.riftRenderer=null;
-							thisRef.view.renderMono(thisRef.renderer.render.bind(thisRef.renderer), thisRef.input, pos);
-							break;
-					}
-				}
-			}
-			catch(e) {
-				if(window.DOMException && e instanceof DOMException && window.console && console.error && e.code === 18) {
-					console.error("Cross origin (CORS) error, try to add the header 'Access-Control-Allow-Origin: *' on your server. See http://enable-cors.org/ for more info.");
-				}
-				throw e;
-			}
-			
-		
-
-			requestAnimationFrame(mainloop);
+			thisRef.mainLoop(dt);
+			requestAnimationFrame(mainloopBound);
 		};
-		mainloop();
+		requestAnimationFrame(mainloopBound);
 	};
 
+	
+	Bivrost.Player.prototype.mainLoop = function(dt) {
+		this.input.update(dt);
+
+		try {
+			if(this.view && this.renderer) {
+				this.view.updateRotation(this.input.lookQuaternion);
+				this.renderer.render(this.webglRenderer, this.view);
+			}
+			else
+				console.log("waiting for init...");
+		}
+		catch(e) {
+			if(window.DOMException && e instanceof DOMException && window.console && console.error && e.code === 18) {
+				console.error("Cross origin (CORS) error, try to add the header 'Access-Control-Allow-Origin: *' on your server. See http://enable-cors.org/ for more info.");
+			}
+			throw e;
+		}
+	};
+	
 	
 	/**
 	 * @type {Bivrost.Input}
@@ -183,14 +174,39 @@
 	/**
 	 * @type {THREE.WebGLRenderer}
 	 */
-	Bivrost.Player.prototype.renderer=null;
-
+	Bivrost.Player.prototype.webglRenderer=null;
+	
 	
 	/**
-	 * @private
-	 * @type {THREE.OculusRiftEffect}
+	 * @type {Bivrost.Renderer}
 	 */
-	Bivrost.Player.prototype.riftRenderer=null;
+	Bivrost.Player.prototype._renderer=null;
+	
+	/**
+	 * Change VR mode
+	 * @property {BivrostRenderer} renderer
+	 * @name Bivrost.Player#renderer
+	 * @member {string} renderer
+	 * @memberOf Bivrost.Player
+	 */
+	Object.defineProperty(Bivrost.Player.prototype, "renderer", {
+		get: function() { return this._renderer; },
+		set: function(value) {
+			log("changed renderer", value);
+			
+			if(this._renderer === value)
+				return;
+			
+			if(this._renderer)
+				this._renderer.destroy(this);
+			
+			this._renderer=value;
+			
+			this._renderer.init(this);
+			
+			this.resize();
+		}
+	});
 
 	
 	/**
@@ -243,22 +259,10 @@
 		width=this.container.offsetWidth;
 		height=this.container.offsetHeight;
 
-		// update rift renderer size after size change
-		if(this.riftRenderer) {
-			this.riftRenderer.HMD.hResolution=width;
-			this.riftRenderer.HMD.vResolution=height;
-			this.riftRenderer.setSize(width, height);
-		}
-		this.renderer.setSize(width, height, true);
+		this.webglRenderer.setSize(width, height, true);
 		this.aspect=width/height;
 		if(this.view)
 			this.view.aspect=this.aspect;
-
-		// TODO: find a better place for this
-		if(this.vrMode === Bivrost.VRMODE_NONE || !this.fullscreen)
-			this.container.classList.remove("no-ui");
-		else
-			this.container.classList.add("no-ui");
 	};
 
 
@@ -268,49 +272,19 @@
 	 */
 	Bivrost.Player.prototype.aspect=4/3;
 
-	
-	/**
-	 * Current VR mode, see Bivrost.VRMODE_*
-	 * @private
-	 * @type {number}
-	 */
-	Bivrost.Player.prototype._vrMode=Bivrost.VRMODE_NONE;
-		
-	
-	/**
-	 * Change VR mode
-	 * @property {string} vrMode, see Bivrost.VRMODE_*
-	 * @name Bivrost.Player#vrMode
-	 * @member {string} vrMode
-	 * @memberOf Bivrost.Player#
-	 */
-	Object.defineProperty(Bivrost.Player.prototype, "vrMode", {
-		get: function() { return this._vrMode; },
-		set: function(value) {
-			if(value === this._vrMode)
-				return;
-			
-			if(value !== Bivrost.VRMODE_NONE)
-				this.input.enableGyro=true;
-			
-			this._vrMode=value;
-			
-			this.resize();
-		}
-	});
-	
+
 	
 	/**
 	 * Turn on fullscreen+VR mode. If already in fullscreen switch between VR modes.
 	 */
 	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
 		if(this.fullscreen) {	// already in fullscreen - toggle modes					
-			this.vrMode=Bivrost.AVAILABLE_VRMODES[(Bivrost.AVAILABLE_VRMODES.indexOf(this.vrMode)+1) % Bivrost.AVAILABLE_VRMODES.length];
+			this.renderer = new Bivrost.StereoRenderer();
 		}
 		else {	// not in fullscreen - start with default mode
 			// TODO: add default mode detection from getVRDevices
 			this.fullscreen=true;
-			this.vrMode=Bivrost.AVAILABLE_VRMODES[0];
+			this.renderer = new Bivrost.StereoRenderer();
 		}
 	};
 
@@ -342,11 +316,13 @@
 	Object.defineProperty(Bivrost.Player.prototype, "fullscreen", {
 		get: function() { return this._fullscreen; },
 		set: function(value) {
+			// all logic that should happen after fullscreen 
+			// goes into _onFullscreenChange handler
+			
 			if(value === this.fullscreen) // ignore if no change
 				return;
 			if(value) {	// turn on
 				var elem=this.container;
-				this.vrMode=Bivrost.VRMODE_NONE;
 
 				if(!this._sizeBeforeFullscreen)
 					this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];
@@ -358,10 +334,9 @@
 					|| elem.mozRequestFullScreen
 					|| elem.webkitRequestFullscreen 
 					|| function() {throw "fullscreen not supported";}
-				).call(elem, {vrDisplay: this.input.hmdVrDevice});
+				).call(elem);
 			}
 			else { // turn off
-				this.input.enableGyro=false;
 				(
 					document.exitFullscreen
 					|| document.mozCancelFullScreen 
@@ -386,7 +361,6 @@
 			document.msFullscreenElement
 		) === this.container;
 
-
 		if(this.fullscreen && typeof(chrome) !== "undefined" && typeof(chrome.power) !== "undefined" && typeof(chrome.power.requestKeepAwake) !== "undefined") {
 			log("chrome device management active");
 			chrome.power.requestKeepAwake("display");
@@ -396,11 +370,13 @@
 			chrome.power.release();
 		}
 
-
 		if(!this.fullscreen && this._sizeBeforeFullscreen) {
 			log("fullscreen exit, resize to", this._sizeBeforeFullscreen);
-			this.renderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
+			this.webglRenderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
 		}
+		
+		if(!this.fullscreen && !(this.renderer instanceof Bivrost.MonoRenderer))
+			this.renderer = new Bivrost.MonoRenderer(this);
 
 		setTimeout(this.resize.bind(this), 0);
 	};
