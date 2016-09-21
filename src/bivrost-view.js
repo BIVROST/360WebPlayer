@@ -79,7 +79,7 @@
 	 * @memberOf Bivrost.View#
 	 */
 	Object.defineProperty(Bivrost.View.prototype, "aspect", {
-		get: function() { return this._leftCamera.aspect; },
+		get: function() { debugger; return this._leftCamera.aspect; },
 		set: function(value) {
 			log("set aspect: ", value);
 			this.leftCamera.aspect=value;

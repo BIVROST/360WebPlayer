@@ -279,12 +279,12 @@
 	 */
 	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
 		if(this.fullscreen) {	// already in fullscreen - toggle modes					
-			this.renderer = new Bivrost.StereoRenderer();
+			this.renderer = new Bivrost.WebVRRenderer();
 		}
 		else {	// not in fullscreen - start with default mode
 			// TODO: add default mode detection from getVRDevices
 			this.fullscreen=true;
-			this.renderer = new Bivrost.StereoRenderer();
+			this.renderer = new Bivrost.WebVRRenderer();
 		}
 	};
 

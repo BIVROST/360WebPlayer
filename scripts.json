@@ -18,6 +18,6 @@
 	"src/bivrost-ui.js",
 	"src/bivrost-loader.js",
 	"src/bivrost-renderer.js",
-	"src/OculusRiftEffect.js",
-	"src/IEVideoTexture.js"
+	"src/IEVideoTexture.js",
+	"src/VREffect.js"
 ]
