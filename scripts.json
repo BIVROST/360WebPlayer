@@ -10,6 +10,7 @@
 	"src/bivrost-projection-equirectangular.js",
 	"src/bivrost-projection-cubemap.js",
 	"src/bivrost-projection-frame.js",
+	"src/bivrost-projection-dome.js",
 	"src/bivrost-media.js",
 	"src/bivrost-media-hls.js",
 	"src/bivrost-media-video.js",
