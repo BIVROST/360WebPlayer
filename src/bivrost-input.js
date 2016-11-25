@@ -118,7 +118,8 @@
 		// touch events
 		
 		function touchstartend(ev) {
-				if(ev.touches.length === 1) {	// one finger touch					
+			thisRef.isTouchInterface=true;
+			if(ev.touches.length === 1) {	// one finger touch					
 				window.addEventListener("touchmove", touchmove);
 				window.addEventListener("touchend", touchstartend);
 				inDrag=false;
@@ -449,6 +450,14 @@
 	 * @type {Bivrost.Observable}
 	 */
 	Bivrost.Input.prototype.onMove;
+	
+
+	/**
+	 * Is true if there was at least one touch event
+	 */
+	Bivrost.Input.prototype.isTouchInterface=false;
+	
+	
 
 	
 })();

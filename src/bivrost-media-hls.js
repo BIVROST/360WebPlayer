@@ -122,16 +122,11 @@
 
 	Bivrost.HLSMedia.prototype.play=function() { this.video.play(); };
 	Bivrost.HLSMedia.prototype.pause=function() { this.video.pause(); };
-	Bivrost.HLSMedia.prototype.pauseToggle=function() {
-		if(this.video.paused)
-			this.video.play();
-		else
-			this.video.pause();
-	};
+	Bivrost.HLSMedia.prototype._getPaused=function() { return this.video.paused; };
 	
 	
 	Bivrost.HLSMedia.prototype._setTime=function(val) { throw "setting time in streams is not supported"; };
-	Bivrost.HLSMedia.prototype._getTime=function() { return video.currentTime; };
-	Bivrost.HLSMedia.prototype._getDuration=function() { return Infinity; };
+	Bivrost.HLSMedia.prototype._getTime=function() { return this.video.currentTime; };
+	Bivrost.HLSMedia.prototype._getDuration=function() { return 1/0; };
 
 })();

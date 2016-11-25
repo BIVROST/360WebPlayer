@@ -160,9 +160,21 @@ Bivrost.AVAILABLE_SOURCES=[
 	};
 
 
-	Bivrost.Media.prototype.play=function() {};
-	Bivrost.Media.prototype.pause=function() {};
-	Bivrost.Media.prototype.pauseToggle=function() {};
+	Bivrost.Media.prototype.play=function() { };
+	Bivrost.Media.prototype.pause=function() { };
+	Bivrost.Media.prototype.pauseToggle=function() { this.paused=!this.paused; };
+	Object.defineProperty(Bivrost.Media.prototype, "paused", {
+		get: function() { return this._getPaused(); },
+		set: function(value) {
+			if(this.paused === value)
+				return;
+			if(value)
+				this.pause();
+			else 
+				this.play(); 
+		}
+	});
+	Bivrost.Media.prototype._getPaused=function() { return true; };
 	Bivrost.Media.prototype.rewind=function() { this.time=0; this.play(); };
 
 	Bivrost.Media.prototype._getTime=function() { return -1; };
@@ -185,6 +197,37 @@ Bivrost.AVAILABLE_SOURCES=[
 	});
 	
 	Bivrost.Media.prototype.url=null;
+	
+	
+	
+	Bivrost.Media.prototype.getBivrostProtocolURI=function() {
+		var urls=[];
+		for(var url in this.url) {
+			if(this.url.hasOwnProperty(url)) {
+				var img = document.createElement('img');
+				img.src = url;
+				url = img.src;
+				img.src = null;
+				urls.push(url);
+			}
+		}
+
+		var protocol="bivrost:"+encodeURIComponent(urls.pop(url));
+		var args="";
+		var arg=function(name, value) { 
+			args+=(args === "") ? "?" : "&";
+			args+=encodeURIComponent(name)+"="+encodeURIComponent(value);
+		};
+		urls.forEach(function(e,i) { arg("alt"+(i || ""), e); });
+		arg("version", Bivrost.version);
+		arg("stereoscopy", this.stereoscopy);
+		arg("projection", this.projection);
+//		arg("autoplay", this.player.autoplay);
+		arg("loop", this.loop);
+		return "http://tools.bivrost360.com/open-in-native/" + "#" + encodeURI(protocol+args);
+	};
+	
+	
 
 	
 	/**

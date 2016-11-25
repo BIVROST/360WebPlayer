@@ -142,7 +142,7 @@ Bivrost.Loader=function(dom) {
 		
 		var loop=attrBool(container, "loop", false);
 
-		var autoplay=attrBool(container, "autoplay", true);
+		var autoplay=attrBool(container, "autoplay", false);
 		
 		return new Bivrost.Player(container, urls, projection, stereoscopy, source, loop, autoplay);
 	});

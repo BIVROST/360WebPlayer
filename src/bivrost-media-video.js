@@ -109,12 +109,7 @@
 
 	Bivrost.VideoMedia.prototype.play=function() { this.video.play(); };
 	Bivrost.VideoMedia.prototype.pause=function() { this.video.pause(); };
-	Bivrost.VideoMedia.prototype.pauseToggle=function() {
-		if(this.video.paused)
-			this.video.play();
-		else
-			this.video.pause();
-	};
+	Bivrost.VideoMedia.prototype._getPaused=function() { return this.video.paused; };
 	
 	Bivrost.VideoMedia.prototype._setTime=function(val) { this.video.currentTime=val; };
 	Bivrost.VideoMedia.prototype._getTime=function() { return this.video.currentTime; };
