@@ -107,7 +107,7 @@
 		}
 		
 		
-		this.renderer = new Bivrost.MonoRenderer();
+		this.renderer = new Bivrost.Renderer.Mono();
 		
 		
 		// Main loop, executed every frame
@@ -279,12 +279,14 @@
 	 */
 	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
 		if(this.fullscreen) {	// already in fullscreen - toggle modes					
-			this.renderer = new Bivrost.WebVRRenderer();
+			this.renderer = new Bivrost.Renderer.Stereo();
 		}
 		else {	// not in fullscreen - start with default mode
 			// TODO: add default mode detection from getVRDevices
 			this.fullscreen=true;
-			this.renderer = new Bivrost.WebVRRenderer();
+			this.renderer = (this.renderer instanceof Bivrost.Renderer.Stereo)
+				?new Bivrost.Renderer.Mono(this)
+				:new Bivrost.Renderer.Stereo(this);
 		}
 	};
 
@@ -375,8 +377,8 @@
 			this.webglRenderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
 		}
 		
-		if(!this.fullscreen && !(this.renderer instanceof Bivrost.MonoRenderer))
-			this.renderer = new Bivrost.MonoRenderer(this);
+		if(!this.fullscreen && !(this.renderer instanceof Bivrost.Renderer.Mono))
+			this.renderer = new Bivrost.Renderer.Mono(this);
 
 		setTimeout(this.resize.bind(this), 0);
 	};
