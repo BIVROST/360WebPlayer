@@ -84,25 +84,26 @@
 	
 	
 	function widget_playpause(player) {
-		var playButton=Bivrost.UI.makeButton("play",/* media.play.bind(media)*/ null, Bivrost.lang.playButtonLabel);
-
 		var pauseCheck=function() {
 			var video=playButton.video;
 			
-			if(video.paused || video.ended) {
+			if(player.media.paused || video.ended) {
 				playButton.changeIcons("play");
 				playButton.title="play";
-				playButton.action=video.play.bind(video);
 				player.ui.show();
 			}
 			else {
 				player.ui.bigPlay.hide();
 				playButton.changeIcons("pause");
 				playButton.title="pause";
-				playButton.action=video.pause.bind(video);
 			}
 		};
 		
+		var playButton=Bivrost.UI.makeButton(
+			"play", 
+			player.media.pauseToggle.bind(player.media), 
+			Bivrost.lang.playButtonLabel
+		);
 		
 		playButton.setVideo=function(video) {
 			if(this.video) { debugger; this.clearVideo(); }
@@ -144,6 +145,184 @@
 		player.input.onMove.subscribeOnce(bigPlay.hide);
 		return bigPlay;
 	}
+	
+	
+	
+	function widget_status(player) {
+		var status=document.createElement("span");
+		status.className="bivrost-status";
+		
+		var currentTime=document.createElement("span");
+		status.appendChild(currentTime);
+		
+		var duration=document.createElement("span");
+		status.appendChild(duration);
+
+		status.setVideo=function(video) {
+			var currentTime_update=function() {
+				currentTime.textContent=Bivrost.UI.timeFormat(video.currentTime);
+			}
+			video.addEventListener("timeupdate", currentTime_update);
+			currentTime_update();
+
+			var duration_update=function() {
+				if(!isFinite(player.media.duration))
+					duration.textContent="";
+				else
+					duration.textContent=" / " + Bivrost.UI.timeFormat(player.media.duration);
+			};
+			video.addEventListener("durationchange", duration_update);
+			duration_update();
+		}
+		
+		status.clearVideo=function() {}
+		
+		return status;
+	}
+	
+	
+	function widget_range(player) {
+		var range=document.createElement("input");
+		range.setAttribute("type", "range");
+		range.setAttribute("min", 0);
+		range.setAttribute("max", /*media.duration ||*/ 1);
+		range.setAttribute("step", 0.025);
+		range.setAttribute("value", 0);
+
+		var rangeBackground=document.createElement("div");
+		rangeBackground.className="bivrost-range-background";
+
+		var rangeForeground=document.createElement("div");
+		rangeForeground.className="bivrost-range-foreground";
+		rangeBackground.appendChild(rangeForeground);
+		rangeForeground.setValue01=function(value01) {
+			var thumbWidth=15;
+			rangeForeground.style.width=Math.round(value01 * (rangeBackground.offsetWidth-thumbWidth) + thumbWidth/2)+"px";
+		};
+
+		rangeBackground.appendChild(range);
+
+		var rangeChange=function() {
+			rangeForeground.setValue01(range.value/player.media.duration);
+			player.media.time=range.value; 
+		};
+		
+		range.addEventListener("change", rangeChange);
+		range.addEventListener("input", rangeChange);		
+		window.addEventListener("resize", rangeChange);
+
+		var time_update=function() {
+			range.value=player.media.time;
+			rangeForeground.setValue01(player.media.time/player.media.duration);			
+		};
+		
+		var duration_update=function() {
+			range.setAttribute("max", player.media.duration || 1);
+		};
+		
+		rangeBackground.setVideo=function(video) {
+			range.style.display=isFinite(player.media.duration)
+				?"block":"hidden";
+
+			video.addEventListener("timeupdate", time_update);
+			video.addEventListener("durationchange", duration_update);
+			time_update();
+			duration_update();
+		};
+		
+		return rangeBackground;
+	}
+	
+	
+	function widget_volumebutton(player) {
+		var volumebar=document.createElement("div");
+		volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; });
+		volumebar.className="bivrost-volume bivrost-hidden";
+		
+		var video;	
+		var lastVolume=0;
+		
+		var ticks=[];
+	
+		var button_press=function () {
+			if(video.volume === 0) {
+				if(lastVolume < 1/8)
+					lastVolume=1/8;
+				video.volume=lastVolume;
+			}
+			else {
+				lastVolume=video.volume;
+				video.volume=0;
+			}
+		};
+
+		var volumebutton=Bivrost.UI.makeButton("speaker", button_press, Bivrost.lang.volumeButtonLabel(0));
+
+		var volumeActive=false;
+		volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("bivrost-hidden"); volumeActive=true; });
+		volumebutton.addEventListener("mouseleave", function() { volumebar.classList.add("bivrost-hidden"); inVolumeDrag=volumeActive=false; });
+
+		// on first touch cancel click, so it doesn't mute automaticaly
+		volumebutton.addEventListener("touchstart", function(ev) {
+			if(!volumeActive) {
+				ev.stopPropagation();
+				return false;
+			}
+		});
+
+		volumebutton.appendChild(volumebar);
+		
+		
+		var inVolumeDrag=false;
+		volumebutton.setVideo=function(video_) {
+			video=video_;
+			lastVolume=video.volume;
+
+			for(var i=8; i--; ) {
+				var tick=document.createElement("div");
+				tick.className="bivrost-volume-tick bivrost-volume-tick-on";
+				var setVolumeCond=(function(vol) { return function() {
+					if(inVolumeDrag)
+						video.volume=vol; 
+					return true;
+				}; })((i+1)/8);
+				var setVolumeBreak=(function(vol) { return function() { 
+					volumebar.classList.add("bivrost-hidden");
+					video.volume=vol; 
+					inVolumeDrag=false;
+				}; })((i+1)/8);
+				var setVolumeStart=(function(vol) { return function() { 
+					video.volume=vol; 
+					inVolumeDrag=true;
+				}; })((i+1)/8);
+				tick.addEventListener("click", setVolumeBreak);
+				tick.addEventListener("mouseup", setVolumeBreak);
+				tick.addEventListener("touchend", setVolumeBreak);
+				tick.addEventListener("mousemove", setVolumeCond);
+				tick.addEventListener("touchmove", setVolumeCond);
+				tick.addEventListener("mousedown", setVolumeStart);
+				tick.addEventListener("touchstart", setVolumeStart);
+				ticks.push(tick);
+				volumebar.appendChild(tick);
+			}
+			
+			video.addEventListener("volumechange", volume_change);
+			volume_change();
+		};
+		
+		var volume_change=function() {
+			volumebutton.changeIcons(video.volume > 0 ? "speaker" : "mute");
+			volumebutton.title=Bivrost.lang.volumeButtonLabel(video.volume);
+			for(var i=0; i < ticks.length; i++)
+				ticks[i].className="bivrost-volume-tick bivrost-volume-tick-"+((video.volume >= (8-i)/8)?"on":"off");
+		};
+		
+		
+		volumebutton.clearVideo=function() {};
+		
+		return volumebutton;
+	}
+	
 	
 
 	
@@ -209,161 +388,31 @@
 			this.loading.setVideo(video);
 
 			// status bar
-			if(isFinite(media.duration)) {
-				var currentTime=document.createElement("span");
-				currentTime.textContent=Bivrost.UI.timeFormat(media.time);
-
-				var separator=document.createElement("span");
-				separator.textContent=" / ";
-
-				var duration=document.createElement("span");
-				duration.textContent=Bivrost.UI.timeFormat(media.duration);
-
-				var status=document.createElement("span");
-				status.className="bivrost-status";
-				status.appendChild(currentTime);
-				status.appendChild(separator);
-				status.appendChild(duration);
-
-				video.addEventListener("durationchange", function(e) {
-					duration.textContent=Bivrost.UI.timeFormat(media.duration);
-				});
-
-				video.addEventListener("timeupdate", function(e) {
-					currentTime.textContent=Bivrost.UI.timeFormat(media.time);
-				});
-			}
-
+			var status=widget_status(this.player);
+			status.setVideo(video);
 
 			// media range
-			if(isFinite(media.duration)) {
-				var range=document.createElement("input");
-				range.setAttribute("type", "range");
-				range.setAttribute("min", 0);
-				range.setAttribute("max", media.duration || 1);
-				range.setAttribute("step", 0.025);
-				range.setAttribute("value", 0);
+			var range=widget_range(this.player);
+			range.setVideo(video);
+			this.domElement.appendChild(range);
 
-				var rangeBackground=document.createElement("div");
-				rangeBackground.className="bivrost-range-background";
-				this.domElement.appendChild(rangeBackground);
-
-				var rangeForeground=document.createElement("div");
-				rangeForeground.className="bivrost-range-foreground";
-				rangeBackground.appendChild(rangeForeground);
-				rangeForeground.setValue01=function(value01) {
-					var thumbWidth=15;
-					rangeForeground.style.width=Math.round(value01 * (rangeBackground.offsetWidth-thumbWidth) + thumbWidth/2)+"px";
-				};
-
-				rangeBackground.appendChild(range);
-
-
-				video.addEventListener("timeupdate", function(e) {
-					range.value=media.time;
-					rangeForeground.setValue01(media.time/media.duration);
-				});
-
-				video.addEventListener("durationchange", function(e) {
-					range.setAttribute("max", media.duration || 1);
-				});
-
-				var rangeChange=function() {
-					rangeForeground.setValue01(range.value/media.duration);
-					media.time=range.value; 
-				};
-				range.addEventListener("change", rangeChange);
-				range.addEventListener("input", rangeChange);		
-				window.addEventListener("resize", rangeChange);
-			}
-
-
-
+			// play/pause button
 			var playButton=widget_playpause(this.player);
 			playButton.setVideo(video);
-			// this.domElement.appendChild(makeButton("back", function() { media.time-=5; }, "<<"));
+//			 this.domElement.appendChild(makeButton("back", function() { media.time-=5; }, "<<"));
 			leftAligned.appendChild(playButton);
-			// this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
+//			 this.domElement.appendChild(makeButton("next", function() { media.time+=5; }, ">>"));
 
 
 			// add status as first right element
-			if(status) {
-				if(rightAligned.childNodes.length > 0)
-					rightAligned.insertBefore(status, rightAligned.childNodes[0]);
-				else
-					rightAligned.appendChild(status);
-			}
+			if(rightAligned.childNodes.length > 0)
+				rightAligned.insertBefore(status, rightAligned.childNodes[0]);
+			else
+				rightAligned.appendChild(status);
 			
 			// volume
-			var volumebar=document.createElement("div");
-			volumebar.addEventListener("click", function(e) { e.stopPropagation(); return false; });
-			volumebar.className="bivrost-volume bivrost-hidden";
-			var ticks=[];
-			var inVolumeDrag=false;
-			for(var i=8; i--; ) {
-				var tick=document.createElement("div");
-				tick.className="bivrost-volume-tick bivrost-volume-tick-on";
-				var setVolumeCond=(function(vol) { return function() {
-//					log("cond", arguments[0].type, inVolumeDrag);
-					if(inVolumeDrag)
-						video.volume=vol; 
-					return true;
-				}; })((i+1)/8);
-				var setVolumeBreak=(function(vol) { return function() { 
-					volumebar.classList.add("bivrost-hidden");
-//					log("break", arguments[0].type, inVolumeDrag);
-					video.volume=vol; 
-					inVolumeDrag=false;
-				}; })((i+1)/8);
-				var setVolumeStart=(function(vol) { return function() { 
-//					log("start", arguments[0].type, inVolumeDrag);
-					video.volume=vol; 
-					inVolumeDrag=true;
-				}; })((i+1)/8);
-				tick.addEventListener("click", setVolumeBreak);
-				tick.addEventListener("mouseup", setVolumeBreak);
-				tick.addEventListener("touchend", setVolumeBreak);
-				tick.addEventListener("mousemove", setVolumeCond);
-				tick.addEventListener("touchmove", setVolumeCond);
-				tick.addEventListener("mousedown", setVolumeStart);
-				tick.addEventListener("touchstart", setVolumeStart);
-				ticks.push(tick);
-				volumebar.appendChild(tick);
-			}
-				
-
-			var lastVolume=video.volume;
-			var volumebutton=Bivrost.UI.makeButton("speaker", function () {
-				if(video.volume === 0) {
-					if(lastVolume < 1/8)
-						lastVolume=1/8;
-					video.volume=lastVolume;
-				}
-				else {
-					lastVolume=video.volume;
-					video.volume=0;
-				}
-			}, Bivrost.lang.volumeButtonLabel(video.volume));
-			
-			var volumeActive=false;
-			volumebutton.addEventListener("mouseover", function() { volumebar.classList.remove("bivrost-hidden"); volumeActive=true; });
-			volumebutton.addEventListener("mouseleave", function() { volumebar.classList.add("bivrost-hidden"); inVolumeDrag=volumeActive=false; });
-			
-			// on first touch cancel click, so it doesn't mute automaticaly
-			volumebutton.addEventListener("touchstart", function(ev) {
-				if(!volumeActive) {
-					ev.stopPropagation();
-					return false;
-				}
-			});
-			
-			video.addEventListener("volumechange", function() {
-				volumebutton.changeIcons(video.volume > 0 ? "speaker" : "mute");
-				for(var i=0; i < ticks.length; i++)
-					ticks[i].className="bivrost-volume-tick bivrost-volume-tick-"+((video.volume >= (8-i)/8)?"on":"off");
-			});
-			
-			volumebutton.appendChild(volumebar);
+			var volumebutton=widget_volumebutton(this.player);
+			volumebutton.setVideo(video);
 			rightAligned.appendChild(volumebutton);
 			
 		}			
