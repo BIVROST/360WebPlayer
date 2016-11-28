@@ -553,13 +553,13 @@ Roadmap
 - [ ] MPEG-DASH support
 - [ ] Support built-in media galleries and switching media
 - [ ] Overlays - add content on top of your media
-- [ ] More supported projections - frame, cylindrical, partial sphere mappings etc.
+- [x] More supported projections - frame, cylindrical, partial sphere mappings etc.
 - [ ] Interactive overlays
 - [ ] Mobile support - iOS
 - [ ] Mobile support - Windows Phone
 - [x] Video on Internet Exporer/Edge
 - [ ] Smaller footprint
-- [ ] 3d glasses stereoscopic display support (line by line, red cyan)
+- [ ] Retro 3d glasses stereoscopic display support (line by line, red cyan)
 
 Please, post suggestions using the issue function. Do not forget to suggest a valid use case.
 

@@ -17,6 +17,8 @@
 	"src/bivrost-media-picture.js",
 	"src/bivrost-input.js",
 	"src/bivrost-ui.js",
+	"src/bivrost-ui-classic.js",
+	"src/bivrost-ui-stereo.js",
 	"src/bivrost-loader.js",
 	"src/bivrost-renderer.js",
 	"src/bivrost-renderer-mono.js",

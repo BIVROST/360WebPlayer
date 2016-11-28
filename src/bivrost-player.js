@@ -284,9 +284,9 @@
 		else {	// not in fullscreen - start with default mode
 			// TODO: add default mode detection from getVRDevices
 			this.fullscreen=true;
-			this.renderer = (this.renderer instanceof Bivrost.Renderer.Stereo)
+			this.renderer = (this.renderer instanceof Bivrost.Renderer.WebVR)
 				?new Bivrost.Renderer.Mono(this)
-				:new Bivrost.Renderer.Stereo(this);
+				:new Bivrost.Renderer.WebVR(this);
 		}
 	};
 
