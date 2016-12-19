@@ -1,7 +1,15 @@
-/* global Bivrost */
+/* global Bivrost, THREE */
 "use strict";
 
 (function() {
+	
+	/**
+	 * Logging helper
+	 * @private
+	 * @param {...object} vargs
+	 */
+	function log(/*vargs...*/) { Bivrost.log("Bivrost.Renderer.WebVR", arguments); };
+	
 	
 	Bivrost.Renderer.WebVR = function(player) { this.player = player; };
 	
@@ -63,6 +71,8 @@
 	Bivrost.Renderer.WebVR.prototype.destroy = function(player) {
 		player.container.classList.remove("bivrost-no-ui");
 		
+		this._renderWebVRdelegate=function() { ; };
+
 		if(!player.input.vrDisplay)
 			{ debugger; return; }
 		
@@ -70,7 +80,7 @@
 			return;
 		
 		player.input.vrDisplay.exitPresent().then(
-			function () { console.log("exit present success"); }, 
+			function () { log("exit present success"); }, 
 			function (err) { console.error(err); debugger; }
 		);
 	};
@@ -83,7 +93,7 @@
 	 */
 	Bivrost.Renderer.WebVR.prototype.render = function(webglRenderer, view) {
 		
-		// init webVR
+		// init webVR - in it's own render queue
 		if(!this._renderWebVRdelegate) {
 			var thisRef=this;
 			var vrDisplay=this.player.input.vrDisplay;
@@ -100,17 +110,19 @@
 			
 			vrDisplay.requestAnimationFrame(this._renderWebVRdelegate);
 			
-			console.log("initiated webvr renderer")
-
+			log("initiated webvr renderer");
 		}
 		
-		var w = webglRenderer.domElement.width;
-		var h = webglRenderer.domElement.height;
+		// classical renderer only if webvr can present on a separate 
+		if(this.input.vrDisplay.capabilities.canPresent) {
+			var w = webglRenderer.domElement.width;
+			var h = webglRenderer.domElement.height;
 
-		webglRenderer.setScissorTest(false);
-		webglRenderer.setViewport(0,0,w,h);
-		webglRenderer.setScissor(0,0,w,h);
-		webglRenderer.render(view.leftScene, view.leftCamera);	
+			webglRenderer.setScissorTest(false);
+			webglRenderer.setViewport(0,0,w,h);
+			webglRenderer.setScissor(0,0,w,h);
+			webglRenderer.render(view.leftScene, view.leftCamera);	
+		}
 	};
 		
 		
@@ -130,10 +142,11 @@
 		var frameData=this.frameData;
 		
 		if(!vrDisplay.isPresenting) {
-			console.log("!isPresenting");
-			return;
+			log("!isPresenting");
+			//return;
+			vrRenderer=webglRenderer;
 		}
-		else console.log("rendering");
+		else log("rendering");
 
 
 		var w = vrRenderer.domElement.width;

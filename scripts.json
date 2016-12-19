@@ -24,6 +24,5 @@
 	"src/bivrost-renderer-mono.js",
 	"src/bivrost-renderer-stereo.js",
 	"src/bivrost-renderer-webvr.js",
-	"src/IEVideoTexture.js",
-	"src/VREffect.js"
+	"src/IEVideoTexture.js"
 ]
