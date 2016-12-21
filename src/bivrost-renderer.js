@@ -6,9 +6,16 @@
 	
 	Bivrost.Renderer = function() {};
 	
-	Bivrost.Renderer.prototype.render = function(webglRenderer, view) {};
+	Bivrost.Renderer.prototype.render = function(webglRenderer, view) { throw "abstract"; };
 	
-	Bivrost.Renderer.prototype.init = function(player) {};
+	Bivrost.Renderer.prototype.init = function(player) {
+		this.player=player;
+	};
+	
+	/**
+	 * @type {Bivrost.Player}
+	 */
+	Bivrost.Renderer.prototype.player = null;
 	
 	Bivrost.Renderer.prototype.destroy = function(player) {};
 	

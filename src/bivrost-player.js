@@ -46,18 +46,6 @@
 		container.bivrost=this;
 			
 		
-		// renderer
-		this.webglRenderer=new THREE.WebGLRenderer({ antialias: true });
-		container.appendChild(this.webglRenderer.domElement);
-		
-
-		// UI
-		var uiDiv=document.createElement("div");
-		uiDiv.className="bivrost-ui";
-		container.appendChild(uiDiv);
-		this.ui=new Bivrost.UI(uiDiv, this);
-
-		
 		// input
 		this.input=new Bivrost.Input(this, container, Math.PI/2);
 		this.input.registerShortcut(["+", "="], function() { thisRef.view.zoom/=0.95; });
@@ -88,6 +76,14 @@
 		document.addEventListener("MSFullscreenChange", onFullscreenChange);
 		
 				
+		// renderer
+		this.webglRenderer=new THREE.WebGLRenderer({ antialias: true });
+		container.appendChild(this.webglRenderer.domElement);
+
+		this.renderer = new Bivrost.Renderer.Mono();
+
+		
+		
 		// resize handling
 		// http://stackoverflow.com/a/14139497/785171
 		var resizeBound=this.resize.bind(this);
@@ -106,9 +102,7 @@
 			this.media_loading=new mediaConstructor(url, this.setMedia.bind(this), projection, stereoscopy, loop);
 		}
 		
-		
-		this.renderer = new Bivrost.Renderer.Mono();
-		
+
 		
 		// Main loop, executed every frame
 		var clock=new THREE.Clock();
@@ -129,8 +123,9 @@
 				this.view.updateRotation(this.input.lookQuaternion);
 				this.renderer.render(this.webglRenderer, this.view);
 			}
-			else
+			else {
 				console.log("waiting for init...");
+			}
 		}
 		catch(e) {
 			if(window.DOMException && e instanceof DOMException && window.console && console.error && e.code === 18) {
@@ -155,8 +150,25 @@
 		
 	/**
 	 * @type {Bivrost.UI}
+	 * @private
 	 */
-	Bivrost.Player.prototype.ui=null;
+	Bivrost.Player.prototype._ui=null;
+	Object.defineProperty(Bivrost.Player.prototype, "ui", {
+		get: function() { return this._ui; },
+		set: function(value) {
+			if(this._ui && value && value.__super__ === this.__super__) {
+				log("warn: replacing UI with instance of itself");
+			}
+			
+//			if(!value) { throw "UI required"; }
+			if(this._ui)
+				this._ui.dispose();
+			this._ui=value;
+			if(this.media && value)
+				this._ui.setMedia(this.media);
+		}
+	});
+
 		
 	
 	/**
@@ -278,15 +290,18 @@
 	 * Turn on fullscreen+VR mode. If already in fullscreen switch between VR modes.
 	 */
 	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
+		var vrMode=(!!this.input.vrDisplay)
+			?Bivrost.Renderer.WebVR
+			:Bivrost.Renderer.Stereo;
+		
 		if(this.fullscreen) {	// already in fullscreen - toggle modes					
-			this.renderer = new Bivrost.Renderer.Stereo();
+			this.renderer = new vrMode();
 		}
 		else {	// not in fullscreen - start with default mode
-			// TODO: add default mode detection from getVRDevices
 			this.fullscreen=true;
-			this.renderer = (this.renderer instanceof Bivrost.Renderer.WebVR)
-				?new Bivrost.Renderer.Mono(this)
-				:new Bivrost.Renderer.WebVR(this);
+			this.renderer = (this.renderer instanceof Bivrost.Renderer.Mono)
+				?new vrMode()
+				:new Bivrost.Renderer.Mono();
 		}
 	};
 

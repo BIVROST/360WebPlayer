@@ -58,15 +58,14 @@
 	};
 	
 	Bivrost.Renderer.Stereo.prototype.init = function(player) {
-		player.container.classList.add("bivrost-no-ui");
-		
+		Bivrost.Renderer.prototype.init.call(this, player);
+		this.player.ui=null;
 		this.hadEnabledGyro = player.input.enableGyro;
 		player.input.enableGyro = true;
 	};
 	
 	Bivrost.Renderer.Stereo.prototype.destroy = function(player) {
-		player.container.classList.remove("bivrost-no-ui");
-		
+		Bivrost.Renderer.prototype.destroy.call(this, player);
 		player.input.enableGyro = this.hadEnabledGyro;
 	};
 	

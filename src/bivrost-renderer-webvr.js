@@ -13,17 +13,13 @@
 	
 	Bivrost.Renderer.WebVR = function(player) { this.player = player; };
 	
-	/**
-	 * @type {Bivrost.Player}
-	 */
-	Bivrost.Renderer.WebVR.prototype.player = null;
-	
 	Bivrost.extend(Bivrost.Renderer.WebVR, Bivrost.Renderer);
 	
 	Bivrost.Renderer.WebVR.prototype.init = function(player) {
-		player.container.classList.add("bivrost-no-ui");
+		Bivrost.Renderer.prototype.init.call(this, player);
 		
-		this.player=player;
+		this.player.ui=null;
+		
 		var vrDisplay=player.input.vrDisplay;
 		var vrRenderer=new THREE.WebGLRenderer();
 		vrRenderer.setSize(player.input.vrDisplaySize.x, player.input.vrDisplaySize.y);
@@ -69,7 +65,7 @@
 
 	
 	Bivrost.Renderer.WebVR.prototype.destroy = function(player) {
-		player.container.classList.remove("bivrost-no-ui");
+		Bivrost.Renderer.prototype.destroy.call(this, player);
 		
 		this._renderWebVRdelegate=function() { ; };
 
