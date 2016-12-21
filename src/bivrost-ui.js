@@ -120,6 +120,8 @@
 			}
 		};
 		
+		player.container.appendChild(loading);
+		
 		return loading;
 	}
 	
@@ -131,7 +133,8 @@
 			if(player.media.paused || video.ended) {
 				playButton.changeIcons("play");
 				playButton.title="play";
-				player.ui.show();
+				if(player.ui.show)
+					player.ui.show();
 			}
 			else {
 				player.ui.bigPlay.hide();
@@ -502,221 +505,321 @@
 	}
 	
 	
-	/**
-	 * UI is short for User Interface - the buttons, slider and timing information
-	 * @param {Bivrost.Player} player
-	 */
-	Bivrost.UI=function(player) {
-		this._widgets=[];		
-		this.player=player;
-		
-		var domElement=document.createElement("div");
-		domElement.className="bivrost-ui";
-		player.container.appendChild(domElement);
-		
-		this.loading=widget_loading(player);
-		this._widgets.push(this.loading);
-		player.container.appendChild(this.loading);		// TODO: in UI		
-		
-		var cancel=function(e) { e.stopPropagation(); return false; };
-		domElement.addEventListener("mousedown", cancel);
-		domElement.addEventListener("mousemove", cancel);
-		domElement.addEventListener("mouseup", cancel);
-		domElement.addEventListener("dblclick", cancel);
-		domElement.addEventListener("click", cancel);
-		domElement.addEventListener("touchstart", cancel);
-		domElement.addEventListener("touchmove", cancel);
-		domElement.addEventListener("touchend", cancel);
-
-		this.logo=widget_logo(this.player);
-		this._widgets.push(this.logo);
-
-		this.domElement=domElement;
-		
-		this.player.container.appendChild(this.domElement);
-	};
-	
-	
-	Bivrost.UI.Classic=function(player) {
-		Bivrost.UI.call(this, player);
-	};
-	Bivrost.extend(Bivrost.UI.Classic, Bivrost.UI);
-	
-
-	
-	/**
-	 * @param {Bivrost.Media} media
-	 */
-	Bivrost.UI.prototype.setMedia=function(media) {
-		if(this.media)
-			return;
-		
-		var widgetsLeft=[];
-		var widgetsRight=[];
-		var widgetsSpecial=[];
-		
-		this.media=media;
-		var video=media.video;
-		var picture;
-		
-		// loading widget - if picture, there is nothing more to load
-		if(!media.video)
-			this.loading.hide();
-		
-		var leftAligned=document.createElement("div");
-		leftAligned.className="bivrost-aligned bivrost-left-aligned";
-		
-		// play/pause button
-		if(media.video) {
-			widgetsLeft.push(widget_playpause(this.player));
-		}
-		
-		var rightAligned=document.createElement("div");
-		rightAligned.className="bivrost-aligned bivrost-right-aligned";
-		
-		// status bar
-		if(media.video) {
-			widgetsRight.push(widget_status(this.player));
-		}
-		
-		// bivrost button
-		widgetsRight.push(widget_bivrost(this.player));
-		
-		// vr button
-		widgetsRight.push(widget_vr(this.player));
-		
-		// volume button
-		if(video) {
-			widgetsRight.push(widget_volumebutton(this.player));
-		}
-		
-		// gyroscope button
-		widgetsRight.push(widget_gyro(this.player));
-		
-		// fullscreen button
-		widgetsRight.push(widget_fullscreen(this.player));
-
-
-		// special widgets:
-
-		// media range, disabled for streaming
-		if(video && Number.isFinite(media.duration)) {
-			var range=widget_range(this.player);
-			this.domElement.appendChild(range);
-			widgetsSpecial.push(range);
-		}
-		
-		// show the ui bar on user activity
-		if(media.video) {
-			this.player.container.addEventListener("mousemove", this.show.bind(this));
-			this.player.container.addEventListener("touchstart", this.show.bind(this));
-			this.player.container.addEventListener("touchmove", this.show.bind(this));
-			this.show();
-		}
-
-		// add big play
-		this.bigPlay=widget_bigplay(this.player);
-		widgetsSpecial.push(this.bigPlay);
-
-
-		// add the buttons to ui
-		var widgets=this._widgets;
-		widgetsLeft.forEach(function(w) {
-			widgets.push(w);
-			leftAligned.appendChild(w);
-		});
-		widgetsRight.forEach(function(w) {
-			widgets.push(w);
-			rightAligned.appendChild(w);
-		});
-		widgetsSpecial.forEach(function(w) {
-			widgets.push(w);
-		});
-		widgets.forEach(function(w) {
-			if(w.setMedia) 
-				w.setMedia(media);
-			if(w.setVideo && video) 
-				w.setVideo(video);
-			if(w.setPicture && picture) 
-				w.setPicture(picture);		
-		});
-		
-		this.domElement.appendChild(leftAligned);
-		this.domElement.appendChild(rightAligned);
-	};
-	
-	
-	Bivrost.UI.prototype._widgets=[];
-	Bivrost.UI.prototype.dispose=function() {
-		this._widgets.forEach(function(w) {
-			if(w.dispose) 
-				w.dispose();
-		});
-		this._widgets=[];
-		this.player.container.removeChild(this.domElement);
-	};
-	
-	
-	/**
-	 * Container for the UI
-	 * @type {HTMLElement}
-	 */
-	Bivrost.UI.prototype.domElement=null;
-	
-	
-	/**
-	 * Reference to the Bivrost player instance
-	 * @type {Bivrost.Player}
-	 */
-	Bivrost.UI.prototype.player=null;
-	
-	
-	/**
-	 * After how many seconds will the UI hide.
-	 * Set to 0 to disable
-	 * @type {number}
-	 */
-	Bivrost.UI.prototype.autoHide=5;
-	
-	
-	Bivrost.UI.prototype.show=function() {
-		var thisRef=this;
-		this.player.container.classList.remove("bivrost-hide-ui");
-		if(this._hideTimeoutId)
-			clearTimeout(this._hideTimeoutId);
-		if(this.autoHide > 0) {
-			this._hideTimeoutId=setTimeout(function() {
-				if(!thisRef.media.paused && thisRef.autoHide > 0)
-					thisRef.hide();
-			} , this.autoHide*1000);
-		}
-	};
-	
-	
-	Bivrost.UI.prototype.hide=function() {
-		this.player.container.classList.add("bivrost-hide-ui");
-		clearTimeout(this._hideTimeoutId);
-	};
-	
-	Bivrost.UI.prototype._hideTimeoutId=null;
+	/// UI:abstract
+	{
+		/**
+		 * UI is short for User Interface - the buttons, slider and timing information
+		 * @param {Bivrost.Player} player
+		 */
+		Bivrost.UI=function(player, className) {
+			this._widgets=[];		
+			this.player=player;
 			
+			var domElement=document.createElement("div");
+			domElement.className=className;
+			player.container.appendChild(domElement);
 
-	Bivrost.UI.prototype.loading=null;
-	
-	
-	/**
-	 * @type {HTMLElement}
-	 * @private
-	 */
-	Bivrost.UI.bigPlay=null;
-	
-	
-	/**
-	 * @type {HTMLElement}
-	 * @private
-	 */
-	Bivrost.UI.logo=null;
+			var cancel=function(e) { e.stopPropagation(); return false; };
+			domElement.addEventListener("mousedown", cancel);
+			domElement.addEventListener("mousemove", cancel);
+			domElement.addEventListener("mouseup", cancel);
+			domElement.addEventListener("dblclick", cancel);
+			domElement.addEventListener("click", cancel);
+			domElement.addEventListener("touchstart", cancel);
+			domElement.addEventListener("touchmove", cancel);
+			domElement.addEventListener("touchend", cancel);
 
+			this.domElement=domElement;
+
+			this.player.container.appendChild(this.domElement);
+		};
+
+
+		Bivrost.UI.prototype.setMedia=function(media) {
+			if(this.media)
+				throw "cannot set media more than once";
+			this.media=media;
+		};
+
+
+		Bivrost.UI.prototype.setMediaToAllWidgets=function() {
+			var media=this.media;
+			this._widgets.forEach(function(w) {
+				if(w.setMedia) 
+					w.setMedia(media);
+				if(w.setVideo && media.video) 
+					w.setVideo(media.video);
+				if(w.setPicture && media.picture) 
+					w.setPicture(media.picture);
+			});
+		};
+
+
+		Bivrost.UI.prototype._widgets=[];
+
+
+		Bivrost.UI.prototype.dispose=function() {
+			this._widgets.forEach(function(w) {
+				if(w.dispose) 
+					w.dispose();
+			});
+			this._widgets=[];
+			this.player.container.removeChild(this.domElement);
+		};
+
+
+		/**
+		 * Container for the UI
+		 * @type {HTMLElement}
+		 */
+		Bivrost.UI.prototype.domElement=null;
+
+
+		/**
+		 * Reference to the Bivrost player instance
+		 * @type {Bivrost.Player}
+		 */
+		Bivrost.UI.prototype.player=null;
+	}
 	
 	
+	/// UI:Classic
+	{
+		Bivrost.UI.Classic=function(player) {
+			Bivrost.UI.call(this, player, "bivrost-ui");
+
+			this._showBound=this.show.bind(this);
+
+			this.loading=widget_loading(player);
+			this._widgets.push(this.loading);
+
+			this.logo=widget_logo(this.player);
+			this._widgets.push(this.logo);
+		};
+		Bivrost.extend(Bivrost.UI.Classic, Bivrost.UI);
+
+
+		/**
+		 * @type {function}
+		 * @private
+		 */
+		Bivrost.UI.Classic.prototype._showBound=null;
+
+
+		/**
+		 * @param {Bivrost.Media} media
+		 */
+		Bivrost.UI.Classic.prototype.setMedia=function(media) {
+			Bivrost.UI.prototype.setMedia.call(this, media);
+
+			var widgetsLeft=[];
+			var widgetsRight=[];
+			var widgetsSpecial=[];
+
+			var video=media.video;
+			var picture=undefined;
+
+			// loading widget - if picture, there is nothing more to load
+			if(!media.video)
+				this.loading.hide();
+
+			var leftAligned=document.createElement("div");
+			leftAligned.className="bivrost-aligned bivrost-left-aligned";
+
+			// play/pause button
+			if(media.video) {
+				widgetsLeft.push(widget_playpause(this.player));
+			}
+
+			var rightAligned=document.createElement("div");
+			rightAligned.className="bivrost-aligned bivrost-right-aligned";
+
+			// status bar
+			if(media.video) {
+				widgetsRight.push(widget_status(this.player));
+			}
+
+			// bivrost button
+			widgetsRight.push(widget_bivrost(this.player));
+
+			// vr button
+			widgetsRight.push(widget_vr(this.player));
+
+			// volume button
+			if(video) {
+				widgetsRight.push(widget_volumebutton(this.player));
+			}
+
+			// gyroscope button
+			widgetsRight.push(widget_gyro(this.player));
+
+			// fullscreen button
+			widgetsRight.push(widget_fullscreen(this.player));
+
+
+			// special widgets:
+
+			// media range, disabled for streaming
+			if(video && Number.isFinite(media.duration)) {
+				var range=widget_range(this.player);
+				this.domElement.appendChild(range);
+				widgetsSpecial.push(range);
+			}
+
+			// show the ui bar on user activity
+			if(media.video) {
+				this.player.container.addEventListener("mousemove", this._showBound);
+				this.player.container.addEventListener("touchstart", this._showBound);
+				this.player.container.addEventListener("touchmove", this._showBound);
+				this.show();
+			}
+
+			// add big play
+			this.bigPlay=widget_bigplay(this.player);
+			widgetsSpecial.push(this.bigPlay);
+
+
+			// add the buttons to ui
+			var widgets=this._widgets;
+			widgetsLeft.forEach(function(w) {
+				widgets.push(w);
+				leftAligned.appendChild(w);
+			});
+			widgetsRight.forEach(function(w) {
+				widgets.push(w);
+				rightAligned.appendChild(w);
+			});
+			widgetsSpecial.forEach(function(w) {
+				widgets.push(w);
+			});
+
+			this.domElement.appendChild(leftAligned);
+			this.domElement.appendChild(rightAligned);
+
+			this.setMediaToAllWidgets();
+		};
+
+
+		/**
+		 * After how many seconds will the UI hide.
+		 * Set to 0 to disable
+		 * @type {number}
+		 */
+		Bivrost.UI.prototype.autoHide=5;
+		
+
+		Bivrost.UI.Classic.prototype.show=function() {
+			var thisRef=this;
+			this.player.container.classList.remove("bivrost-hide-ui");
+			if(this._hideTimeoutId) {
+				clearTimeout(this._hideTimeoutId);
+				this._hideTimeoutId=null;
+			}
+			if(this.autoHide > 0) {
+				this._hideTimeoutId=setTimeout(function() {
+					if(!thisRef.media.paused && thisRef.autoHide > 0)
+						thisRef.hide();
+				} , this.autoHide*1000);
+			}
+		};
+
+
+		Bivrost.UI.Classic.prototype.hide=function() {
+			this.player.container.classList.add("bivrost-hide-ui");
+			clearTimeout(this._hideTimeoutId);
+			this._hideTimeoutId=null;
+		};
+
+
+		Bivrost.UI.Classic.prototype._hideTimeoutId=null;
+
+
+		Bivrost.UI.Classic.prototype.dispose=function() {
+			Bivrost.UI.prototype.dispose.call(this);
+			
+			if(this._hideTimeoutId) {
+				clearTimeout(this._hideTimeoutId);
+				this._hideTimeoutId=null;
+			}
+			
+			this.player.container.removeEventListener("mousemove", this._showBound);
+			this.player.container.removeEventListener("touchstart", this._showBound);
+			this.player.container.removeEventListener("touchmove", this._showBound);
+			this._showBound=null;
+		};
+
+
+		Bivrost.UI.Classic.prototype.loading=null;
+
+
+		/**
+		 * @type {HTMLElement}
+		 * @private
+		 */
+		Bivrost.UI.Classic.bigPlay=null;
+
+
+		/**
+		 * @type {HTMLElement}
+		 * @private
+		 */
+		Bivrost.UI.Classic.logo=null;
+	}
+	
+	
+	/// UI:stereo
+	{
+		
+		function widget_button_circle(name, action, alt) {
+			var inner=widget_button(name, action, alt);
+			
+			var outer=document.createElement("span");
+			outer.className="bivrost-button-holder";
+			outer.appendChild(inner);
+			
+			return outer;
+		}
+		
+		Bivrost.UI.Stereo=function(player, type) {
+			Bivrost.UI.call(this, player, "bivrost-ui bivrost-ui-stereo");
+			this.type=type;
+
+//			this.loading=widget_loading(player);
+//			this._widgets.push(this.loading);
+//
+//			this.logo=widget_logo(this.player);
+//			this._widgets.push(this.logo);
+		};
+		Bivrost.extend(Bivrost.UI.Stereo, Bivrost.UI);
+
+
+		/**
+		 * @param {Bivrost.Media} media
+		 */
+		Bivrost.UI.Stereo.prototype.setMedia=function(media) {
+			Bivrost.UI.prototype.setMedia.call(this, media);
+
+			
+			var player=this.player;
+			var closeButton=widget_button_circle("close", function() { player.fullscreen=false; }, Bivrost.lang.exitVRButtonLabel);
+			this._widgets.push(closeButton);
+			this.domElement.appendChild(closeButton);
+			
+			this.domElement.appendChild(document.createElement("br"));
+			
+			var type=document.createElement("span");
+			type.appendChild(document.createTextNode("renderer: " + this.type));
+			type.style.color="white";
+			type.style.backgroundColor="black";
+			type.style.borderRadius="8px";
+			type.style.padding="2px 8px";
+			type.style.display="inline-block";
+			this._widgets.push(type);
+			this.domElement.appendChild(type);
+			
+			
+			this.setMediaToAllWidgets();
+		};
+	}
+
 })();

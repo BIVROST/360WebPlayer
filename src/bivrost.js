@@ -57,7 +57,8 @@ var Bivrost={
 		playButtonLabel: "play",
 		volumeButtonLabel: function(vol) { return Math.round(vol*100)+"%"; },
 		gyroscopeButtonLabel: "gyroscope",
-		fullscreenButtonLabel: "fullscreen"
+		fullscreenButtonLabel: "fullscreen",
+		exitVRButtonLabel: "exit VR"
 	},
 	
 	/**

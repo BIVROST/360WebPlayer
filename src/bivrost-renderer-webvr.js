@@ -18,12 +18,12 @@
 	Bivrost.Renderer.WebVR.prototype.init = function(player) {
 		Bivrost.Renderer.prototype.init.call(this, player);
 		
-		this.player.ui=null;
+		this.player.ui=new Bivrost.UI.Stereo(player, "webvr");
 		
 		var vrDisplay=player.input.vrDisplay;
 		var vrRenderer=new THREE.WebGLRenderer();
 		vrRenderer.setSize(player.input.vrDisplaySize.x, player.input.vrDisplaySize.y);
-		document.body.appendChild(vrRenderer.domElement);
+		// document.body.appendChild(vrRenderer.domElement);
 		
 		
 //			document.body.appendChild(document.createTextNode(JSON.stringify({
@@ -69,16 +69,13 @@
 		
 		this._renderWebVRdelegate=function() { ; };
 
-		if(!player.input.vrDisplay)
-			{ debugger; return; }
+		this.vrRenderer.dispose();
 		
-		if (!player.input.vrDisplay.isPresenting)
-			return;
-		
-		player.input.vrDisplay.exitPresent().then(
-			function () { log("exit present success"); }, 
-			function (err) { console.error(err); debugger; }
-		);
+		if (player.input.vrDisplay.isPresenting)
+			player.input.vrDisplay.exitPresent().then(
+				function () { log("exit present success"); }, 
+				function (err) { console.error(err); debugger; }
+			);
 	};
 		
 	/**
@@ -91,26 +88,11 @@
 		
 		// init webVR - in it's own render queue
 		if(!this._renderWebVRdelegate) {
-			var thisRef=this;
-			var vrDisplay=this.player.input.vrDisplay;
-			
-			thisRef.vrLeftScene=view.leftScene.clone();
-			thisRef.vrRightScene=view.rightScene.clone();
-			thisRef.vrLeftCamera=view.leftCamera.clone();
-			thisRef.vrRightCamera=view.rightCamera.clone();
-
-			this._renderWebVRdelegate=function() {
-				vrDisplay.requestAnimationFrame(thisRef._renderWebVRdelegate);
-				thisRef.renderWebVR(webglRenderer, view);
-			};
-			
-			vrDisplay.requestAnimationFrame(this._renderWebVRdelegate);
-			
-			log("initiated webvr renderer");
+			this.initWebVR(webglRenderer, view);
 		}
 		
-		// classical renderer only if webvr can present on a separate 
-		if(this.input.vrDisplay.capabilities.canPresent) {
+		// classical renderer only if webvr can present on a separate screen
+		if(this.player.input.vrDisplay.capabilities.canPresent) {
 			var w = webglRenderer.domElement.width;
 			var h = webglRenderer.domElement.height;
 
@@ -119,6 +101,33 @@
 			webglRenderer.setScissor(0,0,w,h);
 			webglRenderer.render(view.leftScene, view.leftCamera);	
 		}
+	};
+	
+	
+	Bivrost.Renderer.WebVR.prototype.vrLeftCamera=null;
+	Bivrost.Renderer.WebVR.prototype.vrRightCamera=null;
+	Bivrost.Renderer.WebVR.prototype.vrLeftScene=null;
+	Bivrost.Renderer.WebVR.prototype.vrRightScene=null;
+
+	
+	
+	Bivrost.Renderer.WebVR.prototype.initWebVR=function(webglRenderer, view) {
+		var vrDisplay=this.player.input.vrDisplay;
+
+		this.vrLeftScene=view.leftScene.clone();
+		this.vrRightScene=view.rightScene.clone();
+		this.vrLeftCamera=view.leftCamera.clone();
+		this.vrRightCamera=view.rightCamera.clone();
+
+		var thisRef=this;
+		this._renderWebVRdelegate=function() {
+			vrDisplay.requestAnimationFrame(thisRef._renderWebVRdelegate);
+			thisRef.renderWebVR(webglRenderer, view);
+		};
+
+		vrDisplay.requestAnimationFrame(this._renderWebVRdelegate);
+
+		log("initiated webvr renderer");
 	};
 		
 		
@@ -138,11 +147,11 @@
 		var frameData=this.frameData;
 		
 		if(!vrDisplay.isPresenting) {
-			log("!isPresenting");
+//			log("!isPresenting");
 			//return;
 			vrRenderer=webglRenderer;
 		}
-		else log("rendering");
+//		else log("rendering");
 
 
 		var w = vrRenderer.domElement.width;
@@ -161,8 +170,9 @@
 	//	camera2.position.set(pos[0], pos[1], pos[2]);
 
 		// left eye
-		vrRenderer.setViewport(0,0,w/2,h);
-		vrRenderer.setScissor(0,0,w/2,h);
+		var viewport=(w > h) ? [0,0,w/2,h] : [0,0,w,h/2];
+		vrRenderer.setViewport.apply(vrRenderer, viewport);
+		vrRenderer.setScissor.apply(vrRenderer, viewport);
 		this.vrLeftCamera.projectionMatrix.elements = frameData.leftProjectionMatrix;
 
 		var offsetLeft = vrDisplay.getEyeParameters("left").offset;
@@ -172,10 +182,11 @@
 		this.vrLeftCamera.position.set(posLeft.x, posLeft.y, posLeft.z);
 
 		vrRenderer.render(this.vrLeftScene, this.vrLeftCamera);
-
+		
 		// right eye
-		vrRenderer.setViewport(w/2,0,w/2,h);
-		vrRenderer.setScissor(w/2,0,w/2,h);
+		var viewport=(w > h) ? [w/2,0,w/2,h] : [0,h/2,w,h/2];
+		vrRenderer.setViewport.apply(vrRenderer, viewport);
+		vrRenderer.setScissor.apply(vrRenderer, viewport);
 		this.vrRightCamera.projectionMatrix.elements = frameData.rightProjectionMatrix;
 
 		var offsetRight = vrDisplay.getEyeParameters("right").offset;
@@ -186,15 +197,15 @@
 
 		vrRenderer.render(this.vrRightScene, this.vrRightCamera);
 
-		vrRenderer.setScissorTest(false);
-		vrRenderer.setViewport(0,0,w,h);
-		vrRenderer.setScissor(0,0,w,h);
+//		vrRenderer.setScissorTest(false);
+//		vrRenderer.setViewport(0,0,w,h);
+//		vrRenderer.setScissor(0,0,w,h);
 
 		vrDisplay.submitFrame();
 	};
 	
 	
-	Bivrost.Renderer.WebVR.prototype.shouldWork = function() { return !!this.input.vrDisplay; };
+	Bivrost.Renderer.WebVR.prototype.shouldWork = function() { return !!this.player.input.vrDisplay; };
 	
 	
 

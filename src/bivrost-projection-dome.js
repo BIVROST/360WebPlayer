@@ -70,11 +70,12 @@ Bivrost.Projection.Dome.prototype.create = function(texture, args) {
 	
 	this.meshRight=new THREE.Mesh(
 		dome,
-		new THREE.MeshBasicMaterial({
-			side: THREE.DoubleSide,
-			map: texture,
-			needsUpdate: true
-		})
+		material
+//		new THREE.MeshBasicMaterial({
+//			side: THREE.DoubleSide,
+//			map: texture,
+//			needsUpdate: true
+//		})
 	);
 };
 

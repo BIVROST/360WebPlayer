@@ -323,6 +323,24 @@ $transition-time: 0.5s;
 			}
 			/*background: red;*/
 		}
+		
+		
+		&.bivrost-ui-stereo {
+			background: transparent;
+			text-align: center;
+			
+			.bivrost-button-holder {
+				@include themed {
+					background: $ui-background;
+				}
+				display: inline-block;
+				border-radius: 100%;
+			}
+			
+			.bivrost-button {
+				margin: 6px;
+			}
+		}
 
 	}
 
