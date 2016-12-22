@@ -328,8 +328,8 @@ $transition-time: 0.5s;
 		&.bivrost-ui-stereo {
 			background: transparent;
 			text-align: center;
-			top: 0;
-			height: auto;
+/*			top: 0;
+			height: auto;*/
 			
 			.bivrost-button-holder {
 				@include themed {

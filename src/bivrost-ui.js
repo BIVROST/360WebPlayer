@@ -45,7 +45,7 @@
 		button.addEventListener("click", function(ev) { 
 			button.action(); 
 			button.blur(); 
-			ev.preventDefault();
+			ev.stopPropagation();
 			return false;
 		});
 		

@@ -204,7 +204,7 @@
 	Object.defineProperty(Bivrost.Player.prototype, "renderer", {
 		get: function() { return this._renderer; },
 		set: function(value) {
-			log("changed renderer", value, console.trace());
+			log("changed renderer", value);
 			
 			if(this._renderer === value)
 				return;

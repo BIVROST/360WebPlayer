@@ -279,6 +279,7 @@
 	{
 		Bivrost.Input.prototype.vrDisplay = null;
 		Bivrost.Input.prototype.vrDisplaySize = { x:undefined, y:undefined };
+		Bivrost.Input.prototype.isGearVR = false;
 
 		/**
 		 * Initiates WebVR support
@@ -563,6 +564,7 @@
 						log("WebVR: Overriding reported resolution for known Samsung device");
 						width = 2560;
 						height = 1440;
+						input.isGearVR = true;
 					}
 
 					input.vrDisplaySize.x=width;
