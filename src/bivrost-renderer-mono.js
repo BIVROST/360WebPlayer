@@ -30,6 +30,6 @@
 	};
 	
 	
-	Bivrost.Renderer.Mono.prototype.shouldWork = function() { return true; };
+	Bivrost.Renderer.Mono.shouldWork = function(player) { return true; };
 	
 })();

@@ -21,6 +21,13 @@
 	
 	Bivrost.Renderer.prototype.updateSize = function(w, h) {}
 	
-	Bivrost.Renderer.prototype.shouldWork = function() { return false; }
+	Bivrost.Renderer.prototype.fullscreenChanged = function(isFullscreen) { ; }
+
+	/**
+	 * @static
+	 * @returns {Boolean}
+	 */
+	Bivrost.Renderer.shouldWork = function() { return false; }
+	
 	
 })();

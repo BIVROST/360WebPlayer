@@ -3,9 +3,20 @@
 
 (function() {
 	
-	Bivrost.Renderer.Stereo = function() {};
-	
+	Bivrost.Renderer.Stereo = function(player) {
+		this._hadEnabledFullscreen=player.fullscreen;
+		player.fullscreen=true;		
+	};
 	Bivrost.extend(Bivrost.Renderer.Stereo, Bivrost.Renderer);
+	
+	
+	Bivrost.Renderer.Stereo.prototype.init = function(player) {
+		Bivrost.Renderer.prototype.init.call(this, player);
+		this.player.ui=new Bivrost.UI.Stereo(player, "stereo");
+		this._hadEnabledGyro = player.input._enableGyro;
+		player.input._enableGyro = true;
+	};
+	
 	
 	Bivrost.Renderer.Stereo.prototype.render = function(webglRenderer, view) {
 		var w = webglRenderer.domElement.width;
@@ -52,27 +63,25 @@
 			webglRenderer.setScissor(0,(h-lineWidth)/2,w,lineWidth);			
 			webglRenderer.clear([0,0,0], true, true);
 		}
-
-
-		
 	};
 	
-	Bivrost.Renderer.Stereo.prototype.init = function(player) {
-		Bivrost.Renderer.prototype.init.call(this, player);
-		this.player.ui=new Bivrost.UI.Stereo(player, "stereo");
-		this.hadEnabledGyro = player.input.enableGyro;
-		player.input.enableGyro = true;
-	};
 	
 	Bivrost.Renderer.Stereo.prototype.destroy = function(player) {
 		Bivrost.Renderer.prototype.destroy.call(this, player);
-		player.input.enableGyro = this.hadEnabledGyro;
+		player.input.enableGyro = this._hadEnabledGyro;
+		player.fullscreen = this._hadEnabledFullscreen;
 	};
+	
 	
 	Bivrost.Renderer.Stereo.prototype.updateSize = function(w, h) {}
 	
-	Bivrost.Renderer.Stereo.prototype.shouldWork = function() { return true; }
 	
-	Bivrost.Renderer.Stereo.prototype.hadEnabledGyro = false;
+	Bivrost.Renderer.Stereo.shouldWork = function(player) { return true; }
+	
+	
+	Bivrost.Renderer.Stereo.prototype._hadEnabledGyro = false;
+	
+	
+	Bivrost.Renderer.Stereo.prototype._hadEnabledFullscreen = false;
 	
 })();

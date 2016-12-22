@@ -204,7 +204,7 @@
 	Object.defineProperty(Bivrost.Player.prototype, "renderer", {
 		get: function() { return this._renderer; },
 		set: function(value) {
-			log("changed renderer", value);
+			log("changed renderer", value, console.trace());
 			
 			if(this._renderer === value)
 				return;
@@ -287,26 +287,42 @@
 
 	
 	/**
-	 * Turn on fullscreen+VR mode. If already in fullscreen switch between VR modes.
+	 * Turn on fullscreen+VR mode. If already in VR, switch between VR modes.
 	 */
 	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
-		var vrMode=(!!this.input.vrDisplay)
-			?Bivrost.Renderer.WebVR
-			:Bivrost.Renderer.Stereo;
+		var player=this;
+		var vrModes=[
+			Bivrost.Renderer.WebVR,
+			Bivrost.Renderer.Stereo
+		].filter(function(r) { return r.shouldWork(player); });
 		
-		if(this.fullscreen) {	// already in fullscreen - toggle modes					
-			this.renderer = new vrMode();
+		if(vrModes.length === 0)
+			throw "VR mode not supported";
+		
+		var vrMode;
+		// not in fullscreen - start with first supported mode
+		if(this.renderer instanceof Bivrost.Renderer.Mono) {
+			vrMode=vrModes[0];
+			log("selecting default VR mode");
 		}
-		else {	// not in fullscreen - start with default mode
-			this.fullscreen=true;
-			this.renderer = (this.renderer instanceof Bivrost.Renderer.Mono)
-				?new vrMode()
-				:new Bivrost.Renderer.Mono();
+		// already in vr mode - toggle next available mode
+		else {
+			var index=(vrModes.indexOf(this.renderer.__proto__) + 1) % vrModes.length;
+			vrMode=vrModes[index];
+			log("selecting next VR mode");
 		}
+		
+		this.renderer=new vrMode(this);
 	};
 
+	
+	/**
+	 * Returns to mono mode
+	 */
+	Bivrost.Player.prototype.vrExit=function() {
+		this.renderer=new Bivrost.Renderer.Mono(this);
+	};
 
-		
 
 	/// REGION: fullscreen 
 
@@ -392,8 +408,8 @@
 			this.webglRenderer.setSize(this._sizeBeforeFullscreen[0], this._sizeBeforeFullscreen[1], true);
 		}
 		
-		if(!this.fullscreen && !(this.renderer instanceof Bivrost.Renderer.Mono))
-			this.renderer = new Bivrost.Renderer.Mono(this);
+		if(this.renderer)
+			this.renderer.fullscreenChanged(this._fullscreen);
 
 		setTimeout(this.resize.bind(this), 0);
 	};

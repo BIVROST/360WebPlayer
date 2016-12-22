@@ -42,7 +42,12 @@
 		
 		button.action=action;
 		
-		button.addEventListener("click", function() { button.action(); button.blur(); });
+		button.addEventListener("click", function(ev) { 
+			button.action(); 
+			button.blur(); 
+			ev.preventDefault();
+			return false;
+		});
 		
 		button.title=alt;
 		
@@ -799,9 +804,8 @@
 		Bivrost.UI.Stereo.prototype.setMedia=function(media) {
 			Bivrost.UI.prototype.setMedia.call(this, media);
 
-			
 			var player=this.player;
-			var closeButton=widget_button_circle("close", function() { player.fullscreen=false; }, Bivrost.lang.exitVRButtonLabel);
+			var closeButton=widget_button_circle("close", function() { player.vrExit(); }, Bivrost.lang.exitVRButtonLabel);
 			this._widgets.push(closeButton);
 			this.domElement.appendChild(closeButton);
 			
@@ -817,6 +821,8 @@
 			this._widgets.push(type);
 			this.domElement.appendChild(type);
 			
+			if(media.video)
+				this.domElement.addEventListener("click", function() { media.pauseToggle(); });
 			
 			this.setMediaToAllWidgets();
 		};
