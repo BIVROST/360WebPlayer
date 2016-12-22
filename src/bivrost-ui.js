@@ -192,9 +192,16 @@
 		});
 		player.input.onMove.subscribeOnce(bigPlay.hide);
 		
+		// media state updater if state gets lost somewhere
+		var intervalId=setInterval(function() {
+			if(!player.media.paused)
+				bigPlay.hide();
+		}, 1000/4);
+		
 		bigPlay.setVideo=function(video) { ; };
 		bigPlay.dispose=function() {
 			player.container.removeChild(bigPlay);
+			clearInterval(intervalId);
 		};
 		
 		player.container.appendChild(bigPlay);
@@ -785,15 +792,32 @@
 			return outer;
 		}
 		
-		Bivrost.UI.Stereo=function(player, type) {
+		Bivrost.UI.Stereo=function(player, rendererDomElement, disableVecticalMode=false) {
 			Bivrost.UI.call(this, player, "bivrost-ui bivrost-ui-stereo");
-			this.type=type;
+
+			this._rendererDomElement=rendererDomElement || window;
 
 //			this.loading=widget_loading(player);
 //			this._widgets.push(this.loading);
 //
 //			this.logo=widget_logo(this.player);
 //			this._widgets.push(this.logo);
+
+
+			if(!disableVecticalMode) {
+				var domElement=this.domElement;
+				this._resizeDelegate=function() {
+					var w = rendererDomElement.width;
+					var h = rendererDomElement.height;
+
+					if(w < h)
+						domElement.classList.add("bivrost-ui-stereo-vectical");
+					else
+						domElement.classList.remove("bivrost-ui-stereo-vectical");
+				};
+			}
+
+			window.addEventListener("resize", this._resizeDelegate);
 		};
 		Bivrost.extend(Bivrost.UI.Stereo, Bivrost.UI);
 
@@ -809,23 +833,31 @@
 			this._widgets.push(closeButton);
 			this.domElement.appendChild(closeButton);
 			
-			this.domElement.appendChild(document.createElement("br"));
-			
-			var type=document.createElement("span");
-			type.appendChild(document.createTextNode("renderer: " + this.type));
-			type.style.color="white";
-			type.style.backgroundColor="black";
-			type.style.borderRadius="8px";
-			type.style.padding="2px 8px";
-			type.style.display="inline-block";
-			this._widgets.push(type);
-			this.domElement.appendChild(type);
-			
-			if(media.video)
-				this.domElement.addEventListener("click", function() { media.pauseToggle(); });
+			if(media.video) {
+				this._pauseToggleDelegate=function() { media.pauseToggle(); };
+				this._rendererDomElement.addEventListener("click", this._pauseToggleDelegate);
+			}
 			
 			this.setMediaToAllWidgets();
 		};
+		
+
+		Bivrost.UI.Stereo.prototype.dispose=function() {
+			Bivrost.UI.prototype.dispose.call(this);
+			if(this._pauseToggleDelegate)
+				this._rendererDomElement.removeEventListener("click", this._pauseToggleDelegate);
+			if(this._resizeDelegate)
+				window.removeEventListener("resize", this._resizeDelegate);
+		}
+		
+		
+		Bivrost.UI.Stereo.prototype._rendererDomElement=null;
+
+
+		Bivrost.UI.Stereo.prototype._pauseToggleDelegate=null;
+
+		
+		Bivrost.UI.Stereo.prototype._resizeDelegate=null;
 	}
 
 })();

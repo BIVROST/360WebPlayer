@@ -68,6 +68,8 @@
 			);
 	
 			log("new vr renderer: "+player.input.vrDisplaySize.x+"x"+player.input.vrDisplaySize.y);		
+			
+			this.player.ui=new Bivrost.UI.Stereo(player, vrRenderer.domElement, true);
 		}
 		// Chrome Android cardboard WebVR mode
 		else	
@@ -80,12 +82,12 @@
 			vrRenderer.domElement.style.height = "100%";
 			player.fullscreen=true;
 			log("reused renderer as vr renderer: "+player.input.vrDisplaySize.x+"x"+player.input.vrDisplaySize.y);		
+		
+			this.player.ui=new Bivrost.UI.Stereo(player, vrRenderer.domElement);
 		}
 		
 		this.vrRenderer=vrRenderer;
 		this.frameData=new VRFrameData();
-		
-		this.player.ui=new Bivrost.UI.Stereo(player, "webvr");
 	};
 
 	

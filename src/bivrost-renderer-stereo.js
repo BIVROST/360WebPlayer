@@ -12,7 +12,7 @@
 	
 	Bivrost.Renderer.Stereo.prototype.init = function(player) {
 		Bivrost.Renderer.prototype.init.call(this, player);
-		this.player.ui=new Bivrost.UI.Stereo(player, "stereo");
+		this.player.ui=new Bivrost.UI.Stereo(player, player.webglRenderer.domElement);
 		this._hadEnabledGyro = player.input._enableGyro;
 		player.input._enableGyro = true;
 	};

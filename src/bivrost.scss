@@ -326,11 +326,13 @@ $transition-time: 0.5s;
 		
 		
 		&.bivrost-ui-stereo {
+			$btn-margin: 6px;
+			
 			background: transparent;
 			text-align: center;
-/*			top: 0;
-			height: auto;*/
-			
+			height: auto;
+			padding-bottom: 16px;
+
 			.bivrost-button-holder {
 				@include themed {
 					background: $ui-background;
@@ -340,7 +342,20 @@ $transition-time: 0.5s;
 			}
 			
 			.bivrost-button {
-				margin: 6px;
+				margin: $btn-margin;
+			}
+			
+			&.bivrost-ui-stereo-vertical {
+				text-align: left;
+				top: 0;
+				padding-bottom: 0px;
+				padding-left: 16px;
+
+				.bivrost-button-holder {
+					position: relative;
+					top: 50%;
+					transform: translateY(-50%);
+				}
 			}
 		}
 
