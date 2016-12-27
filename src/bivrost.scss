@@ -335,7 +335,7 @@ $transition-time: 0.5s;
 
 			.bivrost-button-holder {
 				@include themed {
-					background: $ui-background;
+					background: rgba($ui-background, 1.0);	// no alpha
 				}
 				display: inline-block;
 				border-radius: 100%;
@@ -347,13 +347,12 @@ $transition-time: 0.5s;
 			
 			&.bivrost-ui-stereo-vertical {
 				text-align: left;
-				top: 0;
+				top: 50%;
 				padding-bottom: 0px;
 				padding-left: 16px;
 
 				.bivrost-button-holder {
 					position: relative;
-					top: 50%;
 					transform: translateY(-50%);
 				}
 			}

@@ -176,7 +176,7 @@
 	Bivrost.Renderer.WebVR.prototype.vrRightScene=null;
 
 	
-	Bivrost.Renderer.WebVR.prototype._renderWebVRdelegate;
+	Bivrost.Renderer.WebVR.prototype._renderWebVRdelegate=null;
 		
 	/**
 	 * Stereo renreder on the WebVR surface, on a second rendering queue

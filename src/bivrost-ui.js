@@ -186,10 +186,16 @@
 		bigPlay.addEventListener("click", function() {
 			player.media.play();
 			bigPlay.hide();
-			log("is touch interface", player.input.isTouchInterface);
-			if(player.input.isTouchInterface)
+			
+			// GearVR doesn't like fullscreen, plus it makes sense
+			if(player.input.isGearVR)	
+				player.vrModeEnterOrCycle();
+			
+			// on touch interfaces looking around works only on fullscreen
+			else if(player.input.isTouchInterface)
 				player.fullscreen=true; 
 		});
+		// hide on movement, as something must have interracted with the viewer (probably mouse or keyboard)
 		player.input.onMove.subscribeOnce(bigPlay.hide);
 		
 		// media state updater if state gets lost somewhere
@@ -198,7 +204,6 @@
 				bigPlay.hide();
 		}, 1000/4);
 		
-		bigPlay.setVideo=function(video) { ; };
 		bigPlay.dispose=function() {
 			player.container.removeChild(bigPlay);
 			clearInterval(intervalId);
@@ -507,7 +512,11 @@
 	function widget_vr(player) {
 		var btn=widget_button(
 			"oculus", 
-			function() { player.vrModeEnterOrCycle(); }, 
+			function() { 
+				player.vrModeEnterOrCycle(); 
+				if(player.media)
+					player.media.play();
+			}, 
 			Bivrost.lang.vrButtonLabel 
 		);
 		
@@ -780,7 +789,7 @@
 	
 	
 	/// UI:stereo
-	{
+	(function(){
 		
 		function widget_button_circle(name, action, alt) {
 			var inner=widget_button(name, action, alt);
@@ -792,7 +801,8 @@
 			return outer;
 		}
 		
-		Bivrost.UI.Stereo=function(player, rendererDomElement, disableVecticalMode=false) {
+		Bivrost.UI.Stereo=function(player, rendererDomElement, disableVecticalMode) {
+			disableVecticalMode=disableVecticalMode || false;
 			Bivrost.UI.call(this, player, "bivrost-ui bivrost-ui-stereo");
 
 			this._rendererDomElement=rendererDomElement || window;
@@ -809,11 +819,12 @@
 				this._resizeDelegate=function() {
 					var w = rendererDomElement.width;
 					var h = rendererDomElement.height;
+					var className="bivrost-ui-stereo-vertical";
 
 					if(w < h)
-						domElement.classList.add("bivrost-ui-stereo-vectical");
+						domElement.classList.add(className);
 					else
-						domElement.classList.remove("bivrost-ui-stereo-vectical");
+						domElement.classList.remove(className);
 				};
 			}
 
@@ -858,6 +869,6 @@
 
 		
 		Bivrost.UI.Stereo.prototype._resizeDelegate=null;
-	}
+	})();
 
 })();

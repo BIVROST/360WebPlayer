@@ -21,7 +21,8 @@
 	Bivrost.View=function(media) {
 		this.leftCamera=new THREE.PerspectiveCamera(90, 3/4, 0.1, 1000);
 		this.leftCamera.position.setZ(0);
-		this.rightCamera=this.leftCamera.clone();
+		this.rightCamera=new THREE.PerspectiveCamera(90, 3/4, 0.1, 1000);
+		this.rightCamera.position.setZ(0);
 
 		this.leftScene=new THREE.Scene();
 		this.leftScene.add(this.leftCamera);
