@@ -49,10 +49,10 @@ module.exports = function (grunt) {
 		var buildver=new Date().toISOString();
 		var scripts=grunt.file.readJSON("scripts.json").map(function(fn) {
 			return "// ORIGINAL FILE: " + fn + ":\n\n" + grunt.file.read(fn) + "\n";
-		}).join("\n\n\n\n").replace(/version_build:\s*"[^"]*"/, "version_build:\"+"+buildver+"\"");
+		}).join("\n\n\n\n").replace(/version_build:\s*"[^"]*"/, "version_build:\""+buildver+"\"");
 
 		grunt.file.write("output/bivrost-debug.js", 
-			   "// 360WebPlayer DEBUG BUILD "+buildver
+			"// 360WebPlayer DEBUG BUILD "+buildver
 		    +"\n// PLEASE DO NOT DISTRIBUTE OR USE IN PRODUCTION"
 			+"\n// ----------------------------------------------------\n\n"
 			+scripts

@@ -511,16 +511,14 @@ Potential fixes:
 
 1. Check if your device supports this kind of video by playing it directly in the browser. Some popular devices support only up to 1920x1080 resolution.
 
-2. Videos or pictures have to be served from the same domain or provide [Cross-Origin Resource Sharing][cors] headers.
-
-Some browsers do not support CORS well, for example Safari - for them you have to serve the content from the same subdomain, port and protocol as the HTML.
-
-It is possible that with a CORS issue the audio will play, but the video will not. This is exactly how a CORS issue looks like - secure parts of the browser (displaying images, raw video) have access to the file while unsecure (scripting, WebGL) don't. Check your web development console for details.
-
-[cors]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+2. Videos or pictures have to be served from the same domain or provide [Cross-Origin Resource Sharing][cors] headers.  
+Some browsers do not support CORS well, for example Safari - for them you have to serve the content from the same subdomain, port and protocol as the HTML.  
+It is possible that with a CORS issue the audio will play, but the video will not. This is exactly how a CORS issue looks like - secure parts of the browser (displaying images, raw video) have access to the file while unsecure (scripting, WebGL) don't. Check your web development console for details.  
+Issues with CORS are often reported as a `SecurityError: DOM Exception 18` or mention `Access-Control-Allow-Origin` in the console.
 
 3. Do not test from your local filesystem (the `file:///` protocol). You have to have a working webserver for the plugin to work.
 
+[cors]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 
 ### Seeking does not work
 
