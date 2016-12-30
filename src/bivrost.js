@@ -18,7 +18,7 @@ var Bivrost={
 	 * When on, there is some debug information on the console.log
 	 * @type Boolean
 	 */
-	verbose: true,
+	verbose: false,
 	
 	
 	/**

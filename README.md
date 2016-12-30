@@ -28,18 +28,47 @@ Features
 * Easy to use for the end user.
 * Both desktop and mobile.
 * Free for personal use (see [license][license-free] for details).
-* Works on all major browsers.
+* Works on all major browsers and systems.
 * Possible to embed more than one player on the same page.
 * Mono and stereoscopic video and pictures.
 * HTTP Live Streaming (HLS).
-* [WebVR][webvr] (MozVR) support - works with Oculus Rift, Cardboard and more.
+* Works well with touch.
+* Well tested and supports many edge cases.
+* [WebVR][webvr] support - works with Oculus Rift, Vive, OSVR, GearVR, Google Cardboard and more.
 * Supports watching content in external native players ([by Bivrost][player-windows]).
 * Available as a [WordPress plugin][wordpress-plugin].
 * We want to hear your feedback and ideas for new features, to make it even better.
 
 
 
+Supported browsers
+------------------
 
+
+| OS      | Browser                     | Panorama viewing | Video playback | Video streaming (HLS) | Legacy VR⁵ | WebVR | Headsets supported   |
+| ------- | --------------------------- |:----------------:|:--------------:|:---------------------:|:----------:|:-----:| -------------------- |
+| Windows | Google Chrome               | [x]              | [x]            | [x]                   | [ ]        | [x]¹  | Oculus, Vive         |
+| Windows | Mozilla Firefox             | [x]              | [x]            | [x]                   | [ ]        | [x]²  | Oculus, OSVR, Vive   |
+| Windows | Microsoft Edge              | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
+| Windows | Internet Explorer (11+)     | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
+| Mac OS  | Safari                      | [x]              | [x]⁴           | [x]                   | [ ]        | [ ]   |                      |
+| Mac OS  | Google Chrome               | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
+| Mac OS  | Mozilla Firefox             | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
+| Android | Mozilla Firefox             | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
+| Android | Google Chrome               | [x]              | [x]            | [x]                   | [x]        | [x]³  | Cardboard and clones |
+| Android | Samsung Internet            | [x]              | [x]            | [ ]                   | [x]        | [ ]   | Cardboard and clones |
+| Android | Samsung Internet for GearVR | [x]              | [x]            | [x]                   | [ ]        | [x]   | GearVR               |
+| iOS     | Safari                      | [x]              | [x]            | [ ]                   | [x]        | [ ]   | Cardboard and clones |
+| iOS     | Google Chrome               | [x]              | [x]            | [ ]                   | [x]        | [ ]   | Cardboard and clones |
+| iOS     | Mozilla Firefox             | [x]              | [x]            | [ ]                   | [ ]        | [ ]   |                      |
+
+¹ - With a dedicated WebVR Chromium build  
+² - With Firefox Nightly  
+³ - Requires enabling VR in `chrome://flags`  
+⁴ - Movies must be on the same domain ([broken CORS implementation][video-does-not-work])  
+⁵ - Split screen with orientation sensor support (basic Cardboard)
+
+[video-does-not-work]: #video-does-not-work
 
 
 
@@ -64,6 +93,9 @@ All configurations are autodetected. For example the `.mp4` extension means it's
 Everything is included in the css and js files. There are no additional downloads.
 
 The 360WebPlayer’s default options will cover most use cases.
+
+
+
 
 Installation
 ------------
@@ -121,7 +153,7 @@ Following configuration options are allowed:
 	Warning: When using HLS, you have to include the [HLS.js][hls-js] third party library.
 	
 *	`projection`: how is the media projected (mapping from 2d to 3d)?
-	Allowed value: "equirectangular", "cubemap", "cubemap:configuration...";
+	Allowed value: "equirectangular", "cubemap", "dome", "cubemap:configuration...";
 	optional, default: "equirectangular".
 	Cubemap can be configured through several cubemap types. There are a few presets defining the order: 
 
@@ -152,7 +184,7 @@ Following configuration options are allowed:
 	
 	Please note that with cubemaps, seams can be visible due to texture filtering - this is most visible on horizontal and vertical crosses. It's best you fix them on pictures by duplicating a border into the unused part of the image. The 1% zoom with Facebook is to prevent this from happening.
 
-Apart from that, you can tune down the player console information with `Bivrost.verbose=false` in your script.
+Apart from that, you can tune up the player console information with `Bivrost.verbose=true` in just after including 360WebPlayer .js files
 
 The player can be run and configured in two ways:
 
@@ -245,6 +277,7 @@ var player=new Bivrost.Player(
 	// Projection - how is the media projected (mapping from 2d to 3d)?
 	// Optional, available choices are:
 	// Bivrost.PROJECTION_EQUIRECTANGULAR
+	// Bivrost.PROJECTION_DOME
 	// Bivrost.PROJECTION_CUBEMAP
 	// "cubemap:<cubemap definition>"
 	// or ommit/provide undefined for equirectangular
@@ -297,8 +330,6 @@ Some interesting API methods:
 
 * `player.view.zoom:number`: gets or sets the current zoom, default value is `1`, higher values zoom in, lower zoom out.
 
-* `player.ui.show()`, `player.ui.hide()`: shows or hides the UI.
-
 * `player.ui.autohide:number`: number of seconds of user inactivity after which the UI hides, set to `0` to never hide.
 
 * `player.media.play()`: plays the movie
@@ -307,11 +338,13 @@ Some interesting API methods:
 
 * `player.media.pauseToggle()`: plays or pauses the movie
 
+* `player.media.paused`: gets or sets current pause state
+
 * `player.media.rewind()`: resets the movie
 
 * `player.media.time:number`: gets or sets the current time of the movie (in seconds).
 
-* `player.media.duration:number`: gets the total time of the movie (in seconds).
+* `player.media.duration:number`: gets the total time of the movie (in seconds), will be infinite in streams.
 
 * `player.media.loop:boolean`: gets or sets if the movie should loop.
 
@@ -375,9 +408,10 @@ VR needs high definition content, at the same time browsers have strict guidelin
 We recommend VR creators to use mp4/h264 and webm/vp8 **content types** in at least full HD (1920 x 1080) when uploading content. In order to provide full compatibility we suggest to upload the content in both formats. We also advice content creators to
 refrain from using ogv, because it requires more processing power to get the same results due to software decoding. If you have access to hardware this powerful it will support mp4.
 
-For the **resolution** we advice you to use Full HD. This resolution is not perfect, but it will have to do. Working in 4k or 8k would be optimal, but this is often not supported on mobile or by many desktop computers. In odd cases 720p will do when the user does not toggle on full screen, but watches the content from the window.
+For the **resolution** we advice you to use Full HD. This resolution is not perfect, but it will have to do. Working in 4k or 8k would be optimal, but this is often not supported on mobile or by many desktop computers. Most hardware decoders only work up to Full HD.  
+In odd cases 720p will do when the user does not toggle on full screen, but watches the content from the window. 
 
-As most hardware decoders work up to Full HD, we also recommend you to refrain from using the 2:1 **aspect ratio** and instead use the 16:9 ratio. Although this distorts the image (and the pixels are no longer square) we tell our users to not crop or letter box the content.
+We also recommend you to refrain from using the 2:1 **aspect ratio** and instead use the 16:9 ratio. You shouldn't care that you change aspect ratio, projected pixels weren't square (or even rectangular) to begin with. You must not crop nor letter box the content.
 
 VR content requires a **high bitrate**: 10Mbps is the advised minimum for Full HD. For fast moving images and intense colors we recommend higher bitrates.
 
@@ -471,38 +505,34 @@ User Guide
 * ` + `, ` - ` - zoom in/out (not available in VR mode).
 
 
-### Virtual Reality on desktop with WebVR
+### Virtual Reality on desktop and mobile with WebVR 
 
-At the time of writing, WebVR is supported by Firefox Nightly. It supports Oculus Rift and other headsets like HTC Vive.
+At the time of writing, WebVR is supported by [Firefox Nightly][webvr-firefox], special [Windows builds of Chromium][webvr-chromium], Google Chrome on Android with Cardboard (after enabling WebVR in `chrome://flags`) and [Samsung Internet Browser for Gear VR][webvr-samsung].
 
-When you have a VR headset, press ` V ` or the VR button to go to VR mode.
+When you have a supported platform, an headset button will be visible in 360WebPlayer - press it to enter VR.
 
-[mozvr]: http://mozvr.com/downloads/
+For more platform specific instructions look at the [WebVR][webvr] website.
+
 [webvr]: http://webvr.info/
+[webvr-firefox]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Firefox-Nightly
+[webvr-chromium]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Chromium
+[webvr-samsung]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Samsung-Internet-Browser-for-Gear-VR-on-Android
 
 
-### Virtual Reality on mobile with Google Cardboard
+### Virtual Reality on mobile with legacy Google Cardboard support
 
-You can use the Bivrost 360Player with Google Cardboard and its many clones. Just press the "eye" button to go to VR mode.
+You can use the Bivrost 360WebPlayer with Google Cardboard and its many clones with a simple split screen. Just press the "headset" button to go to VR mode.
+
+Contrary to most players, you don't have to enable screen rotation for 360WebPlayer to work properly in cardboard mode. The phone can be in both landscape or portrait mode.
+
+Press back or "x" button to exit VR mode.
 
 Some tips:
 
 * If you have a NFC tag in your Cardboard we advice you to disable NFC in your phone as it might run the cardboard app and turn off your browser.
-* Not all phones have a gyroscope. If you have problems looking left and right, but up and down works, your phone does not have one. Instead your phone has a magnetometer, which does not work well with VR. Removing the magnet from the Cardboard improves the experience in this situation.
+* Not all phones have a gyroscope. If you have problems looking left and right, but up and down works, your phone does not have one. Instead your phone has a magnetometer, which does not work well with VR. Removing the magnet from the Cardboard improves the experience in this situation. Even if you have a gyroscope, many browsers ignore it (looking at you, recent Chrome). 
 * Consider setting a longer time for screen timeout.
-
-
-### Platform availability
-
-We try to make the player run on as many platforms as possible. 
-
-Currently unsupported platforms are:
-
-* iOS
-* Windows Phone
-* GearVR
-
-If you're experiencing problems with other recent platforms, please let us know.
+* If possible, use WebVR mode - it has far more accurate head movement and proper lens distortion.
 
 
 ### Video does not work
@@ -512,9 +542,10 @@ Potential fixes:
 1. Check if your device supports this kind of video by playing it directly in the browser. Some popular devices support only up to 1920x1080 resolution.
 
 2. Videos or pictures have to be served from the same domain or provide [Cross-Origin Resource Sharing][cors] headers.  
-Some browsers do not support CORS well, for example Safari - for them you have to serve the content from the same subdomain, port and protocol as the HTML.  
+Some browsers do not support CORS well, for example Safari needs you to serve the content from relative links in the same subdomain, port and protocol as the HTML.  
+You might be forced to stop using content delivery networks and proxy the movie from the same domain if you plan to support Safari.  
 It is possible that with a CORS issue the audio will play, but the video will not. This is exactly how a CORS issue looks like - secure parts of the browser (displaying images, raw video) have access to the file while unsecure (scripting, WebGL) don't. Check your web development console for details.  
-Issues with CORS are often reported as a `SecurityError: DOM Exception 18` or mention `Access-Control-Allow-Origin` in the console.
+Issues with CORS are often reported as a `SecurityError: DOM Exception 18` or mention `Access-Control-Allow-Origin` in the console.  
 
 3. Do not test from your local filesystem (the `file:///` protocol). You have to have a working webserver for the plugin to work.
 
@@ -538,30 +569,9 @@ Please send bugs and feature requests to our [GitHub][github]. The sources are l
 
 Although browsers are the most accessible platforms, they are not all fully ready for VR - that is why we created a whole family of video players.
 
-The BIVROST 360WebPlayer has a button that allows online content to be run in a native player. This enhances performance and gives the user a better experience than viewing the content straight from the browser. If the user does not have the player yet, he or she can download it through a pop-up.
+The BIVROST 360WebPlayer has a button that allows online content to be run in the native player. This enhances performance and gives the user a better experience than viewing the content straight from the browser. If the user does not have the player yet, he or she can download it through a pop-up.
 
-The standalone player supports VR headsets, less latency, and better frame rates.
-
-
-Roadmap
--------
-
-- [x] Standalone web component
-- [x] Mobile support - Android
-- [ ] Posters - flat thumbnails for spherical video
-- [ ] Multi-resolution video ("HD" button)
-- [ ] MPEG-DASH support
-- [ ] Support built-in media galleries and switching media
-- [ ] Overlays - add content on top of your media
-- [x] More supported projections - frame, cylindrical, partial sphere mappings etc.
-- [ ] Interactive overlays
-- [ ] Mobile support - iOS
-- [ ] Mobile support - Windows Phone
-- [x] Video on Internet Exporer/Edge
-- [ ] Smaller footprint
-- [ ] Retro 3d glasses stereoscopic display support (line by line, red cyan)
-
-Please, post suggestions using the issue function. Do not forget to suggest a valid use case.
+The [BIVROST 360Player][player-windows] standalone player for Windows supports Oculus, Vive and OSVR VR headsets, has less latency, and better frame rates.
 
 
 
@@ -585,14 +595,20 @@ Changelog
 ---------
 
 2016-03-14: initial public release
+2016-09-21: WebVR 1.1 support
+2016-12-21: GearVR support, stereo UI
+2016-12-30: Documentation update
 
 
 Third party libraries
 ---------------------
 
-The Bivrost Web Player uses third party libraries:
+The BIVROST 360WebPlayer uses third party libraries:
 
-* [THREE.js][threejs] (MIT license)
+* [THREE.js][three-js] (MIT license)
 
+The BIVROST 360WebPlayer can be optionaly made to use third party libraries:
 
-[threejs]: http://threejs.org
+* [HLS.js][hls-js] (Apache 2.0 License)
+
+[three-js]: http://threejs.org

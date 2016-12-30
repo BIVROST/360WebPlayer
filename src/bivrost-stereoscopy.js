@@ -50,7 +50,7 @@ Bivrost.Stereoscopy={
 			aspectFunc: aspectFunc
 		});
 		Bivrost.AVAILABLE_STEREOSCOPIES.push(name);
-		Bivrost.log("Bivrost.Stereoscopy", ["registered", name]);
+//		Bivrost.log("Bivrost.Stereoscopy", ["registered", name]);
 	},
 	
 	

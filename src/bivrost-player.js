@@ -124,7 +124,7 @@
 				this.renderer.render(this.webglRenderer, this.view);
 			}
 			else {
-				console.log("waiting for init...");
+				log("waiting for init...");
 			}
 		}
 		catch(e) {
