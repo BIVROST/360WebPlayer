@@ -38,7 +38,8 @@
 		video.setAttribute("crossOrigin", "anonymous");
 		if(loop)
 			video.setAttribute("loop", "true");
-		video.setAttribute("webkit-playsinline", "webkit-playsinline");
+		video.setAttribute("webkit-playsinline", "");
+		video.setAttribute("playsinline", "");
 		// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
 
 		video.addEventListener("error", function(e) {
