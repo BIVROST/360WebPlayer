@@ -681,7 +681,7 @@
 			// special widgets:
 
 			// media range, disabled for streaming
-			if(video && Number.isFinite(media.duration)) {
+			if(video && isFinite(media.duration)) {
 				var range=widget_range(this.player);
 				this.domElement.appendChild(range);
 				widgetsSpecial.push(range);

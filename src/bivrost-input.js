@@ -157,6 +157,14 @@
 		}
 		domElement.addEventListener("touchstart", touchstartend);
 
+		// hack for Edge not supporting touchdown, but supporting pointer events
+		function pointerdown(ev) {
+			if(ev.pointerType === "touch")
+				thisRef.isTouchInterface=true;
+		}
+		window.addEventListener("pointerdown", pointerdown);
+
+
 		// keyboard controls
 		this.__initKeyboard(player);
 		
@@ -171,9 +179,10 @@
 			domElement.removeEventListener("touchstart", touchstartend);
 			domElement.removeEventListener("touchend", touchstartend);
 			window.removeEventListener("touchmove", touchmove);
-			
+			window.removeEventListener("pointerdown", pointerdown);
+
 			log("main disposed");
-		}
+		};
 		
 
 		// gyroscope controls
@@ -602,8 +611,14 @@
 		Bivrost.Input.prototype.__initGyroscope=function(player) {
 			var thisRef=this;
 			
+			var yAngle=0;
+			if(window.orientation)
+				yAngle=window.orientation;
+			if(screen.orientation)
+				yAngle=screen.orientation.angle;
+			
 			var orientation=new THREE.Quaternion();
-			var tempEuler=new THREE.Euler(0, DEG2RAD*-(window.orientation || screen.orientation.angle || 0), 0);
+			var tempEuler=new THREE.Euler(0, DEG2RAD*-yAngle, 0);
 			orientation.setFromEuler(tempEuler);
 
 			var lookForward=new THREE.Quaternion();
