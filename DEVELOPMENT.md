@@ -26,3 +26,12 @@ Build the project
 -----------------
 
 grunt
+
+
+
+
+
+Issue tracking
+--------------
+
+The project has two issue trackers, a public one (GitHub) with issues marked as #NNN and a legacy private one (Redmine) with issues marked as redmine-NNN

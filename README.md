@@ -47,24 +47,24 @@ Supported browsers
 
 | OS      | Browser                     | Panorama viewing | Video playback | Video streaming (HLS) | Legacy VR⁵ | WebVR | Headsets supported   |
 | ------- | --------------------------- |:----------------:|:--------------:|:---------------------:|:----------:|:-----:| -------------------- |
-| Windows | Google Chrome               | [x]              | [x]            | [x]                   | [ ]        | [x]¹  | Oculus, Vive         |
-| Windows | Mozilla Firefox             | [x]              | [x]            | [x]                   | [ ]        | [x]²  | Oculus, OSVR, Vive   |
-| Windows | Microsoft Edge              | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
-| Windows | Internet Explorer (11+)     | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
-| Mac OS  | Safari                      | [x]              | [x]⁴           | [x]                   | [ ]        | [ ]   |                      |
-| Mac OS  | Google Chrome               | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
-| Mac OS  | Mozilla Firefox             | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
-| Android | Mozilla Firefox             | [x]              | [x]            | [x]                   | [ ]        | [ ]   |                      |
-| Android | Google Chrome               | [x]              | [x]            | [x]                   | [x]        | [x]³  | Cardboard and clones |
-| Android | Samsung Internet            | [x]              | [x]            | [ ]                   | [x]        | [ ]   | Cardboard and clones |
-| Android | Samsung Internet for GearVR | [x]              | [x]            | [x]                   | [ ]        | [x]   | GearVR               |
-| iOS     | Safari                      | [x]              | [x]            | [ ]                   | [x]        | [ ]   | Cardboard and clones |
-| iOS     | Google Chrome               | [x]              | [x]            | [ ]                   | [x]        | [ ]   | Cardboard and clones |
-| iOS     | Mozilla Firefox             | [x]              | [x]            | [ ]                   | [ ]        | [ ]   |                      |
+| Windows | Google Chrome               | ✔                | ✔              | ✔                     |            | ✔¹    | Oculus, Vive         |
+| Windows | Mozilla Firefox             | ✔                | ✔              | ✔                     |            | ✔²    | Oculus, OSVR, Vive   |
+| Windows | Microsoft Edge              | ✔                | ✔              | ✔                     |            |       |                      |
+| Windows | Internet Explorer (11+)     | ✔                | ✔              | ✔                     |            |       |                      |
+| Mac OS  | Safari                      | ✔                | ✔⁴             | ✔                     |            |       |                      |
+| Mac OS  | Google Chrome               | ✔                | ✔              | ✔                     |            |       |                      |
+| Mac OS  | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                      |
+| Android | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                      |
+| Android | Google Chrome               | ✔                | ✔              | ✔                     | ✔          | ✔³    | Cardboard            |
+| Android | Samsung Internet            | ✔                | ✔              |                       | ✔          |       | Cardboard            |
+| Android | Samsung Internet for GearVR | ✔                | ✔              | ✔                     |            | ✔     | GearVR               |
+| iOS     | Safari                      | ✔                | ✔              |                       | ✔          |       | Cardboard            |
+| iOS     | Google Chrome               | ✔                | ✔              |                       | ✔          |       | Cardboard            |
+| iOS     | Mozilla Firefox             | ✔                | ✔              |                       |            |       |                      |
 
-¹ - With a dedicated WebVR Chromium build  
-² - With Firefox Nightly  
-³ - Requires enabling VR in `chrome://flags`  
+¹ - With a [dedicated WebVR Chromium build][webvr-chromium]  
+² - With [Firefox Nightly][webvr-firefox]  
+³ - Requires enabling VR in `chrome://flags/#enable-webvr`  
 ⁴ - Movies must be on the same domain ([broken CORS implementation][video-does-not-work])  
 ⁵ - Split screen with orientation sensor support (basic Cardboard)
 
@@ -507,7 +507,7 @@ User Guide
 
 ### Virtual Reality on desktop and mobile with WebVR 
 
-At the time of writing, WebVR is supported by [Firefox Nightly][webvr-firefox], special [Windows builds of Chromium][webvr-chromium], Google Chrome on Android with Cardboard (after enabling WebVR in `chrome://flags`) and [Samsung Internet Browser for Gear VR][webvr-samsung].
+At the time of writing, WebVR is supported by [Firefox Nightly][webvr-firefox], special [Windows builds of Chromium][webvr-chromium], Google Chrome on Android with Cardboard (after enabling WebVR in `chrome://flags/#enable-webvr`) and [Samsung Internet Browser for Gear VR][webvr-samsung].
 
 When you have a supported platform, an headset button will be visible in 360WebPlayer - press it to enter VR.
 
@@ -516,6 +516,7 @@ For more platform specific instructions look at the [WebVR][webvr] website.
 [webvr]: http://webvr.info/
 [webvr-firefox]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Firefox-Nightly
 [webvr-chromium]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Chromium
+[webvr-chrome]: chrome://flags/#enable-webvr
 [webvr-samsung]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Samsung-Internet-Browser-for-Gear-VR-on-Android
 
 
@@ -594,10 +595,11 @@ If you want to remove or replace our branding, are unsure about which license ap
 Changelog
 ---------
 
-2016-03-14: initial public release
-2016-09-21: WebVR 1.1 support
-2016-12-21: GearVR support, stereo UI
-2016-12-30: Documentation update
+* 2016-03-14: initial public release
+* 2016-09-21: WebVR 1.1 support
+* 2016-12-21: GearVR support, stereo UI
+* 2016-12-30: Documentation update
+* 2016-12-31: Github release
 
 
 Third party libraries
