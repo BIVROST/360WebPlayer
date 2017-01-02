@@ -25,52 +25,44 @@
 		var hw = ~~(w/2);
 
 		webglRenderer.setScissorTest(true);
+		webglRenderer.clear();
 		
 		var lineWidth = 2;
 			
 		if(w > h) {
 			// landscape
-			webglRenderer.setViewport(0,0,hw,h);
-			webglRenderer.setScissor(0,0,hw,h);	
+			webglRenderer.setViewport(0,0,hw-lineWidth,h);
+			webglRenderer.setScissor(0,0,hw-lineWidth,h);	
 			view.leftCamera.aspect = (w/2) / h;
 			view.leftCamera.updateProjectionMatrix();
 			webglRenderer.render(view.leftScene, view.leftCamera);
-//
-			webglRenderer.setViewport(hw,0,hw,h);
-			webglRenderer.setScissor(hw,0,hw,h);
+
+			webglRenderer.setViewport(hw+lineWidth,0,hw-lineWidth,h);
+			webglRenderer.setScissor(hw+lineWidth,0,hw-lineWidth,h);
 			view.rightCamera.aspect = (w/2) / h;
 			view.rightCamera.updateProjectionMatrix();
 			webglRenderer.render(view.rightScene, view.rightCamera);
-			
-			webglRenderer.setViewport(~~((w-lineWidth)/2),0,lineWidth,h);
-			webglRenderer.setScissor(~~((w-lineWidth)/2),0,lineWidth,h);
-			webglRenderer.clear([0,0,0], true, true);
 		}
 		else {
 			// portrait, assuming that the phone is rotated to horizontal
 			// but the screen is locked to portrait
 			// also assuming that the camera is on top of the phone
 			// and almost all cardboards force it to be on the left
-			webglRenderer.setViewport(0,hh,w,hh);
-			webglRenderer.setScissor(0,hh,w,hh);
+			webglRenderer.setViewport(0,hh+lineWidth,w,hh-lineWidth);
+			webglRenderer.setScissor(0,hh+lineWidth,w,hh-lineWidth);
 			view.leftCamera.aspect = w / (h/2);
 			view.leftCamera.updateProjectionMatrix();
 			webglRenderer.render(view.leftScene, view.leftCamera);
 
-			webglRenderer.setViewport(0,0,w,hh);			
-			webglRenderer.setScissor(0,0,w,hh);			
+			webglRenderer.setViewport(0,0,w,hh-lineWidth);			
+			webglRenderer.setScissor(0,0,w,hh-lineWidth);
 			view.rightCamera.aspect = w / (h/2);
 			view.rightCamera.updateProjectionMatrix();
 			webglRenderer.render(view.rightScene, view.rightCamera);
-			
-			webglRenderer.setViewport(0,~~((h-lineWidth)/2),w,lineWidth);			
-			webglRenderer.setScissor(0,~~((h-lineWidth)/2),w,lineWidth);			
-			webglRenderer.clear([0,0,0], true, true);
 		}
 		
-		
 		webglRenderer.setViewport(0,0,w,h);
-		webglRenderer.setScissor(0,0,w,h);
+		webglRenderer.setScissor(0,0,w,h);		
 	};
 	
 	

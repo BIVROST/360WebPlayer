@@ -26,6 +26,7 @@
 		webglRenderer.setScissorTest(false);
 		webglRenderer.setViewport(0,0,w,h);
 		webglRenderer.setScissor(0,0,w,h);
+		webglRenderer.clear(true, true, true);
 		webglRenderer.render(view.leftScene, view.leftCamera);
 	};
 	

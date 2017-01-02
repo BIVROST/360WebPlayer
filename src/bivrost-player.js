@@ -69,7 +69,7 @@
 		
 		// fullscreen
 		container.addEventListener("dblclick", function() { thisRef.fullscreen=!thisRef.fullscreen; });
-		var onFullscreenChange=this._onFullscreenChange.bind(this);
+		var onFullscreenChange=function() { thisRef._onFullscreenChange(); };
 		document.addEventListener("fullscreenchange", onFullscreenChange);
 		document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 		document.addEventListener("mozfullscreenchange", onFullscreenChange);
@@ -78,7 +78,8 @@
 				
 		// renderer
 		this.webglRenderer=new THREE.WebGLRenderer({ antialias: true });
-		container.appendChild(this.webglRenderer.domElement);
+		this.webglRenderer.setClearColor(0x000000, 1);	// iOS doesn't have this set up as proper default
+		container.appendChild(this.webglRenderer.domElement);		
 
 		this.renderer = new Bivrost.Renderer.Mono();
 
@@ -124,7 +125,7 @@
 				this.renderer.render(this.webglRenderer, this.view);
 			}
 			else {
-				log("waiting for init...");
+//				log("waiting for init...");
 			}
 		}
 		catch(e) {
@@ -354,29 +355,46 @@
 			
 			if(value === this.fullscreen) // ignore if no change
 				return;
+			
+			var elem=this.container;
+			
 			if(value) {	// turn on
-				var elem=this.container;
 
 				if(!this._sizeBeforeFullscreen)
 					this._sizeBeforeFullscreen=[elem.offsetWidth, elem.offsetHeight];
 				log("fullscreen enter, stored size", this._sizeBeforeFullscreen);
-
-				(
+				
+				var fsCallback=(
 					elem.requestFullscreen 
 					|| elem.msRequestFullscreen 
 					|| elem.mozRequestFullScreen
-					|| elem.webkitRequestFullscreen 
-					|| function() {throw "fullscreen not supported";}
-				).call(elem);
+					|| elem.webkitRequestFullscreen
+				);
+				if(fsCallback) {
+					fsCallback.call(elem);
+				}
+				else {
+					log("IOS FULLSCREEN ENTER", elem);
+					elem.classList.add("bivrost-ios-fullscreen");
+					this._onFullscreenChange(true);
+				}
+					
 			}
 			else { // turn off
-				(
+				var fsExitCallback=(
 					document.exitFullscreen
 					|| document.mozCancelFullScreen 
 					|| document.webkitExitFullscreen 
 					|| document.msExitFullscreen 
-					|| function() {throw "exiting fullscreen not supported";}
-				).call(document);
+				);
+				if(fsExitCallback) {
+					fsExitCallback.call(document);
+				}
+				else {
+					log("IOS FULLSCREEN EXIT", elem);
+					elem.classList.remove("bivrost-ios-fullscreen");
+					this._onFullscreenChange(false);
+				}
 			}
 		}
 	});
@@ -384,15 +402,22 @@
 	
 	/**
 	 * Event handler for managing full screen changes
+	 * @param {?force} force fullscreen state
 	 * @private
 	 */
-	Bivrost.Player.prototype._onFullscreenChange=function() {
+	Bivrost.Player.prototype._onFullscreenChange=function(force) {
 		this._fullscreen=(
 			document.fullscreenElement ||
 			document.webkitFullscreenElement ||
 			document.mozFullScreenElement ||
 			document.msFullscreenElement
 		) === this.container;
+
+		if(typeof(force) !== "undefined") {
+			this._fullscreen=force;
+		}
+		
+		log("FULLSCREEN CHANGE: ", this._fullscreen);
 
 		if(this.fullscreen && typeof(chrome) !== "undefined" && typeof(chrome.power) !== "undefined" && typeof(chrome.power.requestKeepAwake) !== "undefined") {
 			log("chrome device management active");

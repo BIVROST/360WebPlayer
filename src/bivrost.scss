@@ -391,7 +391,7 @@ $transition-time: 0.5s;
 	&.bivrost-hide-ui .bivrost-logo {
 		-webkit-transform: scale(0.333);
 		-webkit-filter: grayscale(1);
-		transform: scale(0.75);
+		transform: scale(0.333);
 		filter: grayscale(1);
 		opacity: 0.75;
 	}
@@ -429,6 +429,13 @@ $transition-time: 0.5s;
 		height: 100% !important;
 		top: 0;
 		background: none;
+	}
+	&.bivrost-ios-fullscreen {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
 	}
 }
 

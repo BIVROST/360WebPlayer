@@ -165,6 +165,7 @@
 		else if(vrDisplay.capabilities.hasExternalDisplay) {
 			if(this.vrLeftCamera)
 				view.leftCamera.rotation.copy(this.vrLeftCamera.rotation);
+			webglRenderer.clear();
 			webglRenderer.render(view.leftScene, view.leftCamera);	
 		}
 	};
@@ -210,6 +211,7 @@
 
 		vrDisplay.getFrameData(frameData);
 		vrRenderer.setScissorTest(true);
+		vrRenderer.clear();
 
 
 		// left eye

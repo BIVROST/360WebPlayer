@@ -114,7 +114,20 @@
 
 		// touch events
 		
-		function touchstartend(ev) {
+		var inDoubleTap=false;
+		var clearDoubleTapTimeoutId=null;
+		function clearDoubleTap() { 
+			inDoubleTap=false; 
+			clearDoubleTapTimeoutId=null;  
+		}
+		
+		function touchstartend(ev) {		
+			if(player.fullscreen && inDoubleTap) {
+				log("prevented double tap");
+				ev.preventDefault();
+				return false;
+			}
+			
 			thisRef.isTouchInterface=true;
 			if(ev.touches.length === 1) {	// one finger touch					
 				window.addEventListener("touchmove", touchmove);
@@ -130,11 +143,17 @@
 			else {	// pinch or no fingers - not interesting at the moment
 				window.removeEventListener("touchend", touchstartend);
 				window.removeEventListener("touchmove", touchmove);
+				log("two+ finger?", ev.touches);
 				thisRef._mouseLookInProgress=false;
 				
 //				if(!inDrag && ev.touches.length === 0)
 //					player.fullscreen=true;
 			}
+			
+			inDoubleTap=true;
+			if(clearDoubleTapTimeoutId)
+				clearTimeout(clearDoubleTapTimeoutId);
+			clearDoubleTapTimeoutId=setTimeout(clearDoubleTap, 300);
 		}
 		function touchmove(ev) {
 			var x=~~(ev.touches[0].clientX || ev.touches[0].pageX);
@@ -152,6 +171,7 @@
 				thisRef._mouseLookInProgress=true;
 				ev.preventDefault();
 				ev.stopPropagation();
+				thisRef.onMove.publish();
 				return false;
 			}
 		}
@@ -164,10 +184,17 @@
 		}
 		window.addEventListener("pointerdown", pointerdown);
 
+		// disable pinch in fullscreen - don't want the UI to be scaled
+		function gesturestart(ev) {
+			if(player.fullscreen) {
+				ev.preventDefault();
+				return false;
+			}
+			return true;
+		}
+		domElement.addEventListener("gesturestart", gesturestart);
 
-		// keyboard controls
-		this.__initKeyboard(player);
-		
+
 		this.dispose=function() {
 			domElement.removeEventListener("mousedown", mousedown);
 			window.removeEventListener("mousemove", mousemove);
@@ -179,10 +206,14 @@
 			domElement.removeEventListener("touchstart", touchstartend);
 			domElement.removeEventListener("touchend", touchstartend);
 			window.removeEventListener("touchmove", touchmove);
+			
 			window.removeEventListener("pointerdown", pointerdown);
-
-			log("main disposed");
+			domElement.removeEventListener("gesturestart", gesturestart);
 		};
+		
+
+		// keyboard controls
+		this.__initKeyboard(player);
 		
 
 		// gyroscope controls
@@ -272,11 +303,10 @@
 			};
 			domElement.addEventListener("keypress", keypress);
 			
-			this.dispose=(function(chained) {	/// TODO: failing?
+			this.dispose=(function(chained) {
 				domElement.removeEventListener("keydown", keydown);
 				domElement.removeEventListener("keyup", keyup);
 				domElement.removeEventListener("keypress", keypress);
-				log("keyboard disposed");
 				chained.apply(this);
 			}).bind(this, this.dispose);
 		}
@@ -665,7 +695,6 @@
 			this.dispose=(function(chained){
 				window.removeEventListener("deviceorientation", handleDeviceOrientation);
 				window.removeEventListener("orientationchange", handleOrientationChange);
-				log("Gyro disposed");
 				chained.apply(this);
 			}).bind(this, this.dispose);
 		}
