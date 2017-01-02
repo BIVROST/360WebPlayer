@@ -143,7 +143,6 @@
 			else {	// pinch or no fingers - not interesting at the moment
 				window.removeEventListener("touchend", touchstartend);
 				window.removeEventListener("touchmove", touchmove);
-				log("two+ finger?", ev.touches);
 				thisRef._mouseLookInProgress=false;
 				
 //				if(!inDrag && ev.touches.length === 0)

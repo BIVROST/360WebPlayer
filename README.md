@@ -153,36 +153,45 @@ Following configuration options are allowed:
 	Warning: When using HLS, you have to include the [HLS.js][hls-js] third party library.
 	
 *	`projection`: how is the media projected (mapping from 2d to 3d)?
-	Allowed value: "equirectangular", "cubemap", "dome", "cubemap:configuration...";
+	Allowed value: "equirectangular", "dome", "frame", "cubemap", "cubemap:configuration...";
 	optional, default: "equirectangular".
-	Cubemap can be configured through several cubemap types. There are a few presets defining the order: 
 
-	* "horizontal" (default) - all sides of the cube are in one line in the following order; left, right, down, up, back, front. OBRX uses this format.
-	* "two-by-three" - all sides are in two rows: left, right, down and up, bottom, front. Facebook 360 videos use this format.
-	* "facebook" - the same as two-by-three, but rotated, and each face is cropped by 1%.
-	* "horizontal-cross" - all sides are in a cross with bottom, right, front and left in the middle row; up is in the top row and down in the bottom. 
-	* "vertical-cross" - up is in the first row, bottom, right and front in the second, left in the third and down in the fourth. ATI CubeMapGen uses this format.
-	* custom - advanced, please use presets if possible; you can specify any alignment with a description string. The string is an 2d array of face names in the order they appear on the texture. The rows are separated by "," and the faces are one letter acronyms (accepts capital letters):
+	* `equirectangular` is the default value, it is a 360 by 180 degree image with all horizontal and vertical lines preserved
 
-		*  "f" - front
-		*  "b" - back
-		*  "l" - left
-		*  "r" - right
-		*  "u" - up
-		*  "d" - down
-		*  "-" - unused space
+	* `dome` is the front half of an equirectangular image (it is 180 by 180 degree).
 
-	Each face can be rotated with `*x`.  x is a number from 0 to 3. For example `r*1` is right rotated 90 degrees clockwise.
+	* `frame` is a frame hovering in front of the viewer, like a normal floating image.
 
-	There are optional modifiers at the end of the string:
+	* `cubemap` can be configured through several cubemap types. There are a few presets defining the order: 
 
-	*  ">90" - rotate the whole cube clockwise by 90 degrees
-	*  "<72" - rotate the whole cube counter clockwise by 72 degrees
-	*  "+0.01" - crop faces by 0.01 (prevents visible edges)
+		* "horizontal" (default) - all sides of the cube are in one line in the following order; left, right, down, up, back, front. OBRX uses this format.
+		* "two-by-three" - all sides are in two rows: left, right, down and up, bottom, front. Facebook 360 videos use this format.
+		* "facebook" - the same as two-by-three, but rotated, and each face is cropped by 1%.
+		* "horizontal-cross" - all sides are in a cross with bottom, right, front and left in the middle row; up is in the top row and down in the bottom. 
+		* "vertical-cross" - up is in the first row, bottom, right and front in the second, left in the third and down in the fourth. ATI CubeMapGen uses this format.
+		* custom - advanced, please use presets if possible; you can specify any alignment with a description string. The string is an 2d array of face names in the order they appear on the texture. The rows are separated by "," and the faces are one letter acronyms (accepts capital letters):
 
-	Example: `-u--,blfr,-d*2-->90+0.002`
-	
-	Please note that with cubemaps, seams can be visible due to texture filtering - this is most visible on horizontal and vertical crosses. It's best you fix them on pictures by duplicating a border into the unused part of the image. The 1% zoom with Facebook is to prevent this from happening.
+			*  "f" - front
+			*  "b" - back
+			*  "l" - left
+			*  "r" - right
+			*  "u" - up
+			*  "d" - down
+			*  "-" - unused space
+
+		Each face can be rotated with `*x`.  x is a number from 0 to 3. For example `r*1` is right rotated 90 degrees clockwise.
+
+		There are optional modifiers at the end of the string:
+
+		*  ">90" - rotate the whole cube clockwise by 90 degrees
+		*  "<72" - rotate the whole cube counter clockwise by 72 degrees
+		*  "+0.01" - crop faces by 0.01 (prevents visible edges)
+
+		Example: `-u--,blfr,-d*2-->90+0.002`
+
+		Please note that with cubemaps, seams can be visible due to texture filtering - this is most visible on horizontal and 
+		vertical crosses. It's best you fix them on pictures by duplicating a border into the unused part of the image. 
+		The 1% zoom with Facebook is to prevent this from happening.
 
 Apart from that, you can tune up the player console information with `Bivrost.verbose=true` in just after including 360WebPlayer .js files
 
