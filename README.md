@@ -45,28 +45,29 @@ Supported browsers
 ------------------
 
 
-| OS      | Browser                     | Panorama viewing | Video playback | Video streaming (HLS) | Legacy VR⁵ | WebVR | Headsets supported   |
-| ------- | --------------------------- |:----------------:|:--------------:|:---------------------:|:----------:|:-----:| -------------------- |
-| Windows | Google Chrome               | ✔                | ✔              | ✔                     |            | ✔¹    | Oculus, Vive         |
-| Windows | Mozilla Firefox             | ✔                | ✔              | ✔                     |            | ✔²    | Oculus, OSVR, Vive   |
-| Windows | Microsoft Edge              | ✔                | ✔              | ✔                     |            |       |                      |
-| Windows | Internet Explorer (11+)     | ✔                | ✔              | ✔                     |            |       |                      |
-| Mac OS  | Safari                      | ✔                | ✔⁴             | ✔                     |            |       |                      |
-| Mac OS  | Google Chrome               | ✔                | ✔              | ✔                     |            |       |                      |
-| Mac OS  | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                      |
-| Android | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                      |
-| Android | Google Chrome               | ✔                | ✔              | ✔                     | ✔          | ✔³    | Cardboard            |
-| Android | Samsung Internet            | ✔                | ✔              |                       | ✔          |       | Cardboard            |
-| Android | Samsung Internet for GearVR | ✔                | ✔              | ✔                     |            | ✔     | GearVR               |
-| iOS     | Safari                      | ✔                | ✔              |                       | ✔          |       | Cardboard            |
-| iOS     | Google Chrome               | ✔                | ✔              |                       | ✔          |       | Cardboard            |
-| iOS     | Mozilla Firefox             | ✔                | ✔              |                       |            |       |                      |
+| OS      | Browser                     | Panorama viewing | Video playback | Video streaming (HLS) | Legacy VR⁵ | WebVR | Headsets supported                         |
+| ------- | --------------------------- |:----------------:|:--------------:|:---------------------:|:----------:|:-----:| ------------------------------------------ |
+| Windows | Google Chrome               | ✔                | ✔              | ✔                     |            | ✔¹    | Oculus, Vive, Windows Mixed Reality⁶       |
+| Windows | Mozilla Firefox             | ✔                | ✔              | ✔                     |            | ✔²    | Oculus, OSVR, Vive, Windows Mixed Reality⁶ |
+| Windows | Microsoft Edge              | ✔                | ✔              | ✔                     |            | ✔     | Windows Mixed Reality                      |
+| Windows | Internet Explorer (11+)     | ✔                | ✔              | ✔                     |            |       |                                            |
+| Mac OS  | Safari                      | ✔                | ✔⁴             | ✔                     |            |       |                                            |
+| Mac OS  | Google Chrome               | ✔                | ✔              | ✔                     |            |       |                                            |
+| Mac OS  | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                                            |
+| Android | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                                            |
+| Android | Google Chrome               | ✔                | ✔              | ✔                     | ✔          | ✔³    | Cardboard                                  |
+| Android | Samsung Internet            | ✔                | ✔              |                       | ✔          |       | Cardboard                                  |
+| Android | Samsung Internet for GearVR | ✔                | ✔              | ✔                     |            | ✔     | GearVR                                     |
+| iOS     | Safari                      | ✔                | ✔              |                       | ✔          |       | Cardboard                                  |
+| iOS     | Google Chrome               | ✔                | ✔              |                       | ✔          |       | Cardboard                                  |
+| iOS     | Mozilla Firefox             | ✔                | ✔              |                       |            |       |                                            |
 
-¹ - With a [dedicated WebVR Chromium build][webvr-chromium]  
+¹ - With a [dedicated WebVR Chromium build][webvr-chromium] or [Chrome Canary][webvr-chrome-canary]  
 ² - With [Firefox Nightly][webvr-firefox]  
 ³ - Requires enabling VR in `chrome://flags/#enable-webvr`  
 ⁴ - Movies must be on the same domain ([broken CORS implementation][video-does-not-work])  
-⁵ - Split screen with orientation sensor support (basic Cardboard)
+⁵ - Split screen with orientation sensor support (basic Cardboard)  
+⁶ - Windows Mixed Reality support via Microsoft's Windows Mixed Reality for SteamVR
 
 [video-does-not-work]: #video-does-not-work
 
@@ -516,7 +517,7 @@ User Guide
 
 ### Virtual Reality on desktop and mobile with WebVR 
 
-At the time of writing, WebVR is supported by [Firefox Nightly][webvr-firefox], special [Windows builds of Chromium][webvr-chromium], Google Chrome on Android with Cardboard (after enabling WebVR in `chrome://flags/#enable-webvr`) and [Samsung Internet Browser for Gear VR][webvr-samsung].
+At the time of writing, WebVR is supported by Microsoft Edge, [Firefox Nightly][webvr-firefox], special [Windows builds of Chromium][webvr-chromium] and [Chrome Canary][webvr-chrome-canary], Google Chrome on Android with Cardboard (after enabling WebVR in `chrome://flags/#enable-webvr`) and [Samsung Internet Browser for Gear VR][webvr-samsung].
 
 When you have a supported platform, an headset button will be visible in 360WebPlayer - press it to enter VR.
 
@@ -525,6 +526,7 @@ For more platform specific instructions look at the [WebVR][webvr] website.
 [webvr]: http://webvr.info/
 [webvr-firefox]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Firefox-Nightly
 [webvr-chromium]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Chromium
+[webvr-chrome-canary]: https://webvr.info/get-chrome/
 [webvr-chrome]: chrome://flags/#enable-webvr
 [webvr-samsung]: https://github.com/Web-VR/iswebvrready/wiki/Instructions%3A-Samsung-Internet-Browser-for-Gear-VR-on-Android
 
