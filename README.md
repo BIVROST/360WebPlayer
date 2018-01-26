@@ -611,7 +611,7 @@ Changelog
 * 2016-12-21: GearVR support, stereo UI
 * 2016-12-30: Documentation update
 * 2016-12-31: Github release
-
+* 2018-01-26: Move to Gitlab, updated documentation
 
 Third party libraries
 ---------------------

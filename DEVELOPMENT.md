@@ -8,6 +8,7 @@ For windows it's easiest to use cygwin.
 Prepare the project
 -------------------
 
+```bash
 cd $webplayer_directory
 npm install
 npm install -g grunt-cli
@@ -20,13 +21,14 @@ wget https://dl.google.com/closure-compiler/compiler-latest.zip
 mv closure-compiler*jar compiler.jar
 rm compiler-latest.zip
 popd
-
+```
 
 Build the project
 -----------------
 
+```bash
 grunt
-
+```
 
 
 
