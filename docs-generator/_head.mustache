@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bivrost{{#title}} - {{ title }}{{/title}}</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" rel="stylesheet" />
+
+		{{^no_head}}
+		{{#styles}}
+		<link href="../{{{.}}}{{cachebuster}}" rel="stylesheet" />
+		{{/styles}}
+		{{^styles}}
+		<link href="{{{bivrost_dir}}}bivrost.css{{cachebuster}}" rel="stylesheet" />
+		{{/styles}}
+		{{#scripts_additional}}
+		<script src="{{{.}}}{{cachebuster}}"></script>
+		{{/scripts_additional}}
+		{{#scripts}}
+		<script src="../{{{.}}}{{cachebuster}}"></script>
+		{{/scripts}}
+		{{^scripts}}
+		{{#debug}}
+		<script src="{{{bivrost_dir}}}bivrost-debug.js{{cachebuster}}"></script>
+		{{/debug}}
+		{{^debug}}
+		<script src="{{{bivrost_dir}}}bivrost-min.js{{cachebuster}}"></script>
+		{{/debug}}
+		{{/scripts}}
+		<script type="text/javascript">
+			Bivrost.verbose=true;
+		</script>
+		{{/no_head}}
+		<style type="text/css">
+			body { padding-bottom: 2em; }
+		</style>
+	</head>
+	<body >

@@ -17,4 +17,7 @@ compiler.jar
 
 bivrost-icon-*png
 
-output
+demo/*
+devel/*
+media/*
+release

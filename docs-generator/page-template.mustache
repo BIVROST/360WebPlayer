@@ -1,0 +1,22 @@
+{{ >_head }}
+
+
+		{{ ^disable_navigation }}
+		<nav class="container">
+			<ul class="nav nav-pills pull-left">
+				<li role="presentation" class="pull-left"><a href="index.html"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>index</a></li>
+			</ul>
+		</nav>
+		{{ /disable_navigation }}
+
+		<article class="container" role="main">
+			<header>
+				{{{ h1tag }}}
+			</header>
+
+			<section>
+				{{{ innerHTML }}}
+			</section>
+		</article>
+		
+{{ >_foot }}

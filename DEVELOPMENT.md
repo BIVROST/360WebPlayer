@@ -23,12 +23,29 @@ rm compiler-latest.zip
 popd
 ```
 
+
 Build the project
 -----------------
+
+Build the project with:
 
 ```bash
 grunt
 ```
+
+The results will be stored in the output directory:
+
+* `output/release` - the compiled scripts, styles and html documentation with embedded images
+* `output/site` - the HTML, JavaScript and CSS parts that are to be copied to a web server for demonstration. They lack the media files that are supposed to be on the server in the `media` subdirectory. 
+* `output/devel` - the HTML, JavaScript and CSS parts that are to be used on a local server for development. They lack the media files that are supposed to be on the server on the prefix dictated by 
+
+There are a few sub targets if you do not want to rebuild everything. The most interesting are:
+
+* `grunt docs` rebuilds the documentation,
+* `grunt build` rebuilds and recompiles the JavaScript and CSS files,
+* `grunt release` builds the release zip,
+* `grunt sass` rebuilds just CSS,
+* `grunt debug` rebuilds the CSS and unminified JavaScript output, without compiling it.
 
 
 
@@ -36,4 +53,4 @@ grunt
 Issue tracking
 --------------
 
-The project has two issue trackers, a public one (GitHub) with issues marked as #NNN and a legacy private one (Redmine) with issues marked as redmine-NNN
+The project has two issue trackers, a public one (GitLab) with issues marked as #NNN and a legacy private one (Redmine) with issues marked as redmine-NNN

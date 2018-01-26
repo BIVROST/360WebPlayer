@@ -1,13 +1,18 @@
 {
-  "name": "bivrost-web-player",
+  "name": "bivrost-360webplayer",
   "license": "(LicenseRef-LICENSE-free.md OR LicenseRef-LICENSE-commercial.md)",
-  "repository": "gitolite@redmine.bivrost360.com:bivrost-player-web.git",
+  "repository": "git@gitlab.com:BIVROST/360WebPlayer.git",
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-closure-compiler": "0.0.21",
-    "grunt-contrib-sass": "^0.9.2"
+    "grunt-contrib-sass": "^0.9.2",
+    "grunt-inline": "^0.3.6",
+    "grunt-mustache-render": "^1.9.0",
+    "grunt-zip": "^0.17.1",
+    "marked": "^0.3.5",
+    "mustache": "^2.2.0"
   },
   "dependencies": {}
 }

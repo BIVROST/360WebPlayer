@@ -1,0 +1,47 @@
+{{ >_head }}
+
+		<article class="container" role="main">
+			<section id="about">
+				<header>
+					<h1>Demo index for the BIVROST 360WebPlayer</h1>
+				</header>				
+			</section>
+
+			<section>
+				<p>
+					This is an appendix for our <a href="http://github.com/Bivrost/360WebPlayer">GitHub page</a>, 
+					please look there for the documentation. 
+				</p>
+
+<!--
+				<p>
+					<a href="github-codecanyon-webplayer.html">CodeCanyon shop description</a>.
+				</p>
+
+				<p>
+					<a href="wordpress.html">WordPress plugin documentation</a>
+					and its
+					<a href="wordpress-codecanyon.html">Codecanyon flavour</a>.
+				</p>
+-->
+
+				<ul>
+				{{ #examples }}
+				<li>
+					{{ #minification_visible }}
+					<a href="{{ slug }}-unminified.html">{{ title }}</a>
+					<a href="{{ slug }}.html">(minified)</a>
+					{{ #devel_only }}<strong>devel only</strong>{{ /devel_only }}
+					{{ /minification_visible }}
+
+					{{ ^minification_visible }}
+					<a href="{{ slug }}.html">{{ title }}</a>
+					{{ /minification_visible }}
+				</li>
+				{{ /examples }}
+				</ul>
+			</section>
+
+		</article>
+
+{{ >_foot }}

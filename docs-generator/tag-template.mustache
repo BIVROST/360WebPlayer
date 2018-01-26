@@ -1,0 +1,84 @@
+{{ >_head }}
+
+
+		<nav class="container">
+			<ul class="nav nav-pills pull-left">
+				<li role="presentation" class="pull-left"><a href="index.html"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>index</a></li>
+			</ul>
+
+			{{ #minification_visible }}
+			<ul class="nav nav-tabs pull-right">
+				<li role="presentation"{{ #unminified }} class="active"{{ /unminified }}><a href="{{ minified }}">minified</a></li>
+				<li role="presentation"{{ #minified }} class="active"{{ /minified }}><a href="{{ unminified }}">unminified</a></li>
+			</ul>
+			{{ /minification_visible }}
+		</nav>
+
+		<article class="container" role="main">
+			<header>
+				<h1>
+					{{ title }}
+					{{# devel_only }}
+					<small>(development demo only)</small>
+					{{/ devel_only }}
+				</h1>
+			</header>
+
+			<section>
+
+				{{ #description }}
+				<p>{{{ . }}}</p>
+				{{ /description }}
+
+				<bivrost-player{{ #options }} {{attr}}="{{value}}"{{ /options }}>
+					{{ #src }}
+					<bivrost-media url="{{url}}"{{ #type }} type="{{ type }}"{{ /type }}></bivrost-media>
+					{{ /src }}
+				</bivrost-player>
+
+			</section>
+
+			<section>
+				<h2>Source code</h2>
+<pre>
+&lt;bivrost-player{{ #options }}
+  {{ attr }}="{{ #is_link }}<a href="{{{ value }}}">{{ /is_link }}{{ value }}{{ #is_link }}</a>{{ /is_link }}"{{ /options }}&gt;
+  {{ #src }}
+  &lt;bivrost-media 
+    url="<a href="{{url}}">{{url}}</a>"{{!
+    }}{{ #type }}
+    type="{{ type }}"{{ /type }}&gt;
+  &lt;/bivrost-media&gt;
+  {{ /src }}
+&lt;/bivrost-player&gt;
+</pre>
+			</section>
+
+			<section>
+				<h2>Alternative source code with data attributes</h2>
+<pre>
+&lt;div data-bivrost-player{{ #options }} 
+  {{ ^unescaped }}data-bivrost-{{ /unescaped }}{{ attr }}="{{ #is_link }}<a href="{{{ value }}}">{{ /is_link }}{{ value }}{{ #is_link }}</a>{{ /is_link }}"{{ /options }}&gt;
+  {{ #src }}
+  &lt;div data-bivrost-media 
+    {{ #type }}
+    {{ /type }}
+    data-bivrost-url="<a href="{{url}}">{{url}}</a>"{{!
+    }}{{ #type }}
+    data-bivrost-type="{{ type }}"{{ /type }}{{!
+    }}&gt;&lt;/div&gt;
+{{ /src }}
+&lt;/div&gt;
+</pre>
+			</section>
+
+			<script type="text/javascript">
+				var player;
+				addEventListener("load", function() {
+					player=document.getElementsByTagName("bivrost-player")[0].bivrost;
+				});
+			</script>
+
+		</article>
+		
+{{ >_foot }}

@@ -1,0 +1,380 @@
+[
+	{
+		"slug": "simple",
+		"title": "Simplest example",
+		"description": [
+			"Simplest use of a tag, no additional options. ",
+			"The media source type is detected from the file extension and stereoscopy by the word 'mono' (details of the parameter guessing algorithm are in the README.md file)",
+			"There is only one video source provided in the shorthand <tt>bivrost-player[url]</tt> tag. It's best to provide an alternate video source, like a webm - to do that use a <tt>bivrost-media</tt> tag"
+		],
+		"options": [
+			{ "attr": "url", "value": "morskie-oko.mp4", "is_link": true }
+		]
+	},
+	
+	{
+		"slug": "full",
+		"title": "All available options provided with defaults",
+		"description": [
+			"All options provided. They are all their default values except of <tt>bivrost-media[type]</tt> which is normally undefined and detected on play."
+		],
+		"options": [
+			{"attr": "loop", "value": "false"},
+			{"attr": "autoplay", "value": "false"},
+			{"attr": "stereoscopy", "value": "autodetect"},
+			{"attr": "projection", "value": "equirectangular"},
+			{"attr": "source", "value": "autodetect"}
+		],
+		"src": [
+			{"url": "morskie-oko.mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "morskie-oko.webm", "type": "video/webm; codecs=vp8.0"}
+		]
+	},
+
+	{
+		"slug": "loop",
+		"title": "Looping video",
+		"description": ["Example with looping enabled"],
+		"options": [ 
+			{ "attr": "loop", "value": "true" } 
+		],
+		"src": [
+			{"url": "morskie-oko.mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "morskie-oko.webm", "type": "video/webm; codecs=vp8.0"}
+		]
+	},
+	
+	
+	
+	{
+		"slug": "size",
+		"title": "Modified size",
+		"description": "Normally the size of the player is autodetected from available width and preset aspect ratio of 4:3. You can override this with css style or class and the player will adapt.",
+		"options": [
+			{"attr": "style", "value": "width: 400px; height: 500px", "unescaped": true}
+		],
+		"src": [
+			{"url": "morskie-oko.mp4"},
+			{"url": "morskie-oko.webm"}
+		]
+	},
+		
+	{
+		"slug": "still",
+		"title": "Static panoramas",
+		"description": "The 360WebPlayer can also display pictures",
+		"src": [
+			{"url":"Field%20(mono).jpeg"}
+		]
+	},
+	
+	{
+		"slug": "top-and-bottom",
+		"devel_only": true,
+		"title": "Top And Bottom stereoscopy",
+		"description": "A stereoscopic render using an top-and-bottom oriented image.",
+		"options": [
+			{"attr": "stereoscopy", "value":"top-and-bottom"}
+		],
+		"src": [
+			{"url": "blood (TaB).jpeg"}
+		]
+	},
+	
+	{
+		"slug": "cubemap-hcross",
+		"title": "Cubemap horizontal cross",
+		"description": "Panorama in the less common cubemap format. Horizontal cross version.",
+		"options": [
+			{"attr": "projection", "value": "cubemap:horizontal-cross"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			{"url":"cubemap-hcross.jpeg"}
+		]
+	},
+	
+	{
+		"slug": "cubemap-facebook",
+		"title": "Cubemap facebook",
+		"description": "Panorama in the less common cubemap format. Facebook 360 video version.",
+		"options": [
+			{"attr": "projection", "value": "cubemap:facebook"},
+			{"attr": "stereoscopy", "value": "mono"}
+		],
+		"src": [
+			{"url":"cubemap-facebook.jpeg"}
+		]
+	},
+		
+	{
+		"slug": "theme-default",
+		"title": "Default theme",
+		"description": [
+			"The default theme, explicitly stated.",
+			"You can ommit this theme class as it is the default."
+		],
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-default", "unescaped": true}
+		],
+		"src": [
+			{"url": "morskie-oko.mp4"},
+			{"url": "morskie-oko.webm"}
+		]
+	},
+	
+	{
+		"slug": "theme-spring",
+		"title": "Spring theme",
+		"description": "A black and green theme",
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-spring", "unescaped": true}
+		],
+		"src": [
+			{"url": "morskie-oko.mp4"},
+			{"url": "morskie-oko.webm"}
+		]
+	},
+	
+	{
+		"slug": "theme-autumn",
+		"title": "Autumn theme",
+		"description": "A red and black theme",
+		"options": [
+			{"attr": "class", "value": "bivrost-theme-autumn", "unescaped": true}
+		],
+		"src": [
+			{"url": "morskie-oko.mp4"},
+			{"url": "morskie-oko.webm"}
+		]
+	},
+	
+	{
+		"slug": "HLS-1080p",
+		"title": "HLS streaming 720p/Full HD",
+		"description": [
+			"HLS support demo, available resolutions: 720p, Full HD.",
+			"Note: for HLS to work, you have to add HLS.js to your scripts"
+		],
+		"options": [
+			{"attr": "source", "value": "stream-hls"}
+		],
+		"scripts_additional": [
+			"https://cdn.rawgit.com/dailymotion/hls.js/master/dist/hls.min.js"
+		],
+		"src": [
+			{"url":"hls/karty-1080.m3u8"}
+		]
+	},
+
+	{
+		"slug": "HLS",
+		"title": "HLS streaming 720p/Full HD/QHD/4K UHD",
+		"description": [
+			"HLS support demo, available resolutions: 720p, Full HD, QHD and 4K UHD.",
+			"Note: for HLS to work, you have to add HLS.js to your scripts"
+		],
+		"options": [
+			{"attr": "source", "value": "stream-hls"}
+		],
+		"scripts_additional": [
+			"https://cdn.rawgit.com/dailymotion/hls.js/master/dist/hls.min.js"
+		],
+		"src": [
+			{"url":"hls/karty.m3u8"}
+		]
+	},
+
+	{
+		"slug": "resolution-480p",
+		"title": "Resolution example: 480p (extremely low resolution)",
+		"description": ["Resolution FWVGA, 854x480, ratio 16:9, sometimes called 480p"],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-FWVGA_480p-480x854.mp4"},
+			{"url": "EHF2016-FWVGA_480p-480x854.webm"}
+		]
+	},
+	{
+		"slug": "resolution-1024x512",
+		"title": "Resolution example: 1024x512 (very low resolution, POT)",
+		"description": ["Resolution 1024x512, ratio 2:1, POT (Power Of Two)."],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-square-1024x512.mp4"},
+			{"url": "EHF2016-square-1024x512.webm"}
+		]
+	},
+	{
+		"slug": "resolution-720p",
+		"title": "Resolution example: 720p (HD) (low resolution)",
+		"description": ["Resolution 720p, 1280x720, ratio 16:9, sometimes called HD or HD ready"],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-HD_720p-1280x720.mp4"},
+			{"url": "EHF2016-HD_720p-1280x720.webm"}
+		]
+	},
+	{
+		"slug": "resolution-1080p",
+		"title": "Resolution example: 1080p (medium resolution)",
+		"description": ["Resolution Full HD, 1920x1080, ratio 16:9, sometimes called 1080p"],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-FHD_1080p-1920x1080.mp4"},
+			{"url": "EHF2016-FHD_1080p-1920x1080.webm"}
+		]
+	},
+	{
+		"slug": "resolution-2048x1024",
+		"title": "Resolution example: 2048x1024 (medium resolution POT)",
+		"description": ["Resolution 2048x1024, ratio 2:1, POT (Power Of Two)."],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-square-2048x1024.mp4"},
+			{"url": "EHF2016-square-2048x1024.webm"}
+		]
+	},
+	{
+		"slug": "resolution-QHD",
+		"title": "Resolution example: QHD (high resolution)",
+		"description": ["Resolution QHD, 2560x1440, ratio 16:9, sometimes called 1440p or WQHD"],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-QHD_1440p-2560x1440.mp4"},
+			{"url": "EHF2016-QHD_1440p-2560x1440.webm"}
+		]
+	},
+	{
+		"slug": "resolution-4k",
+		"title": "Resolution example: UHD 4k (very high resolution)",
+		"description": ["Resolution UHD 4k (Ultra HD 4k), 3840x2160, ratio 16:9, sometimes called 4K"],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-UHD_4k_2160p-3840x2160.mp4"},
+			{"url": "EHF2016-UHD_4k_2160p-3840x2160.webm"}
+		]
+	},
+	{
+		"slug": "resolution-4096x2048",
+		"title": "Resolution example: 4096x2048 (very high resolution POT)",
+		"description": ["Resolution 4096x2048, ratio 2:1, POT (Power Of Two)."],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "EHF2016-square-4096x2048.mp4"},
+			{"url": "EHF2016-square-4096x2048.webm"}
+		]
+	},
+
+
+	{
+		"slug": "resolution-8k",
+		"title": "Resolution example: 7680x4320 (extremely high resolution) h264",
+		"description": ["Resolution UHD 8k (Ultra HD 8k) 7680x4320."],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "kartingowy-narodowy-8k.mp4"}
+		]
+	},
+
+	{
+		"slug": "resolution-8k-h265",
+		"title": "Resolution example: 7680x4320 (extremely high resolution) h265",
+		"description": ["Resolution UHD 8k (Ultra HD 8k) 7680x4320."],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "kartingowy-narodowy-8k-h265.mp4"}
+		]
+	},
+
+	{
+		"slug": "resolution-8192x4320",
+		"title": "Resolution example: 8192x4320 (extremely high resolution) h264",
+		"description": ["Resolution 8192x4320."],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "kartingowy-narodowy-8192x4320@crf23.mp4"}
+		]
+	},
+
+	{
+		"slug": "resolution-8192x4320-h265",
+		"title": "Resolution example: 8192x4320 (extremely high resolution) h265",
+		"description": ["Resolution 8192x4320."],
+		"options": [ { "attr": "loop", "value": "true" } ],
+		"src": [
+			{"url": "kartingowy-narodowy-8192x4320@crf23-h265.mp4"}
+		]
+	},
+
+	{
+		"slug": "test-s3",
+		"title": "Test Amazon S3",
+		"description": "testing a file from amazon s3",
+		"src": [
+			{"url":"https://s3.amazonaws.com/unstock-staging-bucket/user_235/clips/94dfea79f55833065f359e834284e4aa_prev_lg.mp4"}
+		]
+	},
+	
+		
+	{
+		"slug": "frame-stereo",
+		"devel_only": true,
+		"title": "Side by Side stereoscopy on in a frame",
+		"description": "A stereoscopic image presented as a frame (quad).",
+		"options": [
+			{"attr": "stereoscopy", "value":"side-by-side"},
+			{"attr": "projection", "value":"frame"}
+		],
+		"src": [
+			{"url": "stereo.png"}
+		]
+	},
+		
+	{
+		"slug": "angle-test",
+		"title": "Angle test image",
+		"description": "A mono image for testing angles",
+		"options": [
+			{"attr": "stereoscopy", "value":"mono"},
+			{"attr": "projection", "value":"equirectangular"}
+		],
+		"src": [
+			{"url": "horizon.png"}
+		]
+	},
+	
+	{
+		"slug": "dome",
+		"title": "Dome 180",
+		"description": "A mono equirectangular dome (180 degrees, half sphere, forward)",
+		"options": [
+			{"attr": "projection", "value":"dome"},
+			{"attr": "stereoscopy", "value":"mono"},
+			{"attr": "loop", "value": true}
+		],
+		"src": [ 
+			{"url": "lake-180.mp4"},
+			{"url": "lake-180.webm"}
+		]
+	}
+
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
