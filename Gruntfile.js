@@ -1,8 +1,9 @@
 var player_dir = "";
 var docs_source_dir = "docs-generator/";
-var output_demo = "output/site/";
-var output_devel = "output/devel/";
-var output_release = "output/release/";
+var output_dir = "output/";
+var output_demo = output_dir + "site/";
+var output_devel = output_dir + "devel/";
+var output_release = output_dir + "release/";
 
 var media_prefix_devel = "https://tools.bivrost360.com/webplayer-docs/";
 var media_prefix = "media/";
@@ -203,14 +204,19 @@ module.exports = function (grunt) {
 				src: [
 					output_release + "bivrost.css",
 					output_release + "bivrost-min.js",
+					output_release + "bivrost-debug.js",
 					output_release + "license-commercial.html",
 					output_release + "license-free.html",
 					output_release + "readme.html"
 				],
-				dest: "release.zip"
+				dest: output_release + "BIVROST360WebPlayer-current.zip"
 			}
-		}
-		
+		},
+
+		"git-describe": {
+			"options": { },
+			"target": { }
+		},
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-sass');
@@ -237,8 +243,6 @@ module.exports = function (grunt) {
 			+scripts
 			+"\nBivrost.verbose=true; console.log(\"BIVROST 360WebPlayer DEBUG\", Bivrost.version_build, \"PLEASE DO NOT DISTRIBUTE OR USE IN PRODUCTION\");"
 		);
-        
-                
 	});
 
 	/// Documentation generation follows:
@@ -315,10 +319,18 @@ module.exports = function (grunt) {
 		grunt.file.copy(output_release + "bivrost.css", output_devel + "bivrost.css");
 	});
 	
-	grunt.registerTask('release', ['build', 'docs', 'inline', 'zip']);
+	grunt.registerTask('release', ['build', 'docs', 'inline', 'zip', "zip-rename"]);
 	grunt.registerTask('docs', ['docs-clean', 'docs-render', 'mustache_render', 'docs-copy-files']);
 	grunt.registerTask('build', ['sass', 'closure-compiler', 'fix-closure-compiler', 'build-debug']);
 	grunt.registerTask('debug', ['sass', 'build-debug']);
 	grunt.registerTask('default', ['build', 'docs', 'release']);
 
+	grunt.loadNpmTasks('grunt-git-describe');
+
+	grunt.registerTask("zip-rename", function() {
+		grunt.event.once('git-describe', function (rev) {
+			grunt.file.copy(output_release + "BIVROST360WebPlayer-current.zip", output_dir + "BIVROST360WebPlayer-" + rev + ".zip");
+		});    
+		grunt.task.run('git-describe');
+	});
 };
