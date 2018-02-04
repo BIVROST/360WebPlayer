@@ -205,10 +205,12 @@
 	Object.defineProperty(Bivrost.Player.prototype, "renderer", {
 		get: function() { return this._renderer; },
 		set: function(value) {
-			log("changed renderer", value);
-			
 			if(this._renderer === value)
 				return;
+
+			log("changed renderer", value);
+			if(this.onRendererChange)
+				this.onRendererChange(this._renderer, value);
 			
 			if(this._renderer)
 				this._renderer.destroy(this);
@@ -220,6 +222,11 @@
 			this.resize();
 		}
 	});
+
+	/**
+	 * @type {function(BivrostRenderer? old, BivrostRenderer new)?}
+	 */
+	Bivrost.Player.prototype.onRendererChange=null;
 
 	
 	/**
@@ -417,7 +424,7 @@
 			this._fullscreen=force;
 		}
 		
-		log("FULLSCREEN CHANGE: ", this._fullscreen);
+		// log("FULLSCREEN CHANGE: ", this._fullscreen);
 
 		if(this.fullscreen && typeof(chrome) !== "undefined" && typeof(chrome.power) !== "undefined" && typeof(chrome.power.requestKeepAwake) !== "undefined") {
 			log("chrome device management active");

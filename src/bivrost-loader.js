@@ -68,7 +68,7 @@ Bivrost.Loader=function(dom) {
 
 
 	/**
-	 * Helper returning an custom or data attribute as a number, available values of attribute are "true" and "false"
+	 * Helper returning an custom or data attribute as a number
 	 * @private
 	 * @param {HTMLElement} element
 	 * @param {string} name
@@ -79,7 +79,7 @@ Bivrost.Loader=function(dom) {
 		var value=attrString(element, name, defaultValue);
 		if(!/^\d+(.\d*)?$/.test(value))
 			throw name+" is not a number";
-		return value === "true";
+		return parseFloat(value);
 	}
 	
 	
@@ -143,8 +143,17 @@ Bivrost.Loader=function(dom) {
 		var loop=attrBool(container, "loop", false);
 
 		var autoplay=attrBool(container, "autoplay", false);
+
+		var player = new Bivrost.Player(container, urls, projection, stereoscopy, source, loop, autoplay);
 		
-		return new Bivrost.Player(container, urls, projection, stereoscopy, source, loop, autoplay);
+		var analyticsURI=attrString(container, "analytics-uri", undefined);
+		var analyticsFrequency=attrNumber(container, "analytics-frequency", 10);
+
+		if(analyticsURI) {
+			var analytics = new Bivrost.Analytics(player, analyticsURI, analyticsFrequency)
+		}
+
+		return player;
 	});
 	
 };
