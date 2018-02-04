@@ -4,6 +4,7 @@ var output_dir = "output/";
 var output_demo = output_dir + "site/";
 var output_devel = output_dir + "devel/";
 var output_release = output_dir + "release/";
+function relative_to_docs(path) { return "../../" + path; }
 
 var media_prefix_devel = "https://tools.bivrost360.com/webplayer-docs/";
 var media_prefix = "media/";
@@ -13,20 +14,12 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		
 		pkg: grunt.file.readJSON("package.json"),
-		
-		"sass": {
+
+		"compass": {
 			dist: {
 				options: {
-					style: 'expanded',
-					compass: true,
-					sourcemap: "none",
-					trace: true
-				},
-				files: (function(){
-					var o = {};
-					o[output_release + 'bivrost.css'] = 'src/bivrost.scss';
-					return o;
-				})()
+					config: 'config.rb'
+				}
 			}
 		},
 		
@@ -35,7 +28,7 @@ module.exports = function (grunt) {
 				closurePath: 'node_modules/grunt-closure-compiler/',
 				js: grunt.file.readJSON("scripts.json"),
 				jsOutputFile: output_release + 'bivrost-min.js',
-//				maxBuffer: 5000,
+				maxBuffer: 5000,
 				options: {
 					compilation_level: 'SIMPLE',
 					language_in: 'ECMASCRIPT5_STRICT',
@@ -134,9 +127,9 @@ module.exports = function (grunt) {
 							dest: output_devel + data.slug+"-unminified.html",
 							data: extend(data, {
 								minified: data.slug+".html",
-								scripts: grunt.file.readJSON(player_dir+"scripts.json").map(function(js) { return player_dir+js; } ),
+								scripts: grunt.file.readJSON(player_dir+"scripts.json").map(function(js) { return relative_to_docs(player_dir+js); } ),
 								minification_visible: true,
-								styles: [output_release + "bivrost.css"],
+								styles: [relative_to_docs(output_release + "bivrost.css")],
 							})
 						});
 					});
@@ -219,7 +212,7 @@ module.exports = function (grunt) {
 		},
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-contrib-compass');
 	grunt.loadNpmTasks('grunt-closure-compiler');
 	
 	// TODO: defines don't want to work
@@ -321,8 +314,8 @@ module.exports = function (grunt) {
 	
 	grunt.registerTask('release', ['build', 'docs', 'inline', 'zip', "zip-rename"]);
 	grunt.registerTask('docs', ['docs-clean', 'docs-render', 'mustache_render', 'docs-copy-files']);
-	grunt.registerTask('build', ['sass', 'closure-compiler', 'fix-closure-compiler', 'build-debug']);
-	grunt.registerTask('debug', ['sass', 'build-debug']);
+	grunt.registerTask('build', ['compass', 'closure-compiler', 'fix-closure-compiler', 'build-debug']);
+	grunt.registerTask('debug', ['compass', 'build-debug']);
 	grunt.registerTask('default', ['build', 'docs', 'release']);
 
 	grunt.loadNpmTasks('grunt-git-describe');

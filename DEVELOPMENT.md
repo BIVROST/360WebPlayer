@@ -23,6 +23,17 @@ rm compiler-latest.zip
 popd
 ```
 
+Note: on some systems, `gem` commands might require administrator privileges:
+```bash
+sudo gem install sass
+sudo gem install compass
+```
+
+On recent MacOS, you might need to install `compass` to a different directory if using preinstalled ruby:
+```
+sudo gem install -n /usr/local/bin compass
+```
+
 
 Build the project
 -----------------
