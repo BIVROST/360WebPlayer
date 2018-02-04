@@ -9,7 +9,7 @@
 
 		{{^no_head}}
 		{{#styles}}
-		<link href="../{{{.}}}{{cachebuster}}" rel="stylesheet" />
+		<link href="{{{.}}}{{cachebuster}}" rel="stylesheet" />
 		{{/styles}}
 		{{^styles}}
 		<link href="{{{bivrost_dir}}}bivrost.css{{cachebuster}}" rel="stylesheet" />
@@ -18,7 +18,7 @@
 		<script src="{{{.}}}{{cachebuster}}"></script>
 		{{/scripts_additional}}
 		{{#scripts}}
-		<script src="../{{{.}}}{{cachebuster}}"></script>
+		<script src="{{{.}}}{{cachebuster}}"></script>
 		{{/scripts}}
 		{{^scripts}}
 		{{#debug}}
