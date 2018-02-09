@@ -16,6 +16,13 @@ Bivrost.Projection.prototype.meshRight = null;
 Bivrost.Projection.prototype.create = function(texture, args) { throw "not implemented"; };
 
 
+/**
+ * Set this to true if the projection wants camera translation (movement in space).
+ * @type {bool}
+ */
+Bivrost.Projection.prototype.enablePositionalCamera = false;
+
+
 Bivrost.Projection.prototype.dispose = function() {
 	if(this.meshLeft) {
 		this.meshLeft.material.dispose();

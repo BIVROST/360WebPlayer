@@ -41,10 +41,13 @@ Bivrost.Projection.Frame.prototype.create = function(texture, args) {
 };
 
 
-Bivrost.Projection.Frame.textureWidth = null;
+Bivrost.Projection.Frame.prototype.enablePositionalCamera = true;
 
 
-Bivrost.Projection.Frame.textureHeight = null;
+Bivrost.Projection.Frame.prototype.textureWidth = null;
+
+
+Bivrost.Projection.Frame.prototype.textureHeight = null;
 
 
 Bivrost.Projection.Frame.prototype.applyStereoscopy = function(stereoscopy) {
