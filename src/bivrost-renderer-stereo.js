@@ -63,6 +63,13 @@
 		
 		webglRenderer.setViewport(0,0,w,h);
 		webglRenderer.setScissor(0,0,w,h);		
+
+		if(this.onRenderMainView) {
+			var euler = new THREE.Euler();
+			euler.setFromQuaternion(view.leftCamera.quaterion);
+			var fov = view.leftCamera.getEffectiveFOV();
+			this.onRenderMainView(euler, fov);
+		}
 	};
 	
 	

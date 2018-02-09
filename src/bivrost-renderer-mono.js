@@ -28,6 +28,12 @@
 		webglRenderer.setScissor(0,0,w,h);
 		webglRenderer.clear(true, true, true);
 		webglRenderer.render(view.leftScene, view.leftCamera);
+
+		if(this.onRenderMainView) {
+			var euler = view.leftCamera.rotation;
+			var fov = view.leftCamera.getEffectiveFOV();
+			this.onRenderMainView(euler, fov);
+		}
 	};
 	
 	

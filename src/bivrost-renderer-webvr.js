@@ -244,6 +244,13 @@
 
 		// rendered viewport submission
 		vrDisplay.submitFrame();
+
+		if(this.onRenderMainView) {
+			var euler = new THREE.Euler();
+			euler.setFromQuaternion(q);
+			var fov = this.vrRightCamera.getEffectiveFOV();
+			this.onRenderMainView(euler, fov);
+		}
 	};
 	
 	
