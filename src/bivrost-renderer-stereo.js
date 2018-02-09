@@ -66,7 +66,7 @@
 
 		if(this.onRenderMainView) {
 			var euler = new THREE.Euler();
-			euler.setFromQuaternion(view.leftCamera.quaterion);
+			euler.setFromQuaternion(view.leftCamera.rotation);
 			var fov = view.leftCamera.getEffectiveFOV();
 			this.onRenderMainView(euler, fov);
 		}

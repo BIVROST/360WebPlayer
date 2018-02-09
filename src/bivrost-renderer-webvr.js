@@ -62,6 +62,9 @@
 			vrRenderer.domElement.style.width = "100%";
 			vrRenderer.domElement.style.height = "100%";
 
+			// Hide in desktop browsers
+			vrRenderer.domElement.style.display = "none";
+
 			vrDisplay.requestPresent([{ source: vrRenderer.domElement }]).then(
 				function() { log("webvr presence accepted"); },
 				function(err) {console.error(err); }
@@ -190,10 +193,13 @@
 		var vrRenderer=this.vrRenderer;
 		var frameData=this.frameData;
 		
+		vrDisplay.getFrameData(frameData);
+
 		if(!frameData.pose) {
 			log("No frameData.pose (yet?)");
 		}
 		
+
 		var w = vrRenderer.domElement.width;
 		var h = vrRenderer.domElement.height;
 		var horizontal = screen.width > screen.height;
@@ -201,15 +207,14 @@
 		var viewportRight=horizontal ? [w/2,0,w/2,h] : [0,h/2,w,h/2];
 
 		var pos=(frameData.pose && frameData.pose.position) || [0,0,0];
+		pos = [0,0,0];
 		var posV=new THREE.Vector3(pos[0], pos[1], pos[2]);
-		posV=new THREE.Vector3(0,0,0);
 		var orientation=(frameData.pose && frameData.pose.orientation) || [0,0,0,1];
 		var q=new THREE.Quaternion(orientation[0], orientation[1], orientation[2], orientation[3]);
 		this.q=q;
 		this.vrLeftCamera.rotation.setFromQuaternion(q);
 		this.vrRightCamera.rotation.setFromQuaternion(q);
 
-		vrDisplay.getFrameData(frameData);
 		vrRenderer.setScissorTest(true);
 		vrRenderer.clear();
 
