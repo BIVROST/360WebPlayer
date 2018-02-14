@@ -16,6 +16,13 @@
 	
 	
 	/**
+	 * @private
+	 * @const
+	 */
+	var PLATFORM_NAME = "webvr";
+	
+	
+	/**
 	 * Temporary handle for cleanup in destroy()
 	 */
 	Bivrost.Renderer.WebVR.prototype._displayPresentChange;
@@ -264,10 +271,10 @@
 		vrDisplay.submitFrame();
 
 		if(this.onRenderMainView) {
-			var euler = new THREE.Euler();
+			var euler = new THREE.Euler("yxz");
 			euler.setFromQuaternion(q);
 			var fov = this.vrRightCamera.getEffectiveFOV();
-			this.onRenderMainView(euler, fov);
+			this.onRenderMainView(euler, fov, PLATFORM_NAME);
 		}
 	};
 	

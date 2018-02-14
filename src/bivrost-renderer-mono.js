@@ -8,6 +8,13 @@
 	Bivrost.extend(Bivrost.Renderer.Mono, Bivrost.Renderer);
 	
 	
+	/**
+	 * @private
+	 * @const
+	 */
+	var PLATFORM_NAME = "main-display";
+
+	
 	Bivrost.Renderer.Mono.prototype.init=function(player) {
 		Bivrost.Renderer.prototype.init.call(this, player);
 		this.player.ui=new Bivrost.UI.Classic(this.player);
@@ -32,7 +39,7 @@
 		if(this.onRenderMainView) {
 			var euler = view.leftCamera.rotation;
 			var fov = view.leftCamera.getEffectiveFOV();
-			this.onRenderMainView(euler, fov);
+			this.onRenderMainView(euler, fov, PLATFORM_NAME);
 		}
 	};
 	

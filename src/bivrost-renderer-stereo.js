@@ -10,6 +10,13 @@
 	Bivrost.extend(Bivrost.Renderer.Stereo, Bivrost.Renderer);
 	
 	
+	/**
+	 * @private
+	 * @const
+	 */
+	var PLATFORM_NAME = "legacy-stereo";
+
+	
 	Bivrost.Renderer.Stereo.prototype.init = function(player) {
 		Bivrost.Renderer.prototype.init.call(this, player);
 		this.player.ui=new Bivrost.UI.Stereo(player, player.webglRenderer.domElement);
@@ -65,10 +72,10 @@
 		webglRenderer.setScissor(0,0,w,h);		
 
 		if(this.onRenderMainView) {
-			var euler = new THREE.Euler();
+			var euler = new THREE.Euler("YXZ");
 			euler.setFromQuaternion(view.leftCamera.rotation);
 			var fov = view.leftCamera.getEffectiveFOV();
-			this.onRenderMainView(euler, fov);
+			this.onRenderMainView(euler, fov, PLATFORM_NAME);
 		}
 	};
 	
