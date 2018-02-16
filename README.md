@@ -1,24 +1,17 @@
 BIVROST 360WebPlayer
 ====================
 
-![The default theme](README-player.png)
+![360WebPlayer](README-player.png)
 
 The [BIVROST][bivrost-website] 360WebPlayer is the easiest way to stream 360 videos and pictures on your website or blog.
 
-This player is a part of our large family of [video players][player-windows] so you can watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include the [professional custom camera rigs][camera] and the [BIVROST software suite][stitcher].
+This player is a part of our large family of [video][player-windows] [players][player-unity] so you can watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include the professional custom camera rigs and the BIVROST software suite.
 
-You can watch a demo of the video player [here][live-demo].
 
 [player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
+[player-unity]: https://gitlab.com/BIVROST/360PlayerUnity
 [bivrost-website]: https://bivrost360.com
-[live-demo]: https://tools.bivrost360.com/webplayer-docs
-[camera]: https://bivrost360.com#TODO
-[stitcher]: https://bivrost360.com#TODO
-[wordpress-plugin]: https://bivrost360.com#TODO
-
-
-
-
+[wordpress-plugin]: https://gitlab.com/BIVROST/360WebPlayer-for-WordPress
 
 
 Features
@@ -39,6 +32,13 @@ Features
 * Available as a [WordPress plugin][wordpress-plugin].
 * We want to hear your feedback and ideas for new features, to make it even better.
 
+
+Examples
+--------
+
+You can watch a demo of the video player [here][live-demo]. The samples are password protected. If asked, please login as user `R&D` password `demo`.
+
+[live-demo]: https://R&D:demo@tools.bivrost360.com/webplayer-docs
 
 
 Supported browsers
