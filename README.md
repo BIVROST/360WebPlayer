@@ -1,24 +1,17 @@
 BIVROST 360WebPlayer
 ====================
 
-![The default theme](README-player.png)
+![360WebPlayer](README-player.png)
 
 The [BIVROST][bivrost-website] 360WebPlayer is the easiest way to stream 360 videos and pictures on your website or blog.
 
-This player is a part of our large family of [video players][player-windows] so you can watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include the [professional custom camera rigs][camera] and the [BIVROST software suite][stitcher].
+This player is a part of our large family of [video][player-windows] [players][player-unity] so you can watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include the professional custom camera rigs and the BIVROST software suite.
 
-You can watch a demo of the video player [here][live-demo].
 
 [player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
+[player-unity]: https://gitlab.com/BIVROST/360PlayerUnity
 [bivrost-website]: https://bivrost360.com
-[live-demo]: https://tools.bivrost360.com/webplayer-docs
-[camera]: https://bivrost360.com#TODO
-[stitcher]: https://bivrost360.com#TODO
-[wordpress-plugin]: https://bivrost360.com#TODO
-
-
-
-
+[wordpress-plugin]: https://gitlab.com/BIVROST/360WebPlayer-for-WordPress
 
 
 Features
@@ -34,11 +27,18 @@ Features
 * HTTP Live Streaming (HLS).
 * Works well with touch.
 * Well tested and supports many edge cases.
-* [WebVR][webvr] support - works with Oculus Rift, Vive, OSVR, GearVR, Google Cardboard and more.
+* [WebVR][webvr] support - works with Oculus Rift, Vive, Windows Mixed Reality, OSVR, GearVR, Google Cardboard and more.
 * Supports watching content in external native players ([by Bivrost][player-windows]).
 * Available as a [WordPress plugin][wordpress-plugin].
 * We want to hear your feedback and ideas for new features, to make it even better.
 
+
+Examples
+--------
+
+You can watch a demo of the video player [here][live-demo]. The samples are password protected. If asked, please login as user `R&D` password `demo`.
+
+[live-demo]: https://R&D:demo@tools.bivrost360.com/webplayer-docs
 
 
 Supported browsers
@@ -111,7 +111,7 @@ Don't forget to set the correct paths.
 3. [Configure video player][configuration]
 4. [Encode media][media-preparation-guide]
 
-[download-link]: https://github.com/Bivrost/360WebPlayer/releases
+[download-link]: https://gitlab.com/BIVROST/360WebPlayer/tags
 [configuration]: #configuration
 [media-preparation-guide]: #media-preparation-guide
 
@@ -572,9 +572,9 @@ Either your webserver doesn't support [Content-Range][content-range] or there ar
 
 ### Where can I submit feature requests or bug reports? Where can I find the unminified version?
 
-Please send bugs and feature requests to our [GitHub][github]. The sources are located there too. Thanks a lot in advance for any and all feedback.
+Please send bugs and feature requests to our [GitLab][gitlab]. The sources are located there too. Thanks a lot in advance for any and all feedback.
 
-[github]: http://github.com/Bivrost/360WebPlayer
+[gitlab]: http://gitlab.com/BIVROST/360WebPlayer
 
 
 ### Standalone players
