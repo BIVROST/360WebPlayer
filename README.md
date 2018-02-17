@@ -34,7 +34,7 @@ Features
 * HTTP Live Streaming (HLS).
 * Works well with touch.
 * Well tested and supports many edge cases.
-* [WebVR][webvr] support - works with Oculus Rift, Vive, OSVR, GearVR, Google Cardboard and more.
+* [WebVR][webvr] support - works with Oculus Rift, Vive, Windows Mixed Reality, OSVR, GearVR, Google Cardboard and more.
 * Supports watching content in external native players ([by Bivrost][player-windows]).
 * Available as a [WordPress plugin][wordpress-plugin].
 * We want to hear your feedback and ideas for new features, to make it even better.
@@ -111,7 +111,7 @@ Don't forget to set the correct paths.
 3. [Configure video player][configuration]
 4. [Encode media][media-preparation-guide]
 
-[download-link]: https://github.com/Bivrost/360WebPlayer/releases
+[download-link]: https://gitlab.com/BIVROST/360WebPlayer/tags
 [configuration]: #configuration
 [media-preparation-guide]: #media-preparation-guide
 
@@ -572,9 +572,9 @@ Either your webserver doesn't support [Content-Range][content-range] or there ar
 
 ### Where can I submit feature requests or bug reports? Where can I find the unminified version?
 
-Please send bugs and feature requests to our [GitHub][github]. The sources are located there too. Thanks a lot in advance for any and all feedback.
+Please send bugs and feature requests to our [GitLab][gitlab]. The sources are located there too. Thanks a lot in advance for any and all feedback.
 
-[github]: http://github.com/Bivrost/360WebPlayer
+[gitlab]: http://gitlab.com/BIVROST/360WebPlayer
 
 
 ### Standalone players

@@ -80,7 +80,7 @@
 	 * @memberOf Bivrost.View#
 	 */
 	Object.defineProperty(Bivrost.View.prototype, "aspect", {
-		get: function() { return this._leftCamera.aspect; },
+		get: function() { return this.leftCamera.aspect; },
 		set: function(value) {
 			log("set aspect: ", value);
 			this.leftCamera.aspect=value;
@@ -99,7 +99,7 @@
 	 * @memberOf Bivrost.View#
 	 */
 	Object.defineProperty(Bivrost.View.prototype, "zoom", {
-		get: function() { return this._leftCamera.zoom; },
+		get: function() { return this.leftCamera.zoom; },
 		set: function(value) {
 			if(value < 0.5) value=0.5;
 			if(value > 2.0) value=2.0;
