@@ -153,6 +153,7 @@ Bivrost.Loader=function(dom) {
 			analytics.installationId = attrString(container, "analytics-installation-id", undefined);
 			analytics.mediaId = attrString(container, "analytics-media-id", undefined);
 			analytics.sendTimeout = attrNumber(container, "analytics-uri-timeout", Bivrost.Analytics.prototype.sendTimeout);
+			player.analytics = analytics;
 		}
 
 		return player;

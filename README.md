@@ -498,6 +498,137 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 
 
 
+BIVROST Analytics for VR integration
+------------------------------------
+
+The 360WebPlayer has built in support for gathering user analytics, just like the other Bivrost players.  
+Please check the documentation for more details about [BIVROST Analytics for VR][bivrost-analytics-for-vr] capabilities.
+
+Analytics works only with videos. 
+It does not work with static images (panoramas) or with infinite live streams. 
+It does work with streams of known duration.
+
+[bivrost-analytics-for-vr]: https://gitlab.com/BIVROST/Analytics-for-VR
+
+After starting playback, Analytics will start to gather head movement information in relation to the video time. 
+When the video ends or loops, Analytics will send all the collected data with the configured storage method.
+
+
+
+### Analytics configuration options
+
+*	**Frequency of head movement gathering** - required.  
+	Example value: 10  
+	HTML attribute: `analytics-frequency`  
+	JavaScript attribute: second argument in the constructor
+*	**Session destination URI** - optional.  
+	When set, session data will be sent to this address in the `session` POST variable. Please check [documentation for precise server requirements][bivrost-analytics-for-vr]. Can be an absoulte or local url and is subject to [CORS][cors].  
+	Example value: `/session-endpoint.php` or `https://example.com/session-endpoint`.  
+	HTML attribute: `analytics-uri`  
+	JavaScript attribute: `destinationURI`
+*	**Session destination URI timeout** - optional, default `10`.  
+	The timeout for sending the session to Destination URI  
+	Example value: `10`  
+	HTML attribute: `analytics-uri-timeout`  
+	JavaScript attribute: `sendTimeout`
+*	**Installation ID** - optional, default `null`.  
+	Can be used to match a user to the session data.
+	Should be in GUID v4 format.  
+	Example value: `42de7b22-3db6-492a-8718-1641272d75c3`  
+	HTML attribute: `analytics-installation-id`  
+	JavaScript attribute: `installationId`
+*	**Media ID** - optional, default .  
+	Canonical media identification, used for precise distinguishing of played content.
+	Please see the [session format documentation][bivrost-analytics-for-vr] for media id types that can be used.
+	If not provided, the current location.href with the uri protocol will be used.  
+	Example value: `guid:1dbd5447-e044-41db-8866-61c57d16b49f`, `sha1+len:9fded3706e065e7cfeec1c86db2afe5a29f89acf+13211116` or `uri:https://example.com/360video`  
+	HTML attribute: `analytics-uri-timeout`  
+	JavaScript attribute: `sendTimeout`
+*	**Default send handler** - optional.
+	When set, it will be called to store session data.
+	HTML attribute: (unavailable)
+	JavaScript attribute: `sendHandler`, pass a function handling an object (raw session object) and string (JSON-serialized session object).
+
+
+### Analytics API
+
+To use the API you need to keep track of the Analytics object.
+In JavaScript it is the constructed object.
+When used as a HTML tag, Analytics is available as the `analytics` property of the Player object.
+
+To force send the analytics data, you can use the `send()` method. 
+Calling the method will send session data as set in the configuration.
+The handler has an optional argument, if set it will override the configured behaviour.  
+Example:
+
+```javascript
+analytics.send(function(session, serialized) {
+	console.log("session data for" + session.lookprovider + ":", session); 
+})
+```
+
+In the same way, you can also override the `sendHandler(session, serialized)` method to hook into the default sending of sessions after the video has ended:
+
+```javascript
+analytics.sendHandler = function(session, serialized) {
+	console.log("session data for" + session.lookprovider + ":", session); 
+};
+```
+
+To have better control over sending session data using `destinationURI`, you can use the `sendSuccess(xhr, session)` and `sendError(err, session)`:
+
+```javascript
+analytics.sendError = function(err, session) { console.warn("Could not send session", err); }
+analytics.sendSuccess = function(xhr, session) { console.log("Sent successfully", xhr.responseText); }
+.sendSuccess
+```
+
+Please note, that calling `send` might duplicate your gathered session data with sessions with the same `guid` field and different (inremental) content. 
+Check in the documentation on how to resolve duplicates.
+
+
+### Usage
+
+Analytics can be enabled with the HTML component interface:
+
+```html
+<bivrost-player
+	url="movie.mp4"
+	analytics-frequency="15"
+	analytics-uri="/session-gathering-endpoint"
+	analytics-uri-timeout="10"
+	analytics-installation-id="9954d641-67ba-4e16-8f55-3dc513487a89"
+	analytics-media-id="sha1+len:9fded3706e065e7cfeec1c86db2afe5a29f89acf+13211116">
+</bivrost-player>
+```
+
+Or with a JavaScript call:
+
+```javascript
+var analytics = new Bivrost.Analytics(player, 10); //< 10 is the frequency
+analytics.sendHandler = function(session, serialized) { 
+	console.log("Received session", session, serialized);
+};
+analytics.installationId = "42de7b22-3db6-492a-8718-1641272d75c3";
+analytics.mediaId = "uri:https://example.com/360video"
+analytics.destinationURI = "session-gathering-endpoint";
+analytics.sendTimeout = 3; //< seconds
+
+// example: automatically send the sessions every 10 seconds
+setInterval(function() { analytics.send() }, 10000);
+```
+
+
+### Look providers
+
+Analytics are performed separately for each renderer.
+So, if a user starts a video in mono mode and switches to WebVR in the progress, two sessions will be generated and sent.
+You can distinguish between the sessions with the `lookprovider` field of the session data.
+
+Look providers generated by the player:
+*	`bivrost:360WebPlayer:main-display` - gathered by the mono renderer - the classical desktop or mobile mode.
+*	`bivrost:360WebPlayer:webvr` - gathered by the WebVR view.
+*	`bivrost:360WebPlayer:legacy-stereo` - gathered by the legacy Stereo view (Cardboard support).
 
 
 

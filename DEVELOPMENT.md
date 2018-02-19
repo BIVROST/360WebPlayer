@@ -8,8 +8,9 @@ For windows it's easiest to use cygwin.
 Prepare the project
 -------------------
 
+After a successfull git checkout, `cd` into the 360WebPlayer's directory and:
+
 ```bash
-cd $webplayer_directory
 npm install
 npm install -g grunt-cli
 gem install sass

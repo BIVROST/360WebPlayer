@@ -60,8 +60,6 @@
 	 * @param {number} frequency A positive integral number, the frequency at which the movement is sampled. Should not be too high, 10 is a good value.
 	 */
 	Bivrost.Analytics = function(player, frequency) {
-		player.analytics = this;
-
 		if(!(frequency > 0) || ~~frequency !== frequency)
 			throw "Frequency must be a positive integral number";
 
@@ -101,7 +99,7 @@
 
 
 	/**
-	 * Optional installation ID.
+	 * Optional installation ID. Should be in GUID v4 format.
 	 * Can be used to match a user to the session data.
 	 * @type {?string}
 	 */
@@ -111,7 +109,7 @@
 	/**
 	 * Optional canonical media identification.
 	 * Please see the session format documentation for media id types that can be used.
-	 * If not provided, the current location.href will be used.
+	 * If not provided, the current location.href with the uri protocol will be used.
 	 * @type {?string}
 	 */
 	Bivrost.Analytics.prototype.mediaId = undefined;
@@ -242,6 +240,9 @@
 	};
 
 
+	/**
+	 * @param {object} session the session object
+	 */
 	Bivrost.Analytics.prototype.serialize = function(session) {
 		var lastFov;
 		var history = session.history;		
@@ -316,7 +317,7 @@
 							thisRef.sendError(["non-200 return code", xhr.status, xhr.statusText].join(", "), session);
 						}
 						else {
-							log("Session " + session.guid + "(" + session.lookprovider + ") sent successfully");
+							thisRef.sendSuccess(xhr, session);
 						}
 					};
 
@@ -325,17 +326,25 @@
 					xhr.send("session=" + encodeURIComponent(serialized));
 				}
 
-				if(this.sendHandler) {
-					this.sendHandler(session, serialized);
-				}
+				this.sendHandler(session, serialized);
 			}
 		}
+	}
+
+	/**
+	 * Called when a session send XHR error occurs.
+	 * @param {XMLHttpRequest} xhr
+	 * @param {object} session
+	 */
+	Bivrost.Analytics.prototype.sendSuccess = function(xhr, session) {
+		log("Session " + session.guid + "(" + session.lookprovider + ") sent successfully", xhr.responseText);
 	}
 
 
 	/**
 	 * Called when a session send XHR error occurs.
-	 * @type {function(this:Bivrost.Analytics, object)}
+	 * @param {string} err
+	 * @param {object} session
 	 */
 	Bivrost.Analytics.prototype.sendError = function(err, session) {
 		log("Error occurred while sending session to " + this.destinationURI, err, session);
@@ -344,8 +353,9 @@
 
 	/**
 	 * Provide handler to call on each sending of analytics.
-	 * @type {function(this:Bivrost.Analytics, object, string)} the handler, will be called with two arguments: the session in raw object form and session in serialized json form.
+	 * @param {object} session the session in raw object form 
+	 * @param {string} serialized the session in serialized JSON form
 	 */
-	Bivrost.Analytics.prototype.sendHandler = null;
+	Bivrost.Analytics.prototype.sendHandler = function(session, serialized) { /* you can override this handler */ };
 
 })();
