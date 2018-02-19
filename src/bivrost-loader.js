@@ -146,11 +146,13 @@ Bivrost.Loader=function(dom) {
 
 		var player = new Bivrost.Player(container, urls, projection, stereoscopy, source, loop, autoplay);
 		
-		var analyticsURI=attrString(container, "analytics-uri", undefined);
 		var analyticsFrequency=attrNumber(container, "analytics-frequency", 10);
-
-		if(analyticsURI) {
-			var analytics = new Bivrost.Analytics(player, analyticsURI, analyticsFrequency)
+		if(analyticsFrequency) {
+			var analytics = new Bivrost.Analytics(player, analyticsFrequency)
+			analytics.destinationURI = attrString(container, "analytics-uri", undefined);
+			analytics.installationId = attrString(container, "analytics-installation-id", undefined);
+			analytics.mediaId = attrString(container, "analytics-media-id", undefined);
+			analytics.sendTimeout = attrNumber(container, "analytics-uri-timeout", Bivrost.Analytics.prototype.sendTimeout);
 		}
 
 		return player;

@@ -57,10 +57,9 @@
 	/**
 	 * @constructor
 	 * @param {Bivrost.Player} player An instance of Bivrost.Player to be monitored
-	 * @param {string|null} destinationURI The URI that the session will be sent to, optional
 	 * @param {number} frequency A positive integral number, the frequency at which the movement is sampled. Should not be too high, 10 is a good value.
 	 */
-	Bivrost.Analytics = function(player, destinationURI, frequency) {
+	Bivrost.Analytics = function(player, frequency) {
 		player.analytics = this;
 
 		if(!(frequency > 0) || ~~frequency !== frequency)
@@ -76,7 +75,6 @@
 
 		this.player = player;
 		this.frequency = frequency;
-		this.destinationURI = destinationURI;
 		this.sessions = {};
 	}
 
@@ -97,26 +95,26 @@
 
 	/**
 	 * The URI that the session will be sent to, optional
-	 * @type {string|null}
+	 * @type {?string}
 	 */
-	Bivrost.Analytics.prototype.destinationURI = null;
+	Bivrost.Analytics.prototype.destinationURI = undefined;
 
 
 	/**
 	 * Optional installation ID.
 	 * Can be used to match a user to the session data.
-	 * @type {string}
+	 * @type {?string}
 	 */
-	Bivrost.Analytics.prototype.installationId = null;
+	Bivrost.Analytics.prototype.installationId = undefined;
 
 
 	/**
 	 * Optional canonical media identification.
 	 * Please see the session format documentation for media id types that can be used.
 	 * If not provided, the current location.href will be used.
-	 * @type {string}
+	 * @type {?string}
 	 */
-	Bivrost.Analytics.prototype.mediaID = null;
+	Bivrost.Analytics.prototype.mediaId = undefined;
 
 
 	/**
@@ -128,10 +126,10 @@
 
 
 	/**
-	 * Timeout of XHR sending of sessions, in milliseconds
+	 * Timeout of XHR sending of sessions, in seconds
 	 * @type {number}
 	 */
-	Bivrost.Analytics.prototype.sendTimeout = 10000; //< ms
+	Bivrost.Analytics.prototype.sendTimeout = 10; //< seconds
 
 	/**
 	 * @param {THREE.Euler} euler
@@ -188,7 +186,7 @@
 		}
 
 		if(!this.sessions[platform]) {
-			var mediaId = this.mediaID || "url:"+location.href;
+			var mediaId = this.mediaId || "url:"+location.href;
 			var uri = this.player.media.video.currentSrc;
 			var lookprovider = "bivrost:360WebPlayer:" + platform;
 
@@ -228,6 +226,8 @@
 
 
 	/**
+	 * Is the current media compatible with analytics.
+	 * Do not use for disabling analytics (to do that, simply don't enable them).
 	 * @private
 	 * @type {boolean}
 	 */
@@ -289,15 +289,15 @@
 	 * If the handler argument is provided, then destinationURI and sendHandler are not used.
 	 * @param {?function(Object, string)} handler the handler, will be called with two arguments: the session in raw object form and session in serialized json form.
 	 */
-	Bivrost.Analytics.prototype.send = function(handler) {
+	Bivrost.Analytics.prototype.send = function(handlerOverride) {
 		for(var i in this.sessions) {
 			if(this.sessions.hasOwnProperty(i)) {
 				var session = this.sessions[i];
 				var serialized = this.serialize(session);
 				log("will send session "+i, serialized);
 
-				if(handler) {
-					handler(session, serialized);
+				if(handlerOverride) {
+					handlerOverride(session, serialized);
 					continue;
 				}
 
@@ -305,7 +305,7 @@
 					var xhr = new XMLHttpRequest();
 					xhr.open("POST", this.destinationURI, true);
 					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					xhr.timeout = this.sendTimeout;
+					xhr.timeout = ~~(this.sendTimeout * 1000);
 					var thisRef = this;
 
 					xhr.onreadystatechange = function() {
