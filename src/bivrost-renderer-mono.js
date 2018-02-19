@@ -9,10 +9,9 @@
 	
 	
 	/**
-	 * @private
 	 * @const
 	 */
-	var PLATFORM_NAME = "main-display";
+	Bivrost.Renderer.Mono.PLATFORM_NAME = "main-display";
 
 	
 	Bivrost.Renderer.Mono.prototype.init=function(player) {
@@ -39,7 +38,7 @@
 		if(this.onRenderMainView) {
 			var euler = view.leftCamera.rotation;
 			var fov = view.leftCamera.getEffectiveFOV();
-			this.onRenderMainView(euler, fov, PLATFORM_NAME);
+			this.onRenderMainView(euler, fov, Bivrost.Renderer.Mono.PLATFORM_NAME);
 		}
 	};
 	

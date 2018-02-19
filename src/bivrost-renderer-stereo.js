@@ -11,10 +11,9 @@
 	
 	
 	/**
-	 * @private
 	 * @const
 	 */
-	var PLATFORM_NAME = "legacy-stereo";
+	Bivrost.Renderer.Stereo.PLATFORM_NAME = "legacy-stereo";
 
 	
 	Bivrost.Renderer.Stereo.prototype.init = function(player) {
@@ -75,7 +74,7 @@
 			var euler = new THREE.Euler("YXZ");
 			euler.setFromQuaternion(view.leftCamera.rotation);
 			var fov = view.leftCamera.getEffectiveFOV();
-			this.onRenderMainView(euler, fov, PLATFORM_NAME);
+			this.onRenderMainView(euler, fov, Bivrost.Renderer.Stereo.PLATFORM_NAME);
 		}
 	};
 	
