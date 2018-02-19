@@ -71,9 +71,12 @@
 		webglRenderer.setScissor(0,0,w,h);		
 
 		if(this.onRenderMainView) {
-			var euler = new THREE.Euler("YXZ");
-			euler.setFromQuaternion(view.leftCamera.rotation);
+			var euler = this.player.input.lookEuler;
+
+			// var euler = new THREE.Euler("YXZ");
+			// euler.setFromQuaternion(view.leftCamera.rotation);
 			var fov = view.leftCamera.getEffectiveFOV();
+			// debugger;
 			this.onRenderMainView(euler, fov, Bivrost.Renderer.Stereo.PLATFORM_NAME);
 		}
 	};

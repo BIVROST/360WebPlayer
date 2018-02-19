@@ -36,7 +36,7 @@
 		webglRenderer.render(view.leftScene, view.leftCamera);
 
 		if(this.onRenderMainView) {
-			var euler = view.leftCamera.rotation;
+			var euler = this.player.input.lookEuler;
 			var fov = view.leftCamera.getEffectiveFOV();
 			this.onRenderMainView(euler, fov, Bivrost.Renderer.Mono.PLATFORM_NAME);
 		}
