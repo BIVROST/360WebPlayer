@@ -4,11 +4,18 @@
 (function() {
 	
 	Bivrost.Renderer.Stereo = function(player) {
+		Bivrost.Renderer.call(this);
 		this._hadEnabledFullscreen=player.fullscreen;
 		player.fullscreen=true;		
 	};
 	Bivrost.extend(Bivrost.Renderer.Stereo, Bivrost.Renderer);
 	
+	
+	/**
+	 * @const
+	 */
+	Bivrost.Renderer.Stereo.PLATFORM_NAME = "legacy-stereo";
+
 	
 	Bivrost.Renderer.Stereo.prototype.init = function(player) {
 		Bivrost.Renderer.prototype.init.call(this, player);
@@ -63,6 +70,12 @@
 		
 		webglRenderer.setViewport(0,0,w,h);
 		webglRenderer.setScissor(0,0,w,h);		
+
+		this.onRenderMainView.publish({
+			euler: this.player.input.lookEuler, 
+			fov: view.leftCamera.getEffectiveFOV(),
+			platform: Bivrost.Renderer.Stereo.PLATFORM_NAME
+		});
 	};
 	
 	

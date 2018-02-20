@@ -19,8 +19,10 @@ Bivrost.Projection.Cubemap.prototype.create = function(texture, args) {
 	texture.wrapT=texture.wrapS=THREE.ClampToEdgeWrapping;
 	texture.needsUpdate=true;
 	
+	var size = 100;
+	
 	this.meshLeft=new THREE.Mesh(
-		new THREE.BoxGeometry(1, 1, 1),
+		new THREE.BoxGeometry(size, size, size),
 		new THREE.MeshBasicMaterial({
 			side: THREE.DoubleSide,
 			map: texture,
@@ -29,7 +31,7 @@ Bivrost.Projection.Cubemap.prototype.create = function(texture, args) {
 	);
 	
 	this.meshRight=new THREE.Mesh(
-		new THREE.BoxGeometry(1, 1, 1),
+		new THREE.BoxGeometry(size, size, size),
 		new THREE.MeshBasicMaterial({
 			side: THREE.DoubleSide,
 			map: texture,

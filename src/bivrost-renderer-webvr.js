@@ -11,9 +11,16 @@
 	function log(/*vargs...*/) { Bivrost.log("Bivrost.Renderer.WebVR", arguments); };
 	
 	
-	Bivrost.Renderer.WebVR = function(player) { ; };
+	Bivrost.Renderer.WebVR = function(player) {
+		Bivrost.Renderer.call(this);
+	};
 	Bivrost.extend(Bivrost.Renderer.WebVR, Bivrost.Renderer);
 	
+	
+	/**
+	 * @const
+	 */
+	Bivrost.Renderer.WebVR.PLATFORM_NAME = "webvr";
 	
 	/**
 	 * Temporary handle for cleanup in destroy()
@@ -62,6 +69,9 @@
 			vrRenderer.domElement.style.width = "100%";
 			vrRenderer.domElement.style.height = "100%";
 
+			// Hide in desktop browsers
+			vrRenderer.domElement.style.display = "none";
+
 			vrDisplay.requestPresent([{ source: vrRenderer.domElement }]).then(
 				function() { log("webvr presence accepted"); },
 				function(err) {console.error(err); }
@@ -88,6 +98,7 @@
 		
 		this.vrRenderer=vrRenderer;
 		this.frameData=new VRFrameData();
+		this._position=new THREE.Vector3(0,0,0);
 	};
 
 	
@@ -163,8 +174,10 @@
 		}
 		// classical renderer only if webvr has a separate screen
 		else if(vrDisplay.capabilities.hasExternalDisplay) {
-			if(this.vrLeftCamera)
+			if(this.vrLeftCamera) {
 				view.leftCamera.rotation.copy(this.vrLeftCamera.rotation);
+				view.leftCamera.position.copy(this.vrLeftCamera.position);
+			}
 			webglRenderer.clear();
 			webglRenderer.render(view.leftScene, view.leftCamera);	
 		}
@@ -179,6 +192,13 @@
 	
 	Bivrost.Renderer.WebVR.prototype._renderWebVRdelegate=null;
 		
+
+	/**
+	 * @type {THREE.Vector3}
+	 * @private
+	 */
+	Bivrost.Renderer.WebVR.prototype._position=null;
+		
 	/**
 	 * Stereo renreder on the WebVR surface, on a second rendering queue
 	 * @param {THREE.WebGLRenderer} webglRenderer
@@ -190,26 +210,31 @@
 		var vrRenderer=this.vrRenderer;
 		var frameData=this.frameData;
 		
+		vrDisplay.getFrameData(frameData);
+
 		if(!frameData.pose) {
 			log("No frameData.pose (yet?)");
 		}
 		
+
 		var w = vrRenderer.domElement.width;
 		var h = vrRenderer.domElement.height;
 		var horizontal = screen.width > screen.height;
 		var viewportLeft=horizontal ? [0,0,w/2,h] : [0,0,w,h/2];
 		var viewportRight=horizontal ? [w/2,0,w/2,h] : [0,h/2,w,h/2];
 
-		var pos=(frameData.pose && frameData.pose.position) || [0,0,0];
-		var posV=new THREE.Vector3(pos[0], pos[1], pos[2]);
-		posV=new THREE.Vector3(0,0,0);
+		if(this.player.view.enablePositionalCamera && frameData.pose && frameData.pose.position) {
+			this._position.x = frameData.pose.position[0];
+			this._position.y = frameData.pose.position[1];
+			this._position.z = frameData.pose.position[2];
+		}
+
 		var orientation=(frameData.pose && frameData.pose.orientation) || [0,0,0,1];
 		var q=new THREE.Quaternion(orientation[0], orientation[1], orientation[2], orientation[3]);
 		this.q=q;
 		this.vrLeftCamera.rotation.setFromQuaternion(q);
 		this.vrRightCamera.rotation.setFromQuaternion(q);
 
-		vrDisplay.getFrameData(frameData);
 		vrRenderer.setScissorTest(true);
 		vrRenderer.clear();
 
@@ -222,7 +247,7 @@
 		var offsetLeft = vrDisplay.getEyeParameters("left").offset;
 		var posLeft = new THREE.Vector3(offsetLeft[0], offsetLeft[1], offsetLeft[2]);
 		posLeft.applyQuaternion(q);
-		posLeft.add(posV);
+		posLeft.add(this._position);
 		this.vrLeftCamera.position.set(posLeft.x, posLeft.y, posLeft.z);
 
 		vrRenderer.render(this.vrLeftScene, this.vrLeftCamera);
@@ -236,7 +261,7 @@
 		var offsetRight = vrDisplay.getEyeParameters("right").offset;
 		var posRight = new THREE.Vector3(offsetRight[0], offsetRight[1], offsetRight[2]);
 		posRight.applyQuaternion(q);
-		posRight.add(posV);
+		posRight.add(this._position);
 		this.vrRightCamera.position.set(posRight.x, posRight.y, posRight.z);
 
 		vrRenderer.render(this.vrRightScene, this.vrRightCamera);
@@ -244,6 +269,14 @@
 
 		// rendered viewport submission
 		vrDisplay.submitFrame();
+
+		var euler = new THREE.Euler("yxz");
+		euler.setFromQuaternion(q);
+		this.onRenderMainView.publish({
+			euler: euler, 
+			fov: this.vrRightCamera.getEffectiveFOV(),
+			platform: Bivrost.Renderer.WebVR.PLATFORM_NAME
+		});
 	};
 	
 	

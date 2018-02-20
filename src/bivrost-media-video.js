@@ -36,12 +36,11 @@
 		video.setAttribute("width", "32");	// any number will be ok
 		video.setAttribute("height", "32");	// any number will be ok
 		video.setAttribute("crossOrigin", "anonymous");
-		if(loop)
-			video.setAttribute("loop", "true");
 		video.setAttribute("webkit-playsinline", "");
 		video.setAttribute("playsinline", "");
 		video.setAttribute("preload", "auto");
 		// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+		this.loop = loop;
 
 		video.addEventListener("error", function(e) {
 			var description={
@@ -53,6 +52,17 @@
 			}[(video.error || {code:-1}) && video.error.code];
 			console.error("error: ", description);
 			thisRef.onerror(description);
+		});
+
+		video.addEventListener("ended", function(e) {
+			thisRef.playbackStatusChange(false);
+			if(thisRef._loopAfterEnd) {
+				log("looping video");
+				thisRef.play();	// will set playbackStatusChange to true
+			}
+			else {
+				log("video ended");
+			}
 		});
 
 		var videoLoadedDone=false;
@@ -102,14 +112,12 @@
 	Bivrost.Media.store.register(Bivrost.SOURCE_VIDEO, Bivrost.VideoMedia);
 
 	
+	Bivrost.VideoMedia.prototype._loopAfterEnd = false;
 	Bivrost.VideoMedia.prototype._setLoop = function(value) {
-		if(value)
-			this.video.setAttribute("loop", "true");
-		else
-			this.video.removeAttribute("loop");
+		this._loopAfterEnd = value;
 	};
 
-	Bivrost.VideoMedia.prototype.play=function() { this.video.play(); };
+	Bivrost.VideoMedia.prototype.play=function() { this.video.play(); this.playbackStatusChange(true); };
 	Bivrost.VideoMedia.prototype.pause=function() { this.video.pause(); };
 	Bivrost.VideoMedia.prototype._getPaused=function() { return this.video.paused; };
 	
