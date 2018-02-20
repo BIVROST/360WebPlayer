@@ -55,16 +55,6 @@
 		this.input.registerShortcut(" ", function() { thisRef.media.pauseToggle(); });
 		this.input.registerShortcut(["f", "F"], function() { thisRef.fullscreen=!thisRef.fullscreen; });
 		this.input.registerShortcut(["v", "V"], function() { thisRef.vrModeEnterOrCycle(); });
-		// TODO: s - toggle stereoscopy mode
-		// TODO: i - show media info
-		// TODO: w: media.width--;
-		// TODO: W: media.width++;
-		// TODO: h: media.height--;
-		// TODO: H: media.height++;
-		// TODO: x: media.woffset--;
-		// TODO: X: media.woffset++;
-		// TODO: y: media.hoffset--;
-		// TODO: Y: media.hoffset++;
 		
 		
 		// fullscreen
@@ -81,8 +71,8 @@
 		this.webglRenderer.setClearColor(0x000000, 1);	// iOS doesn't have this set up as proper default
 		container.appendChild(this.webglRenderer.domElement);		
 
+		this.onRendererChange = new Bivrost.Observable();
 		this.renderer = new Bivrost.Renderer.Mono();
-
 		
 		
 		// resize handling
@@ -209,8 +199,7 @@
 				return;
 
 			log("changed renderer", value);
-			if(this.onRendererChange)
-				this.onRendererChange(this._renderer, value);
+			this.onRendererChange.publish({prev:this._renderer, next:value});
 			
 			if(this._renderer)
 				this._renderer.destroy(this);
@@ -224,9 +213,10 @@
 	});
 
 	/**
-	 * @type {function(BivrostRenderer? old, BivrostRenderer new)?}
+	 * @member {Bivrost.Player} onRenderChange
+	 * @type {Bivrost.Observable}
 	 */
-	Bivrost.Player.prototype.onRendererChange=null;
+	Bivrost.Player.prototype.onRendererChange;
 
 	
 	/**

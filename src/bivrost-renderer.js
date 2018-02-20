@@ -4,7 +4,9 @@
 
 (function() {
 	
-	Bivrost.Renderer = function() {};
+	Bivrost.Renderer = function() {
+		this.onRenderMainView = new Bivrost.Observable();
+	};
 	
 	Bivrost.Renderer.prototype.render = function(webglRenderer, view) { throw "abstract"; };
 	
@@ -28,7 +30,9 @@
 	 * The main view is the most interesting view for the user, for example if
 	 * there is a PC VR headset and the viewport is monitored on the monitor, 
 	 * this will be called during rendering on the headset (once per frame).
-	 * @type {?function(THREE.Euler euler, number fov, string platform)}
+	 * Arguments of callback: { euler: THREE.Euler, fov: number, platform: string }
+	 * @type {Bivrost.Observable}
+	 * @memberof Bivrost.Renderer#
 	 */
 	Bivrost.Renderer.prototype.onRenderMainView = null;
 

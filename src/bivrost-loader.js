@@ -150,9 +150,9 @@ Bivrost.Loader=function(dom) {
 		if(analyticsFrequency) {
 			var analytics = new Bivrost.Analytics(player, analyticsFrequency)
 			analytics.destinationURI = attrString(container, "analytics-uri", undefined);
+			analytics.sendTimeout = attrNumber(container, "analytics-uri-timeout", Bivrost.Analytics.prototype.sendTimeout);
 			analytics.installationId = attrString(container, "analytics-installation-id", undefined);
 			analytics.mediaId = attrString(container, "analytics-media-id", undefined);
-			analytics.sendTimeout = attrNumber(container, "analytics-uri-timeout", Bivrost.Analytics.prototype.sendTimeout);
 			player.analytics = analytics;
 		}
 

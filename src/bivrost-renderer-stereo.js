@@ -4,6 +4,7 @@
 (function() {
 	
 	Bivrost.Renderer.Stereo = function(player) {
+		Bivrost.Renderer.call(this);
 		this._hadEnabledFullscreen=player.fullscreen;
 		player.fullscreen=true;		
 	};
@@ -70,15 +71,11 @@
 		webglRenderer.setViewport(0,0,w,h);
 		webglRenderer.setScissor(0,0,w,h);		
 
-		if(this.onRenderMainView) {
-			var euler = this.player.input.lookEuler;
-
-			// var euler = new THREE.Euler("YXZ");
-			// euler.setFromQuaternion(view.leftCamera.rotation);
-			var fov = view.leftCamera.getEffectiveFOV();
-			// debugger;
-			this.onRenderMainView(euler, fov, Bivrost.Renderer.Stereo.PLATFORM_NAME);
-		}
+		this.onRenderMainView.publish({
+			euler: this.player.input.lookEuler, 
+			fov: view.leftCamera.getEffectiveFOV(),
+			platform: Bivrost.Renderer.Stereo.PLATFORM_NAME
+		});
 	};
 	
 	

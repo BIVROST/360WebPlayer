@@ -64,9 +64,7 @@
 			throw "Frequency must be a positive integral number";
 
 		var thisRef = this;
-		player.onRendererChange = function(prev, next) {
-			thisRef.setRenderer(next);
-		}
+		player.onRendererChange.subscribe(function(r) {	thisRef.setRenderer(r.next); });
 		if(player.renderer) {
 			this.setRenderer(player.renderer);
 		}
@@ -133,7 +131,11 @@
 	 * @param {THREE.Euler} euler
 	 * @param {number} fov
 	 */
-	Bivrost.Analytics.prototype.update = function(euler, fov, platform) {
+	Bivrost.Analytics.prototype.update = function(ev) {
+		var euler = ev.euler;
+		var fov = ev.fov;
+		var platform = ev.platform;
+
 		if(this.lastMedia !== this.player.media) {
 			this.lastMedia = this.player.media;
 
@@ -202,7 +204,7 @@
 				"media_id": mediaId
 			};
 
-			log("Created session for platform " + platform, this.sessions[platform]);
+			log("Started session " + this.sessions[platform].guid + " for platform " + platform);
 		}
 
 
@@ -218,8 +220,6 @@
 		var frame = ~~(time * this.frequency);	//< implicit Math.floor, so each frame except the last one lasts the same
 
 		this.sessions[platform].history[frame] = [~~(64 * yaw), ~~(64 * pitch), fov];
-		// log(frame, time, this.frequency);
-		// log(yaw + "," + pitch +" "+fov);
 	}
 
 
@@ -236,7 +236,7 @@
 	 * @param {Bivrost.Renderer} renderer
 	 */
 	Bivrost.Analytics.prototype.setRenderer = function(renderer) {
-		renderer.onRenderMainView = this.update.bind(this);
+		renderer.onRenderMainView.subscribe(this.update.bind(this));
 	};
 
 
@@ -295,7 +295,7 @@
 			if(this.sessions.hasOwnProperty(i)) {
 				var session = this.sessions[i];
 				var serialized = this.serialize(session);
-				log("will send session "+i, serialized);
+				log("Will send session " + session.guid + " for platform " + i);
 
 				if(handlerOverride) {
 					handlerOverride(session, serialized);
@@ -337,7 +337,7 @@
 	 * @param {object} session
 	 */
 	Bivrost.Analytics.prototype.sendSuccess = function(xhr, session) {
-		log("Session " + session.guid + "(" + session.lookprovider + ") sent successfully", xhr.responseText);
+		log("Session " + session.guid + "(" + session.lookprovider + ") sent successfully"/*, xhr.responseText*/);
 	}
 
 

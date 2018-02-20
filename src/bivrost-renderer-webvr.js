@@ -11,7 +11,9 @@
 	function log(/*vargs...*/) { Bivrost.log("Bivrost.Renderer.WebVR", arguments); };
 	
 	
-	Bivrost.Renderer.WebVR = function(player) { ; };
+	Bivrost.Renderer.WebVR = function(player) {
+		Bivrost.Renderer.call(this);
+	};
 	Bivrost.extend(Bivrost.Renderer.WebVR, Bivrost.Renderer);
 	
 	
@@ -268,12 +270,13 @@
 		// rendered viewport submission
 		vrDisplay.submitFrame();
 
-		if(this.onRenderMainView) {
-			var euler = new THREE.Euler("yxz");
-			euler.setFromQuaternion(q);
-			var fov = this.vrRightCamera.getEffectiveFOV();
-			this.onRenderMainView(euler, fov, Bivrost.Renderer.WebVR.PLATFORM_NAME);
-		}
+		var euler = new THREE.Euler("yxz");
+		euler.setFromQuaternion(q);
+		this.onRenderMainView.publish({
+			euler: euler, 
+			fov: this.vrRightCamera.getEffectiveFOV(),
+			platform: Bivrost.Renderer.WebVR.PLATFORM_NAME
+		});
 	};
 	
 	

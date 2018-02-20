@@ -3,7 +3,9 @@
 
 (function() {
 	
-	Bivrost.Renderer.Mono = function() {};
+	Bivrost.Renderer.Mono = function() {
+		Bivrost.Renderer.call(this);
+	};
 	
 	Bivrost.extend(Bivrost.Renderer.Mono, Bivrost.Renderer);
 	
@@ -35,11 +37,11 @@
 		webglRenderer.clear(true, true, true);
 		webglRenderer.render(view.leftScene, view.leftCamera);
 
-		if(this.onRenderMainView) {
-			var euler = this.player.input.lookEuler;
-			var fov = view.leftCamera.getEffectiveFOV();
-			this.onRenderMainView(euler, fov, Bivrost.Renderer.Mono.PLATFORM_NAME);
-		}
+		this.onRenderMainView.publish({
+			euler: this.player.input.lookEuler, 
+			fov: view.leftCamera.getEffectiveFOV(),
+			platform: Bivrost.Renderer.Mono.PLATFORM_NAME
+		});
 	};
 	
 	
