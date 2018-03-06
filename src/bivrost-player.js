@@ -55,16 +55,6 @@
 		this.input.registerShortcut(" ", function() { thisRef.media.pauseToggle(); });
 		this.input.registerShortcut(["f", "F"], function() { thisRef.fullscreen=!thisRef.fullscreen; });
 		this.input.registerShortcut(["v", "V"], function() { thisRef.vrModeEnterOrCycle(); });
-		// TODO: s - toggle stereoscopy mode
-		// TODO: i - show media info
-		// TODO: w: media.width--;
-		// TODO: W: media.width++;
-		// TODO: h: media.height--;
-		// TODO: H: media.height++;
-		// TODO: x: media.woffset--;
-		// TODO: X: media.woffset++;
-		// TODO: y: media.hoffset--;
-		// TODO: Y: media.hoffset++;
 		
 		
 		// fullscreen
@@ -81,8 +71,8 @@
 		this.webglRenderer.setClearColor(0x000000, 1);	// iOS doesn't have this set up as proper default
 		container.appendChild(this.webglRenderer.domElement);		
 
+		this.onRendererChange = new Bivrost.Observable();
 		this.renderer = new Bivrost.Renderer.Mono();
-
 		
 		
 		// resize handling
@@ -205,10 +195,11 @@
 	Object.defineProperty(Bivrost.Player.prototype, "renderer", {
 		get: function() { return this._renderer; },
 		set: function(value) {
-			log("changed renderer", value);
-			
 			if(this._renderer === value)
 				return;
+
+			log("changed renderer", value);
+			this.onRendererChange.publish({prev:this._renderer, next:value});
 			
 			if(this._renderer)
 				this._renderer.destroy(this);
@@ -220,6 +211,12 @@
 			this.resize();
 		}
 	});
+
+	/**
+	 * @member {Bivrost.Player} onRenderChange
+	 * @type {Bivrost.Observable}
+	 */
+	Bivrost.Player.prototype.onRendererChange;
 
 	
 	/**
@@ -417,7 +414,7 @@
 			this._fullscreen=force;
 		}
 		
-		log("FULLSCREEN CHANGE: ", this._fullscreen);
+		// log("FULLSCREEN CHANGE: ", this._fullscreen);
 
 		if(this.fullscreen && typeof(chrome) !== "undefined" && typeof(chrome.power) !== "undefined" && typeof(chrome.power.requestKeepAwake) !== "undefined") {
 			log("chrome device management active");

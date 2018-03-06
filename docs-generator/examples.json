@@ -357,6 +357,19 @@
 			{"url": "lake-180.mp4"},
 			{"url": "lake-180.webm"}
 		]
+	},
+
+	{
+		"slug": "analytics",
+		"title": "Analytics example",
+		"description": [
+			"Example for the BIVROST Video Analytics"
+		],
+		"options": [
+			{ "attr": "url", "value": "morskie-oko.mp4", "is_link": true },
+			{ "attr": "analytics-uri", "value": "dump-post.php" },
+			{ "attr": "analytics-frequency", "value": 2 }
+		]
 	}
 
 ]

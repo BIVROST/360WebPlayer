@@ -36,6 +36,7 @@
 		projection.create(media.texture, projection_args);
 		projection.applyStereoscopy(media.stereoscopy);
 		projection.attach(this.leftScene, this.rightScene);
+		this.enablePositionalCamera = projection.enablePositionalCamera;
 	};
 	
 	
@@ -109,5 +110,13 @@
 			this.rightCamera.updateProjectionMatrix();			
 		}
 	});
+
+
+	/**
+	 * This is set to true if the projection wants camera translation (movement in space).
+	 * @type {bool}
+	 */
+	Bivrost.View.prototype.enablePositionalCamera = false;
+
 
 })();

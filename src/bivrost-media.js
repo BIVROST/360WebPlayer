@@ -157,6 +157,7 @@ Bivrost.AVAILABLE_SOURCES=[
 		}
 		log("got texture", texture);
 		this.onload(this);
+		this.playbackStatusChange(true);
 	};
 
 
@@ -190,6 +191,37 @@ Bivrost.AVAILABLE_SOURCES=[
 		get: function() {return this._getLoop();},
 		set: function(value) {this._setLoop(value);}
 	});
+
+	/**
+	 * Called when media is loaded/started (true) or ended(false) or will loop (first false, then true)
+	 * @type {?function(BIVROST.Media media, bool playing)}
+	 */
+	Bivrost.Media.prototype.onPlaybackStatusChange = null;
+
+	/**
+	 * @private
+	 */
+	Bivrost.Media.prototype.playbackStatus = false;
+
+	/**
+	 * @protected
+	 */
+	Bivrost.Media.prototype.playbackStatusChange = function(playing) {
+		if(this.playbackStatus === playing) {
+			return;
+		}
+		this.playbackStatus = playing;
+		if(this.onPlaybackStatusChange) {
+			this.onPlaybackStatusChange(this, playing);
+		}
+	}
+
+	/**
+	 * Called when media has ended 
+	 * @type {?function(BIVROST.Media media)}
+	 */
+	Bivrost.Media.prototype.onMediaEnd = null;
+
 
 	Bivrost.Media.prototype._getDuration=function() { return 0; },
 	Object.defineProperty(Bivrost.Media.prototype, "duration", {
