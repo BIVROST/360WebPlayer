@@ -13,6 +13,10 @@ This player is a part of our large family of [video][player-windows] [players][p
 [bivrost-website]: https://bivrost360.com
 [wordpress-plugin]: https://gitlab.com/BIVROST/360WebPlayer-for-WordPress
 
+Quick links:
+* [download the latest release][download-link]
+* [examples and live demo][live-demo]
+* [development setup](DEVELOPMENT.md)
 
 Features
 --------
@@ -101,13 +105,13 @@ The 360WebPlayer’s default options will cover most use cases.
 Installation
 ------------
 
-1. Download the JS and CSS files [here][download-link] and put it on your server.
+1. Download the JS and CSS files [here][download-link] and put them on your server.
 2. Link to the CSS and JS files anywhere in the HTML (for example in the head):
-```html
-<link rel="stylesheet" href="bivrost.css" />
-<script type="text/javascript" src="bivrost-min.js"></script>
-```
-Don't forget to set the correct paths.
+   ```html
+   <link rel="stylesheet" href="bivrost.css" />
+   <script type="text/javascript" src="bivrost-min.js"></script>
+   ```
+   Don't forget to set the correct paths.
 3. [Configure video player][configuration]
 4. [Encode media][media-preparation-guide]
 
@@ -124,38 +128,38 @@ Configuration
 
 Following configuration options are allowed:
 
-*	`url`: media address, can be multiple addresses when you have alternative sources (translates to `source` tag of HTML5 `video` or `img` if a picture); At least one `url` attribute or `bivrost-media` tag is required.
+*	`url`: media address, can be multiple addresses when you have alternative sources (translates to `source` tag of HTML5 `video` or `img` if a picture); At least one `url` attribute or `bivrost-media` tag is required. Multiple URLs are used only with the video, not with streaming nor photos.
 
 *	`type`: media mime types and codec information. The format is the same as in HTML5 video; optional, ignored on pictures.
 
 *	`loop`: allows the video to loop 
-	Allowed values: "true", "false";  
-	optional, default: "false".
+	Allowed values: `true`, `false`;  
+	optional, default: `false`.
 
 *	`autoplay`: should the content play automatically? This might not work with some platforms.
-	Allowed values: "true", "false";  
-	optional, default: "true".
+	Allowed values: `true`, `false`;  
+	optional, default: `true`.
 
 *	`stereoscopy`: which form of stereoscopy is used?  
 	Allowed values:  
 	
-	* "autodetect" - detects by filename tags and media ratio (see: Media preparation guide), 
-	* "mono" - whole image used,
-	* "side-by-side" - the image for left eye is on the left half, and right on the right half of the media,
-	* "top-and-bottom" - the left eye is the top half of the image, the right one on the bottom half,
- 	* "top-and-bottom-reversed" - the left eye is the bottom half of the image, the right one on the top half;
+	* `autodetect` - detects by filename tags and media ratio (see: Media preparation guide), 
+	* `mono` - whole image used,
+	* `side-by-side` - the image for the left eye is on the left half, and for the right on the right half of the media,
+	* `top-and-bottom` - the left eye is the top half of the image, while the right one is on the bottom half,
+ 	* `top-and-bottom-reversed` - the left eye is on the bottom half of the image, while the right one is on the top half;
 
-	optional, default: "autodetect".
+	optional, default: `autodetect`.
 
-*	`source`: is it a video or picture?
-	Allowed values: "video", "picture", "stream-hls", "autodetect";
-	optional, default: "autodetect"
+*	`source`: is it a video, a picture or a stream?
+	Allowed values: `video`, `picture`, `stream-hls`, `autodetect`;
+	optional, default: `autodetect`
 
 	Warning: When using HLS, you have to include the [HLS.js][hls-js] third party library.
 	
 *	`projection`: how is the media projected (mapping from 2d to 3d)?
-	Allowed value: "equirectangular", "dome", "frame", "cubemap", "cubemap:configuration...";
-	optional, default: "equirectangular".
+	Allowed value: `equirectangular`, `dome`, `frame`, `cubemap`, `cubemap:configuration...`;
+	optional, default: `equirectangular`.
 
 	* `equirectangular` is the default value, it is a 360 by 180 degree image with all horizontal and vertical lines preserved
 
@@ -165,28 +169,28 @@ Following configuration options are allowed:
 
 	* `cubemap` can be configured through several cubemap types. There are a few presets defining the order: 
 
-		* "horizontal" (default) - all sides of the cube are in one line in the following order; left, right, down, up, back, front. OBRX uses this format.
-		* "two-by-three" - all sides are in two rows: left, right, down and up, bottom, front. Facebook 360 videos use this format.
-		* "facebook" - the same as two-by-three, but rotated, and each face is cropped by 1%.
-		* "horizontal-cross" - all sides are in a cross with bottom, right, front and left in the middle row; up is in the top row and down in the bottom. 
-		* "vertical-cross" - up is in the first row, bottom, right and front in the second, left in the third and down in the fourth. ATI CubeMapGen uses this format.
+		* `horizontal` (default) - all sides of the cube are in one line in the following order; left, right, down, up, back, front. OBRX uses this format.
+		* `two-by-three` - all sides are in two rows: left, right, down and up, bottom, front Facebook 360 videos use this format.
+		* `facebook` - the same as two-by-three, but rotated. Each face is cropped by 1%.
+		* `horizontal-cross` - all sides are in a cross with bottom, right, front and left in the middle row; up is in the top row and down in the bottom. 
+		* `vertical-cross` - up is in the first row, bottom, right and front in the second left in the third and down in the fourth. ATI CubeMapGen uses this format`
 		* custom - advanced, please use presets if possible; you can specify any alignment with a description string. The string is an 2d array of face names in the order they appear on the texture. The rows are separated by "," and the faces are one letter acronyms (accepts capital letters):
 
-			*  "f" - front
-			*  "b" - back
-			*  "l" - left
-			*  "r" - right
-			*  "u" - up
-			*  "d" - down
-			*  "-" - unused space
+			*  `f` - front
+			*  `b` - back
+			*  `l` - left
+			*  `r` - right
+			*  `u` - up
+			*  `d` - down
+			*  `-` - unused space
 
 		Each face can be rotated with `*x`.  x is a number from 0 to 3. For example `r*1` is right rotated 90 degrees clockwise.
 
 		There are optional modifiers at the end of the string:
 
-		*  ">90" - rotate the whole cube clockwise by 90 degrees
-		*  "<72" - rotate the whole cube counter clockwise by 72 degrees
-		*  "+0.01" - crop faces by 0.01 (prevents visible edges)
+		*  `>90` - rotate the whole cube clockwise by 90 degrees
+		*  `<72` - rotate the whole cube counter clockwise by 72 degrees
+		*  `+0.01` - crop faces by 0.01 (prevents visible edges)
 
 		Example: `-u--,blfr,-d*2-->90+0.002`
 
@@ -380,32 +384,34 @@ Some interesting API methods:
 
 
 
-Themes
-------
+Themes and personalization
+--------------------------
 
 There are three themes available:
 
-## Default
-
-![The default theme](README-skin-default.jpeg)
+![Three default themes: default, spring and autumn](README-themes.png "Three default themes: default, spring and autumn")
 
 
+## Default theme
 
-## Spring
-
-![The spring theme](README-skin-spring.jpeg)
-
-You can change the theme by adding a `bivrost-theme-spring` class to the `bivrost-player` tag.
+The colour of the default theme is blue. It does not require any additional configuration.
 
 
+## Spring theme
 
-## Autumn
-
-![The autumn theme](README-skin-autumn.jpeg)
-
-You can change the theme by adding a `bivrost-theme-autumn` class to the `bivrost-player` tag.
+The colour of the spring theme is green. 
+You can change the theme by adding the `bivrost-theme-spring` class to the `bivrost-player` tag.
 
 
+## Autumn theme
+
+The colour of the autumn theme is red. 
+You can change the theme by adding the `bivrost-theme-autumn` class to the `bivrost-player` tag.
+
+
+## Additional configuration and custom themes
+
+You can configure other options, including modifying the logo or making custom colours by editing the sass and image files and recompiling the player. See the [development setup document](DEVELOPMENT.md) for more details.
 
 
 
@@ -416,10 +422,11 @@ Media preparation guide
 VR needs high definition content, at the same time browsers have strict guidelines and restrictions for portable media. 
 
 We recommend VR creators to use mp4/h264 and webm/vp8 **content types** in at least full HD (1920 x 1080) when uploading content. In order to provide full compatibility we suggest to upload the content in both formats. We also advice content creators to
-refrain from using ogv, because it requires more processing power to get the same results due to software decoding. If you have access to hardware this powerful it will support mp4.
+refrain from using ogv, because it requires more processing power to get the same results due to software decoding. If you have access to hardware this powerful it will support h264 or vp8.
 
-For the **resolution** we advice you to use Full HD. This resolution is not perfect, but it will have to do. Working in 4k or 8k would be optimal, but this is often not supported on mobile or by many desktop computers. Most hardware decoders only work up to Full HD.  
-In odd cases 720p will do when the user does not toggle on full screen, but watches the content from the window. 
+For the **resolution** we advise you to use at least Full HD. 
+This resolution is not perfect, but usually it is enough if displayed in a window or mobile. WQHD (2560 × 1440) works in most configurations and has much more details. 
+Of course 4K and 8K are even better, but they are often not supported on mobile or by many desktop computers. Some hardware decoders only work up to Full HD or WQHD.  
 
 We also recommend you to refrain from using the 2:1 **aspect ratio** and instead use the 16:9 ratio. You shouldn't care that you change aspect ratio, projected pixels weren't square (or even rectangular) to begin with. You must not crop nor letter box the content.
 
@@ -430,7 +437,7 @@ Some other tips:
 * Set keyframes around 5 times per second. otherwise the movie will take forever to seek (ffmpeg's `-g` option).
 * Make the movie streamable by putting the headers in the beginning of the file (ffmpeg's `+faststart` option).
 * Codecs, especially h264, have lots of switches that should be used, for example using the yuv420p colorspace to keep a correct level and profile.
-* Browsers prefer the H.264 and VP8 codec types over H.265 and VP9.
+* When encoding, prefer the H.264 and VP8 codec types over H.265 and VP9. The latter ones are still not universally supported.
 
 At Bivrost we use [ffmpeg][ffmpeg] in combination with these options for both web & mobile:
 
@@ -451,7 +458,7 @@ If you want to know more, here are some good manuals to look into:
 
 [ffmpeg]: https://www.ffmpeg.org/
 
-For **static pictures**, use jpeg or png. Hugin's equirectangular or Google's Photo Sphere pictures work well if you stay below 4096 x 4096.
+For **static pictures**, use jpeg or png. Hugin's equirectangular or Google's Photo Sphere pictures works well. Most hardware supports at least the 8192 x 4096 resolution.
 
 For examples [click here][live-demo].
 

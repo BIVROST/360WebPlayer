@@ -2,14 +2,15 @@ Development setup
 =================
 
 Install npm, ruby and java. Have them in your path.
-For windows it's easiest to use cygwin.
+For Windows we advise to use cygwin.
 
 
 Prepare the project
 -------------------
 
+After a successful git checkout, `cd` into the 360WebPlayer's directory and:
+
 ```bash
-cd $webplayer_directory
 npm install
 npm install -g grunt-cli
 gem install sass
@@ -29,7 +30,7 @@ sudo gem install sass
 sudo gem install compass
 ```
 
-On recent MacOS, you might need to install `compass` to a different directory if using preinstalled ruby:
+On recent MacOS, you might need to install `compass` to a different directory if using pre-installed ruby:
 ```
 sudo gem install -n /usr/local/bin compass
 ```
@@ -48,9 +49,9 @@ The results will be stored in the output directory:
 
 * `output/release` - the compiled scripts, styles and html documentation with embedded images
 * `output/site` - the HTML, JavaScript and CSS parts that are to be copied to a web server for demonstration. They lack the media files that are supposed to be on the server in the `media` subdirectory. 
-* `output/devel` - the HTML, JavaScript and CSS parts that are to be used on a local server for development. They lack the media files that are supposed to be on the server on the prefix dictated by 
+* `output/devel` - the HTML, JavaScript and CSS parts that are to be used on a local server for development. They lack the media files that are supposed to be on the server on the prefix dictated by `media_prefix_devel` in the Gruntfile.
 
-There are a few sub targets if you do not want to rebuild everything. The most interesting are:
+There are a few sub targets when you do not want to rebuild everything. The most interesting are:
 
 * `grunt docs` rebuilds the documentation,
 * `grunt build` rebuilds and recompiles the JavaScript and CSS files,
@@ -64,4 +65,4 @@ There are a few sub targets if you do not want to rebuild everything. The most i
 Issue tracking
 --------------
 
-The project has two issue trackers, a public one (GitLab) with issues marked as #NNN and a legacy private one (Redmine) with issues marked as redmine-NNN
+The project has two issue trackers, a semi-public one (GitLab) with issues marked as #NNN and a legacy private one (Redmine) with issues marked as redmine-NNN
