@@ -13,6 +13,11 @@
 	
 	
 	var DEG2RAD=Math.PI/180.0;
+
+
+
+	var PINCH_ZOOM_SCALE = 3000;
+	var WHEEL_ZOOM_SCALE = 1;
 		
 	
 	/**
@@ -37,6 +42,12 @@
 		this.lookQuaternion=new THREE.Quaternion();
 		
 		this.sensitivity=scale;
+
+		/**
+		 * Contains the sum of pinch and mousewheel events that may be translated into zoom by the view
+		 * @type {number}
+		 */
+		this.relativeZoom = 0;
 		
 		var isDown=false;
 		var isIn=false;
@@ -121,18 +132,36 @@
 			clearDoubleTapTimeoutId=null;  
 		}
 		
-		function touchstartend(ev) {		
-			if(player.fullscreen && inDoubleTap) {
-				log("prevented double tap");
-				ev.preventDefault();
-				return false;
+		var pinchOrigin=undefined;
+		var relativeZoomOrigin=undefined;
+		function touchPinchMove(ev) {
+			if(ev.touches.length < 2)
+				return;
+
+			var x1=(ev.touches[0].clientX || ev.touches[0].pageX);
+			var y1=(ev.touches[0].clientY || ev.touches[0].pageY);
+			var x2=(ev.touches[1].clientX || ev.touches[1].pageX);
+			var y2=(ev.touches[1].clientY || ev.touches[1].pageY);
+
+			var pinch = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+			var pinchDiff = pinchOrigin - pinch;
+			// log("Distance between fingers: ", pinch, "diff:", pinchDiff);
+			if(typeof(pinchOrigin) === "undefined") {
+				log("Set pinch origin to", pinch);
+				pinchOrigin = pinch;
 			}
-			
+
+			thisRef.relativeZoom = relativeZoomOrigin - pinchDiff / (0.5 * (domElement.offsetWidth + domElement.offsetWidth)) * PINCH_ZOOM_SCALE;
+		}
+
+		function touchstartend(ev) {		
 			thisRef.isTouchInterface=true;
 			if(ev.touches.length === 1) {	// one finger touch					
+				window.removeEventListener("touchmove", touchPinchMove);
 				window.addEventListener("touchmove", touchmove);
 				window.addEventListener("touchend", touchstartend);
 				inDrag=false;
+				pinchOrigin = undefined;
 				var x=~~(ev.touches[0].clientX || ev.touches[0].pageX);
 				var y=~~(ev.touches[0].clientY || ev.touches[0].pageY);
 				originX=x;
@@ -140,13 +169,26 @@
 				originEulerX=thisRef.lookEuler.x;
 				originEulerY=thisRef.lookEuler.y;
 			}
-			else {	// pinch or no fingers - not interesting at the moment
+			else if(ev.touches.length === 2) {	// pinch
+				window.removeEventListener("touchmove", touchmove);
+				window.addEventListener("touchmove", touchPinchMove);
+				window.addEventListener("touchend", touchstartend);
+				relativeZoomOrigin = thisRef.relativeZoom;
+			}
+			else {	// no fingers or more than two
 				window.removeEventListener("touchend", touchstartend);
 				window.removeEventListener("touchmove", touchmove);
+				window.removeEventListener("touchmove", touchPinchMove);
 				thisRef._mouseLookInProgress=false;
-				
+				pinchOrigin = undefined;
 //				if(!inDrag && ev.touches.length === 0)
 //					player.fullscreen=true;
+			}
+
+			if(player.fullscreen && inDoubleTap) {
+				log("prevented double tap");
+				ev.preventDefault();
+				return false;
 			}
 			
 			inDoubleTap=true;
@@ -194,6 +236,16 @@
 		domElement.addEventListener("gesturestart", gesturestart);
 
 
+		function wheel(ev) {
+			if(!player.fullscreen)
+				return;
+			ev.preventDefault();
+			var px = ev.deltaY;
+			thisRef.relativeZoom += px * -WHEEL_ZOOM_SCALE;
+		}
+		domElement.addEventListener("wheel", wheel);
+
+
 		this.dispose=function() {
 			domElement.removeEventListener("mousedown", mousedown);
 			window.removeEventListener("mousemove", mousemove);
@@ -208,6 +260,8 @@
 			
 			window.removeEventListener("pointerdown", pointerdown);
 			domElement.removeEventListener("gesturestart", gesturestart);
+			
+			domElement.removeEventListener("wheel", wheel);
 		};
 		
 

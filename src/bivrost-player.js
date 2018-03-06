@@ -48,8 +48,8 @@
 		
 		// input
 		this.input=new Bivrost.Input(this, container, Math.PI/2);
-		this.input.registerShortcut(["+", "="], function() { thisRef.view.zoom/=0.95; });
-		this.input.registerShortcut("-", function() { thisRef.view.zoom*=0.95; });
+		this.input.registerShortcut(["+", "="], function() { thisRef.input.relativeZoom += 100; });
+		this.input.registerShortcut("-", function() { thisRef.input.relativeZoom -= 100; });
 		this.input.registerShortcut("[", function() { thisRef.media.time-=5; });
 		this.input.registerShortcut("]", function() { thisRef.media.time+=5; });
 		this.input.registerShortcut(" ", function() { thisRef.media.pauseToggle(); });
@@ -112,6 +112,12 @@
 		try {
 			if(this.view && this.renderer) {
 				this.view.updateRotation(this.input.lookQuaternion);
+
+				if(this.input.relativeZoom < -1000) this.input.relativeZoom=-1000;
+				if(this.input.relativeZoom > 1000) this.input.relativeZoom=1000;
+				var zoom = this.input.relativeZoom/2000;
+				this.view.zoom = 1 + zoom * 0.8;
+
 				this.renderer.render(this.webglRenderer, this.view);
 			}
 			else {
@@ -199,6 +205,7 @@
 				return;
 
 			log("changed renderer", value);
+			this.input.relativeZoom = 0;
 			this.onRendererChange.publish({prev:this._renderer, next:value});
 			
 			if(this._renderer)
