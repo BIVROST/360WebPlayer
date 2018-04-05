@@ -14,8 +14,8 @@ This player is a part of our large family of [video][player-windows] [players][p
 [wordpress-plugin]: https://gitlab.com/BIVROST/360WebPlayer-for-WordPress
 
 Quick links:
-* [download the latest release][download-link]
-* [examples and live demo][live-demo]
+* [download the latest release][section-download]
+* [examples and live demo][section-examples]
 * [development setup](DEVELOPMENT.md)
 
 Features
@@ -40,9 +40,30 @@ Features
 Examples
 --------
 
-You can watch a demo of the video player [here][live-demo]. The samples are password protected. If asked, please login as user `R&D` password `demo`.
+[section-examples]: #examples
 
-[live-demo]: https://R&D:demo@tools.bivrost360.com/webplayer-docs
+You can watch a [demo of the video player here][live-demo].
+The samples are password protected.
+When asked, please login as user `R&D` password `demo`.
+
+[live-demo]: https://tools.bivrost360.com/webplayer-docs
+
+
+Download
+--------
+
+The latest version is available from the [GitLab current release page][download-link].
+There you will be able to download the most current compiled version of the 360WebPlayer (click the zip file below the text). 
+
+You can also download the source code of the player (click the cloud icon with the arrow pointing down).  
+Or use git to checkout: `git@gitlab.com:BIVROST/360WebPlayer.git`.  
+After you have the sources, build the player as described in the [development setup](DEVELOPMENT.md) document.
+
+If you're interested in older releases, checkout [the Tags tab][download-link-tags].
+
+[section-download]: #download
+[download-link]: https://gitlab.com/BIVROST/360WebPlayer/tags/current
+[download-link-tags]: https://gitlab.com/BIVROST/360WebPlayer/tags/
 
 
 Supported browsers
@@ -80,7 +101,7 @@ Supported browsers
 Quickstart
 ----------
 
-1.	[Download][download-link] the 360WebPlayer and unpack it to `bivrost_dir`
+1.	[Download][section-download] the 360WebPlayer and unpack it to `bivrost_dir`
 2.	Copy / paste:
 
 	```html
@@ -105,7 +126,7 @@ The 360WebPlayer’s default options will cover most use cases.
 Installation
 ------------
 
-1. Download the JS and CSS files [here][download-link] and put them on your server.
+1. [Download the JS and CSS files][section-download] and put them on your server.
 2. Link to the CSS and JS files anywhere in the HTML (for example in the head):
    ```html
    <link rel="stylesheet" href="bivrost.css" />
@@ -115,7 +136,6 @@ Installation
 3. [Configure video player][configuration]
 4. [Encode media][media-preparation-guide]
 
-[download-link]: https://gitlab.com/BIVROST/360WebPlayer/tags
 [configuration]: #configuration
 [media-preparation-guide]: #media-preparation-guide
 
@@ -211,7 +231,7 @@ The player can be run and configured in two ways:
 Preferred. Use as Web Component with a dedicated HTML5 tag:
 
 ```html
-<bivrost-player url="stereoscopic-media_LR.mp4"></bivrost>
+<bivrost-player url="stereoscopic-media_LR.mp4"></bivrost-player>
 ```
 
 Or with more configuration:
