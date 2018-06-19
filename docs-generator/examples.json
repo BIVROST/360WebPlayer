@@ -8,7 +8,7 @@
 			"There is only one video source provided in the shorthand <tt>bivrost-player[url]</tt> tag. It's best to provide an alternate video source, like a webm - to do that use a <tt>bivrost-media</tt> tag"
 		],
 		"options": [
-			{ "attr": "url", "value": "morskie-oko.mp4", "is_link": true }
+			{ "attr": "url", "value": "surgery.mp4", "is_link": true }
 		]
 	},
 	
@@ -26,8 +26,8 @@
 			{"attr": "source", "value": "autodetect"}
 		],
 		"src": [
-			{"url": "morskie-oko.mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
-			{"url": "morskie-oko.webm", "type": "video/webm; codecs=vp8.0"}
+			{"url": "surgery.mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "surgery.webm", "type": "video/webm; codecs=vp8.0"}
 		]
 	},
 
@@ -39,8 +39,8 @@
 			{ "attr": "loop", "value": "true" } 
 		],
 		"src": [
-			{"url": "morskie-oko.mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
-			{"url": "morskie-oko.webm", "type": "video/webm; codecs=vp8.0"}
+			{"url": "surgery.mp4", "type": "video/mp4; codecs=avc1.640033, mp4a.40.2"},
+			{"url": "surgery.webm", "type": "video/webm; codecs=vp8.0"}
 		]
 	},
 	
@@ -54,8 +54,8 @@
 			{"attr": "style", "value": "width: 400px; height: 500px", "unescaped": true}
 		],
 		"src": [
-			{"url": "morskie-oko.mp4"},
-			{"url": "morskie-oko.webm"}
+			{"url": "surgery.mp4"},
+			{"url": "surgery.webm"}
 		]
 	},
 		
@@ -64,7 +64,7 @@
 		"title": "Static panoramas",
 		"description": "The 360WebPlayer can also display pictures",
 		"src": [
-			{"url":"Field%20(mono).jpeg"}
+			{"url":"brainembassy%20(mono).jpeg"}
 		]
 	},
 	
@@ -118,8 +118,8 @@
 			{"attr": "class", "value": "bivrost-theme-default", "unescaped": true}
 		],
 		"src": [
-			{"url": "morskie-oko.mp4"},
-			{"url": "morskie-oko.webm"}
+			{"url": "surgery.mp4"},
+			{"url": "surgery.webm"}
 		]
 	},
 	
@@ -131,8 +131,8 @@
 			{"attr": "class", "value": "bivrost-theme-spring", "unescaped": true}
 		],
 		"src": [
-			{"url": "morskie-oko.mp4"},
-			{"url": "morskie-oko.webm"}
+			{"url": "surgery.mp4"},
+			{"url": "surgery.webm"}
 		]
 	},
 	
@@ -144,8 +144,8 @@
 			{"attr": "class", "value": "bivrost-theme-autumn", "unescaped": true}
 		],
 		"src": [
-			{"url": "morskie-oko.mp4"},
-			{"url": "morskie-oko.webm"}
+			{"url": "surgery.mp4"},
+			{"url": "surgery.webm"}
 		]
 	},
 	
@@ -163,7 +163,7 @@
 			"https://cdn.rawgit.com/dailymotion/hls.js/master/dist/hls.min.js"
 		],
 		"src": [
-			{"url":"hls/karty-1080.m3u8"}
+			{"url":"surgery-hls/master-mini.m3u8"}
 		]
 	},
 
@@ -181,7 +181,7 @@
 			"https://cdn.rawgit.com/dailymotion/hls.js/master/dist/hls.min.js"
 		],
 		"src": [
-			{"url":"hls/karty.m3u8"}
+			{"url":"surgery-hls/master.m3u8"}
 		]
 	},
 
@@ -309,6 +309,7 @@
 
 	{
 		"slug": "test-s3",
+		"devel_only": true,
 		"title": "Test Amazon S3",
 		"description": "testing a file from amazon s3",
 		"src": [
@@ -366,7 +367,7 @@
 			"Example for the BIVROST Video Analytics"
 		],
 		"options": [
-			{ "attr": "url", "value": "morskie-oko.mp4", "is_link": true },
+			{ "attr": "url", "value": "surgery.mp4", "is_link": true },
 			{ "attr": "analytics-uri", "value": "dump-post.php" },
 			{ "attr": "analytics-frequency", "value": 2 }
 		]

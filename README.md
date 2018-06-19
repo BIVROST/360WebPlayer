@@ -44,7 +44,7 @@ Examples
 
 You can watch a [demo of the video player here][live-demo].
 The samples are password protected.
-When asked, please login as user `R&D` password `demo`.
+When asked, please login as user `BEEP` password `demo`.
 
 [live-demo]: https://tools.bivrost360.com/webplayer-docs
 

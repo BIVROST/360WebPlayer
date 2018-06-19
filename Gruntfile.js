@@ -251,9 +251,10 @@ module.exports = function (grunt) {
 
 			var files=["README.md"];
 			for(var i=0; i < files.length; i++) {
+				var html = Marked(grunt.file.read(grunt.file.exists(files[i]) ? files[i] : (player_dir+files[i])));
 				var innerHTML=(
-					Marked(grunt.file.read(grunt.file.exists(files[i]) ? files[i] : (player_dir+files[i])))
-						.replace(/"(.+\.md)"/g, function(t,fn) { 
+					html
+						.replace(/"([^"]+\.md)"/g, function(t,fn) { 
 							if(files.indexOf(fn) === -1) {
 								console.log("adding "+fn+" to process queue");
 								files.push(fn);
