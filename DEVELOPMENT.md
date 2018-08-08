@@ -56,7 +56,7 @@ There are a few sub targets when you do not want to rebuild everything. The most
 * `grunt docs` rebuilds the documentation,
 * `grunt build` rebuilds and recompiles the JavaScript and CSS files,
 * `grunt release` builds the release zip,
-* `grunt sass` rebuilds just CSS,
+* `grunt sass` rebuilds just the CSS,
 * `grunt debug` rebuilds the CSS and unminified JavaScript output, without compiling it.
 
 

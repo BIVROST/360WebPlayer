@@ -5,7 +5,7 @@ BIVROST 360WebPlayer
 
 The [BIVROST][bivrost-website] 360WebPlayer is the easiest way to stream 360 videos and pictures on your website or blog.
 
-This player is a part of our [large family of video players][section-standalone-players] so you can watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include the professional custom camera rigs and the BIVROST software suite.
+This player is a part of our [large family of video players][section-standalone-players] allowing you to watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include professional custom camera rigs and the BIVROST software suite.
 
 
 [player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
@@ -31,11 +31,12 @@ Features
 * Mono and stereoscopic video and pictures.
 * HTTP Live Streaming (HLS).
 * Works well with touch.
-* Well tested and supports many edge cases.
+* Well tested - supports many edge cases.
 * [WebVR][webvr] support - works with Oculus Rift, Vive, Windows Mixed Reality, OSVR, GearVR, Google Cardboard and more.
 * Supports watching content in external native players ([by Bivrost][player-windows]).
 * Available as a [WordPress plugin][wordpress-plugin].
-* We want to hear your feedback and ideas for new features, to make it even better.
+
+We want to hear your feedback and ideas for new features, to make it even better.
 
 
 Examples
@@ -51,8 +52,7 @@ You can check out a live demo of the player at the [360WebPlayer samples page][l
 Download
 --------
 
-The latest version is available from the [GitHub releases page][download-link].
-There you will be able to download the most current compiled version of the 360WebPlayer (click the header). 
+The latest version is available on our [GitHub releases page][download-link], where you will be able to download the most recent version of the 360WebPlayer (click the header). 
 
 You can also download the source code of the player (click the zip/tar.gz file below the text).  
 Or use git to checkout: `https://github.com/BIVROST/360WebPlayer.git`.  
@@ -119,7 +119,7 @@ All configurations are autodetected. For example the `.mp4` extension means it's
 
 Everything is included in the css and js files. There are no additional downloads.
 
-The 360WebPlayer’s default options will cover most use cases.
+The 360WebPlayer’s default options will cover most of the possible scenarios.
 
 
 
@@ -134,7 +134,7 @@ Installation
    <script type="text/javascript" src="bivrost-min.js"></script>
    ```
    Don't forget to set the correct paths.
-3. [Configure video player][configuration]
+3. [Configure the video player][configuration]
 4. [Encode media][media-preparation-guide]
 
 [configuration]: #configuration
@@ -157,7 +157,7 @@ Following configuration options are allowed:
 	Allowed values: `true`, `false`;  
 	optional, default: `false`.
 
-*	`autoplay`: should the content play automatically? This might not work with some platforms.
+*	`autoplay`: should the content be played automatically? This might not work with some platforms.
 	Allowed values: `true`, `false`;  
 	optional, default: `true`.
 
@@ -367,21 +367,21 @@ Some interesting API methods:
 
 * `player.ui.autohide:number`: number of seconds of user inactivity after which the UI hides, set to `0` to never hide.
 
-* `player.media.play()`: plays the movie
+* `player.media.play()`: plays the video
 
-* `player.media.pause()`: pauses the movie
+* `player.media.pause()`: pauses the video
 
-* `player.media.pauseToggle()`: plays or pauses the movie
+* `player.media.pauseToggle()`: plays or pauses the video
 
 * `player.media.paused`: gets or sets current pause state
 
-* `player.media.rewind()`: resets the movie
+* `player.media.rewind()`: resets the video
 
-* `player.media.time:number`: gets or sets the current time of the movie (in seconds).
+* `player.media.time:number`: gets or sets the current time of the video (in seconds).
 
-* `player.media.duration:number`: gets the total time of the movie (in seconds), will be infinite in streams.
+* `player.media.duration:number`: gets the total time of the video (in seconds), will be infinite in streams.
 
-* `player.media.loop:boolean`: gets or sets if the movie should loop.
+* `player.media.loop:boolean`: gets or sets if the video should loop.
 
 * `player.input.clampY:boolean`: should user movement be constrained when he or she looks too far up or down, default true (does not restrict VR headset movement).
 
@@ -445,7 +445,7 @@ VR needs high definition content, at the same time browsers have strict guidelin
 We recommend VR creators to use mp4/h264 and webm/vp8 **content types** in at least full HD (1920 x 1080) when uploading content. In order to provide full compatibility we suggest to upload the content in both formats. We also advice content creators to
 refrain from using ogv, because it requires more processing power to get the same results due to software decoding. If you have access to hardware this powerful it will support h264 or vp8.
 
-For the **resolution** we advise you to use at least Full HD. 
+For the **resolution** we advise you to use Full HD at least. 
 This resolution is not perfect, but usually it is enough if displayed in a window or mobile. WQHD (2560 × 1440) works in most configurations and has much more details. 
 Of course 4K and 8K are even better, but they are often not supported on mobile or by many desktop computers. Some hardware decoders only work up to Full HD or WQHD.  
 
@@ -529,7 +529,7 @@ Parts of the filename are separated by "_", "-" or other non-word characters. Fo
 BIVROST Analytics for VR integration
 ------------------------------------
 
-The 360WebPlayer has built in support for gathering user analytics, just like the other Bivrost players.  
+The 360WebPlayer has a built-in support for gathering user analytics, just like the other BIVROST players.  
 For more information about BIVROST Analytics for VR, please contact us at [contact@bivrost360.com][email-sales].
 
 Analytics works only with videos. 
