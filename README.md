@@ -5,18 +5,19 @@ BIVROST 360WebPlayer
 
 The [BIVROST][bivrost-website] 360WebPlayer is the easiest way to stream 360 videos and pictures on your website or blog.
 
-This player is a part of our large family of [video][player-windows] [players][player-unity] so you can watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include the professional custom camera rigs and the BIVROST software suite.
+This player is a part of our [large family of video players][section-standalone-players] so you can watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include the professional custom camera rigs and the BIVROST software suite.
 
 
 [player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
-[player-unity]: https://gitlab.com/BIVROST/360PlayerUnity
 [bivrost-website]: https://bivrost360.com
-[wordpress-plugin]: https://gitlab.com/BIVROST/360WebPlayer-for-WordPress
+[wordpress-plugin]: https://github.com/BIVROST/360WebPlayer-for-WordPress
 
 Quick links:
+* [quickstart][section-quickstart]
 * [download the latest release][section-download]
 * [examples and live demo][section-examples]
 * [development setup](DEVELOPMENT.md)
+
 
 Features
 --------
@@ -24,7 +25,7 @@ Features
 * Fast integration into any web site.
 * Easy to use for the end user.
 * Both desktop and mobile.
-* Free for personal use (see [license][license-free] for details).
+* Free for personal use (see [license][section-license] for details).
 * Works on all major browsers and systems.
 * Possible to embed more than one player on the same page.
 * Mono and stereoscopic video and pictures.
@@ -42,9 +43,7 @@ Examples
 
 [section-examples]: #examples
 
-You can watch a [demo of the video player here][live-demo].
-The samples are password protected.
-When asked, please login as user `BEEP` password `demo`.
+You can check out a live demo of the player at the [360WebPlayer samples page][live-demo].
 
 [live-demo]: https://tools.bivrost360.com/webplayer-docs
 
@@ -52,18 +51,18 @@ When asked, please login as user `BEEP` password `demo`.
 Download
 --------
 
-The latest version is available from the [GitLab current release page][download-link].
-There you will be able to download the most current compiled version of the 360WebPlayer (click the zip file below the text). 
+The latest version is available from the [GitHub releases page][download-link].
+There you will be able to download the most current compiled version of the 360WebPlayer (click the header). 
 
-You can also download the source code of the player (click the cloud icon with the arrow pointing down).  
-Or use git to checkout: `git@gitlab.com:BIVROST/360WebPlayer.git`.  
+You can also download the source code of the player (click the zip/tar.gz file below the text).  
+Or use git to checkout: `https://github.com/BIVROST/360WebPlayer.git`.  
 After you have the sources, build the player as described in the [development setup](DEVELOPMENT.md) document.
 
 If you're interested in older releases, checkout [the Tags tab][download-link-tags].
 
 [section-download]: #download
-[download-link]: https://gitlab.com/BIVROST/360WebPlayer/tags/current
-[download-link-tags]: https://gitlab.com/BIVROST/360WebPlayer/tags/
+[download-link]: https://github.com/Bivrost/360WebPlayer/releases/tag/current
+[download-link-tags]: https://github.com/Bivrost/360WebPlayer/releases/
 
 
 Supported browsers
@@ -100,6 +99,8 @@ Supported browsers
 
 Quickstart
 ----------
+
+[section-quickstart]: #quickstart
 
 1.	[Download][section-download] the 360WebPlayer and unpack it to `bivrost_dir`
 2.	Copy / paste:
@@ -529,13 +530,11 @@ BIVROST Analytics for VR integration
 ------------------------------------
 
 The 360WebPlayer has built in support for gathering user analytics, just like the other Bivrost players.  
-Please check the documentation for more details about [BIVROST Analytics for VR][bivrost-analytics-for-vr] capabilities.
+For more information about BIVROST Analytics for VR, please contact us at [contact@bivrost360.com][email-sales].
 
 Analytics works only with videos. 
 It does not work with static images (panoramas) or with infinite live streams. 
 It does work with streams of known duration.
-
-[bivrost-analytics-for-vr]: https://gitlab.com/BIVROST/Analytics-for-VR
 
 After starting playback, Analytics will start to gather head movement information in relation to the video time. 
 When the video ends or loops, Analytics will send all the collected data with the configured storage method.
@@ -730,19 +729,24 @@ Either your webserver doesn't support [Content-Range][content-range] or there ar
 
 ### Where can I submit feature requests or bug reports? Where can I find the unminified version?
 
-Please send bugs and feature requests to our [GitLab][gitlab]. The sources are located there too. Thanks a lot in advance for any and all feedback.
+Please send bugs and feature requests to our [GitHub][github]. The sources are located there too. Thanks a lot in advance for any and all feedback.
 
 [gitlab]: http://gitlab.com/BIVROST/360WebPlayer
+[github]: http://github.com/BIVROST/360WebPlayer
 
 
 ### Standalone players
+
+[section-standalone-players]: #standalone-players
 
 Although browsers are the most accessible platforms, they are not all fully ready for VR - that is why we created a whole family of video players.
 
 The BIVROST 360WebPlayer has a button that allows online content to be run in the native player. This enhances performance and gives the user a better experience than viewing the content straight from the browser. If the user does not have the player yet, he or she can download it through a pop-up.
 
-The [BIVROST 360Player][player-windows] standalone player for Windows supports Oculus, Vive and OSVR VR headsets, has less latency, and better frame rates.
+The [BIVROST 360Player for Windows][player-windows] standalone player for Windows supports Oculus, HTC Vive, OSVR and Windows Mixed Reality (via SteamVR) VR headsets, has less latency, and better frame rates.
 
+We also have the BIVROST 360Player for Unity - a tool built on top of Unity that allows the user to create 360° video players for iOS, Android and GearVR.
+Please [contact sales at contact@bivrost360.com][email-sales] for more details.
 
 
 License
@@ -751,28 +755,17 @@ License
 There are two separate licenses to choose from:
 
 1. [The free license][license-free] - for web sites that are non commercial
-2. [The paid license][license-commercial] - for commercial web sites, one license per domain ([contact sales][email-sales] for payment).
+2. [The paid license][license-commercial] - for commercial web sites, one license per domain ([contact sales at contact@bivrost360.com][email-sales] for payment).
 
 If you want to remove or replace our branding, are unsure about which license applies to you, please [contact us for help and additional licensing options][email-sales].
 
+[section-license]: #License
 [email-sales]: mailto:contact@bivrost360.com
 [license-free]: LICENSE-free.md
 [license-commercial]: LICENSE-commercial.md
 
 
-
-Changelog
----------
-
-* 2016-03-14: initial public release
-* 2016-09-21: WebVR 1.1 support
-* 2016-12-21: GearVR support, stereo UI
-* 2016-12-30: Documentation update
-* 2016-12-31: Github release
-* 2018-01-26: Move to Gitlab, updated documentation
-
-Third party libraries
----------------------
+### Third party libraries
 
 The BIVROST 360WebPlayer uses third party libraries:
 
