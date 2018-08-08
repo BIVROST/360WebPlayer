@@ -207,7 +207,7 @@ module.exports = function (grunt) {
 		},
 
 		"git-describe": {
-			"options": { },
+			"options": { "match": "[0-9].[0-9]" },
 			"target": { }
 		},
 	});
