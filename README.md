@@ -776,3 +776,16 @@ The BIVROST 360WebPlayer can be optionaly made to use third party libraries:
 * [HLS.js][hls-js] (Apache 2.0 License)
 
 [three-js]: http://threejs.org
+
+
+
+Changelog
+---------
+
+* 2016-03-14: initial public release
+* 2016-09-21: WebVR 1.1 support
+* 2016-12-21: GearVR support, stereo UI
+* 2016-12-30: Documentation update
+* 2016-12-31: GitHub release
+* 2018-01-26: Move to GitLab, updated documentation
+* 2018-08-08: Moved back to GitHub, updated logo
