@@ -8,7 +8,6 @@ The [BIVROST][bivrost-website] 360WebPlayer is the easiest way to stream 360 vid
 This player is a part of our [large family of video players][section-standalone-players] allowing you to watch 360° videos on all platforms. It is part of our end-to-end solution for 360° video. Our other products include professional custom camera rigs and the BIVROST software suite.
 
 
-[player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
 [bivrost-website]: https://bivrost360.com
 [wordpress-plugin]: https://github.com/BIVROST/360WebPlayer-for-WordPress
 
@@ -33,10 +32,10 @@ Features
 * Works well with touch.
 * Well tested - supports many edge cases.
 * [WebVR][webvr] support - works with Oculus Rift, Vive, Windows Mixed Reality, OSVR, GearVR, Google Cardboard and more.
-* Supports watching content in external native players ([by Bivrost][player-windows]).
+* Supports watching content in external native players ([by BIVROST][section-standalone-players]).
 * Available as a [WordPress plugin][wordpress-plugin].
 
-We want to hear your feedback and ideas for new features, to make it even better.
+We want to [hear your feedback and ideas for new features][issues], to make it even better.
 
 
 Examples
@@ -729,10 +728,9 @@ Either your webserver doesn't support [Content-Range][content-range] or there ar
 
 ### Where can I submit feature requests or bug reports? Where can I find the unminified version?
 
-Please send bugs and feature requests to our [GitHub][github]. The sources are located there too. Thanks a lot in advance for any and all feedback.
+Please send bugs and feature requests to our [GitHub][issues]. The sources are located there too. Thanks a lot in advance for any and all feedback.
 
-[gitlab]: http://gitlab.com/BIVROST/360WebPlayer
-[github]: http://github.com/BIVROST/360WebPlayer
+[issues]: https://github.com/BIVROST/360WebPlayer/issues
 
 
 ### Standalone players
@@ -747,6 +745,8 @@ The [BIVROST 360Player for Windows][player-windows] standalone player for Window
 
 We also have the BIVROST 360Player for Unity - a tool built on top of Unity that allows the user to create 360° video players for iOS, Android and GearVR.
 Please [contact sales at contact@bivrost360.com][email-sales] for more details.
+
+[player-windows]: https://download.bivrost360.com/player-desktop/?campaign=player-web-ref
 
 
 License
