@@ -178,6 +178,11 @@ module.exports = function (grunt) {
 				options: {tag: ""},
 				src: output_demo + "readme.html",
 				dest: output_release + "readme.html" 
+			},			
+			development: {
+				options: {tag: ""},
+				src: output_demo + "development.html",
+				dest: output_release + "development.html" 
 			},
 			license_free: {
 				options: {tag: ""},

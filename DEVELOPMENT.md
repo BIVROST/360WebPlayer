@@ -1,6 +1,11 @@
 Development setup
 =================
 
+**NOTE:** This are the instructions to build 360WebPlayer from source.
+In 99% of the cases, you do not need to do this - all you need is the compiled version that is [available for download at the release tab of the GitHub page][download-link].
+
+[download-link]: https://github.com/Bivrost/360WebPlayer/releases/tag/current
+
 Install npm, ruby and java. Have them in your path.
 For Windows we advise to use cygwin.
 
@@ -65,4 +70,4 @@ There are a few sub targets when you do not want to rebuild everything. The most
 Issue tracking
 --------------
 
-The project has two issue trackers, a semi-public one (GitLab) with issues marked as #NNN and a legacy private one (Redmine) with issues marked as redmine-NNN
+The project has two issue trackers, a public one (GitHub) with issues marked as #NNN and a legacy private one (Redmine) with issues marked as redmine-NNN.
