@@ -124,7 +124,7 @@ $transition-time: 0.5s;
 		}
 
 		div {
-			$frames: 32;
+			$frames: 8;
 			position: absolute;
 			display: block;
 			background: inline-image($loading-anim);
