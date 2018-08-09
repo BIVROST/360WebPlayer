@@ -1,8 +1,8 @@
 Development setup
 =================
 
-**NOTE:** This are the instructions to build 360WebPlayer from source.
-In 99% of the cases, you do not need to do this - all you need is the compiled version that is [available for download at the release tab of the GitHub page][download-link].
+**NOTE:** These are the instructions for developing 360WebPlayer. For information on how to use the player, please refer to the main documentation.  
+The compiled version [available for download at the release tab of the GitHub page][download-link] is sufficient in 99% of the cases – building the player by yourself is not necessary.
 
 [download-link]: https://github.com/Bivrost/360WebPlayer/releases/tag/current
 
