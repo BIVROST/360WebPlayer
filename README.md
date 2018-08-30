@@ -72,7 +72,7 @@ Supported browsers
 | ------- | --------------------------- |:----------------:|:--------------:|:---------------------:|:----------:|:-----:| ------------------------------------------ |
 | Windows | Google Chrome               | ✔                | ✔              | ✔                     |            | ✔¹    | Oculus, Vive, Windows Mixed Reality⁶       |
 | Windows | Mozilla Firefox             | ✔                | ✔              | ✔                     |            | ✔²    | Oculus, OSVR, Vive, Windows Mixed Reality⁶ |
-| Windows | Microsoft Edge              | ✔                | ✔              | ✔                     |            | ✔     | Windows Mixed Reality                      |
+| Windows | Microsoft Edge              | ✔                | ✔              | ✔                     |            | ✔     | Windows Mixed Reality, Hololens⁷           |
 | Windows | Internet Explorer (11+)     | ✔                | ✔              | ✔                     |            |       |                                            |
 | Mac OS  | Safari                      | ✔                | ✔⁴             | ✔                     |            |       |                                            |
 | Mac OS  | Google Chrome               | ✔                | ✔              | ✔                     |            |       |                                            |
@@ -90,7 +90,8 @@ Supported browsers
 ³ - Requires enabling VR in `chrome://flags/#enable-webvr`  
 ⁴ - Movies must be on the same domain ([broken CORS implementation][video-does-not-work])  
 ⁵ - Split screen with orientation sensor support (basic Cardboard)  
-⁶ - Windows Mixed Reality support via Microsoft's Windows Mixed Reality for SteamVR
+⁶ - Windows Mixed Reality support via Microsoft's Windows Mixed Reality for SteamVR  
+⁷ - Requires enabling WebVR in `about:flags`
 
 [video-does-not-work]: #video-does-not-work
 
