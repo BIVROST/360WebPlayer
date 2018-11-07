@@ -268,7 +268,10 @@
 
 
 		// rendered viewport submission
-		vrDisplay.submitFrame();
+		if(vrDisplay.isPresenting)
+			vrDisplay.submitFrame();
+		else
+			console.warn("Cannot submit frame because display is not (yet?) presenting");
 
 		var euler = new THREE.Euler("yxz");
 		euler.setFromQuaternion(q);
