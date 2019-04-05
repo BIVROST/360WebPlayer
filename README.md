@@ -790,3 +790,4 @@ Changelog
 * 2016-12-31: GitHub release
 * 2018-01-26: Move to GitLab, updated documentation
 * 2018-08-08: Moved back to GitHub, updated logo
+* 2019-04-05: Updated logo
