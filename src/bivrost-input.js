@@ -690,7 +690,13 @@
 		Bivrost.Input.prototype._gyroLookQuaternion=new THREE.Quaternion();
 
 		
-		
+		/**
+		 * Interactive events on player call this as a placeholder to activate permissions.
+		 * Overloaded when required.
+		 */
+		Bivrost.Input.prototype.handlePermissions=function() {};
+
+
 		Bivrost.Input.prototype.__initGyroscope=function(player) {
 			var thisRef=this;
 			
@@ -735,14 +741,52 @@
 			};
 			
 			function handleOrientationChange() { 
-				var orient=DEG2RAD*(window.orientation || screen.orientation.angle || 0);
+				var orient=DEG2RAD*(window.orientation || (screen.orientation && screen.orientation.angle) || 0);
 				if(isNaN(orient))
 					throw "screen orientation? "+window.orientation;
 				tempEuler.set(0, -orient, 0);
 				orientation.setFromEuler(tempEuler);
 			}
 			
-			window.addEventListener("deviceorientation", handleDeviceOrientation);
+			if(DeviceOrientationEvent && DeviceOrientationEvent.requestPermission)
+			{
+				var permissionAsked = false;
+				var prevHandlePermissions = this.handlePermissions;
+
+				var handlePermissionsWrapped = function() {
+					thisRef.handlePermissions();
+				};
+
+				this.handlePermissions = function() {
+					if(prevHandlePermissions) prevHandlePermissions();
+
+					if(permissionAsked) return;
+
+					log("Permission ask handler executing for deviceorientation...");
+					
+					DeviceOrientationEvent
+						.requestPermission()
+						.then(function(response) {
+							log("Permission ask handler for deviceorientation: " + response);
+							if (response == "granted") {
+								window.addEventListener("deviceorientation", handleDeviceOrientation);
+							}
+							permissionAsked = true;
+							window.removeEventListener("click", handlePermissionsWrapped);
+							window.removeEventListener("mousedown", handlePermissionsWrapped);
+						})
+						.catch(console.error);
+				};
+
+				// listen for gyro at first available moment
+				window.addEventListener("click", handlePermissionsWrapped);
+				window.addEventListener("mousedown", handlePermissionsWrapped);
+			}
+			else
+			{
+				window.addEventListener("deviceorientation", handleDeviceOrientation);
+			}
+
 			window.addEventListener("orientationchange", handleOrientationChange);
 			
 			this.dispose=(function(chained){

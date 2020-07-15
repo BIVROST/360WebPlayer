@@ -44,6 +44,7 @@
 		
 		button.addEventListener("click", function(ev) { 
 			button.action(); 
+			player.input.handlePermissions();
 			button.blur(); 
 			ev.stopPropagation();
 			return false;
@@ -186,6 +187,8 @@
 		bigPlay.addEventListener("click", function() {
 			player.media.play();
 			bigPlay.hide();
+
+			player.input.handlePermissions();
 			
 			// GearVR doesn't like fullscreen, plus it makes sense
 			if(player.input.isGearVR)	
@@ -432,6 +435,8 @@
 			gyroButton.style.removeProperty("display");
 			window.removeEventListener("deviceorientation", listenGyro);
 		};
+		// Permission is asked by input, no need to repeat this here. 
+		// Yes, it will log a warning in the console
 		window.addEventListener("deviceorientation", listenGyro);
 		
 		gyroButton.dispose=function() {
@@ -513,6 +518,7 @@
 		var btn=widget_button(
 			"oculus", 
 			function() { 
+				player.input.handlePermissions();
 				player.vrModeEnterOrCycle(); 
 				if(player.media)
 					player.media.play();
