@@ -791,3 +791,4 @@ Changelog
 * 2018-01-26: Move to GitLab, updated documentation
 * 2018-08-08: Moved back to GitHub, updated logo
 * 2019-04-05: Updated logo
+* 2020-07-16: Fixed issues with iOS 13 fullscreen and gyroscope
