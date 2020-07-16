@@ -748,7 +748,7 @@
 				orientation.setFromEuler(tempEuler);
 			}
 			
-			if(DeviceOrientationEvent && DeviceOrientationEvent.requestPermission)
+			if(typeof(DeviceOrientationEvent) != "undefined" && DeviceOrientationEvent.requestPermission)
 			{
 				var permissionAsked = false;
 				var prevHandlePermissions = this.handlePermissions;

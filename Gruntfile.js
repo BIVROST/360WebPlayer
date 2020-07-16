@@ -212,7 +212,7 @@ module.exports = function (grunt) {
 		},
 
 		"git-describe": {
-			"options": { "match": "[0-9].[0-9]" },
+			"options": { "match": "v[0-9].[0-9]" },
 			"target": { }
 		},
 	});
