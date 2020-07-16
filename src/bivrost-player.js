@@ -297,6 +297,7 @@
 	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
 		var player=this;
 		var vrModes=[
+			Bivrost.Renderer.WebXR,
 			Bivrost.Renderer.WebVR,
 			Bivrost.Renderer.Stereo
 		].filter(function(r) { return r.shouldWork(player); });
