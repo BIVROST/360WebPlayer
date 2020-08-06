@@ -753,17 +753,12 @@ Please [contact sales at contact@bivrost360.com][email-sales] for more details.
 License
 -------
 
-There are two separate licenses to choose from:
-
-1. [The free license][license-free] - for web sites that are non commercial
-2. [The paid license][license-commercial] - for commercial web sites, one license per domain ([contact sales at contact@bivrost360.com][email-sales] for payment).
+Terms and conditions are [available in a separate document (english)](LICENSE.md) [(polish)](LICENSE-polish.md).
 
 If you want to remove or replace our branding, are unsure about which license applies to you, please [contact us for help and additional licensing options][email-sales].
 
 [section-license]: #License
 [email-sales]: mailto:contact@bivrost360.com
-[license-free]: LICENSE-free.md
-[license-commercial]: LICENSE-commercial.md
 
 
 ### Third party libraries
@@ -792,3 +787,4 @@ Changelog
 * 2018-08-08: Moved back to GitHub, updated logo
 * 2019-04-05: Updated logo
 * 2020-07-16: Fixed issues with iOS 13 fullscreen and gyroscope
+* 2020-08-06: License updated
