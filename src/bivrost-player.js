@@ -68,6 +68,9 @@
 				
 		// renderer
 		this.webglRenderer=new THREE.WebGLRenderer({ antialias: true });
+		this.webglRenderer.xr.enabled = true;
+		this.webglRenderer.xr.setReferenceSpaceType( 'local' );
+
 		this.webglRenderer.setClearColor(0x000000, 1);	// iOS doesn't have this set up as proper default
 		container.appendChild(this.webglRenderer.domElement);		
 
@@ -100,9 +103,9 @@
 		function mainloopBound() {
 			var dt=clock.getDelta();
 			thisRef.mainLoop(dt);
-			requestAnimationFrame(mainloopBound);
 		};
-		requestAnimationFrame(mainloopBound);
+		this.webglRenderer.setAnimationLoop(mainloopBound);
+
 	};
 
 	
