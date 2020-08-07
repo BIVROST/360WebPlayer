@@ -382,6 +382,8 @@
 					log("IOS FULLSCREEN ENTER", elem);
 					elem.classList.add("bivrost-ios-fullscreen");
 					this._onFullscreenChange(true);
+					elem.prevHeight = elem.style.height;
+					elem.style.height="auto";
 				}
 					
 			}
@@ -399,6 +401,7 @@
 					log("IOS FULLSCREEN EXIT", elem);
 					elem.classList.remove("bivrost-ios-fullscreen");
 					this._onFullscreenChange(false);
+					elem.style.height = elem.prevHeight;
 				}
 			}
 		}
