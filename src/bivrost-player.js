@@ -68,6 +68,9 @@
 				
 		// renderer
 		this.webglRenderer=new THREE.WebGLRenderer({ antialias: true });
+		this.webglRenderer.xr.enabled = true;
+		this.webglRenderer.xr.setReferenceSpaceType( 'local' );
+
 		this.webglRenderer.setClearColor(0x000000, 1);	// iOS doesn't have this set up as proper default
 		container.appendChild(this.webglRenderer.domElement);		
 
@@ -100,9 +103,9 @@
 		function mainloopBound() {
 			var dt=clock.getDelta();
 			thisRef.mainLoop(dt);
-			requestAnimationFrame(mainloopBound);
 		};
-		requestAnimationFrame(mainloopBound);
+		this.webglRenderer.setAnimationLoop(mainloopBound);
+
 	};
 
 	
@@ -297,6 +300,7 @@
 	Bivrost.Player.prototype.vrModeEnterOrCycle=function() {
 		var player=this;
 		var vrModes=[
+			Bivrost.Renderer.WebXR,
 			Bivrost.Renderer.WebVR,
 			Bivrost.Renderer.Stereo
 		].filter(function(r) { return r.shouldWork(player); });
@@ -310,12 +314,19 @@
 			vrMode=vrModes[0];
 			log("selecting default VR mode");
 		}
-		// already in vr mode - toggle next available mode
+		// already in vr mode - reset to mono
 		else {
-			var index=(vrModes.indexOf(this.renderer.__proto__) + 1) % vrModes.length;
-			vrMode=vrModes[index];
-			log("selecting next VR mode");
+			log("back to mono");
+			this.vrExit();
+			return;
 		}
+
+		// // already in vr mode - toggle next available mode
+		// else {
+		// 	var index=(vrModes.indexOf(this.renderer.__proto__) + 1) % vrModes.length;
+		// 	vrMode=vrModes[index];
+		// 	log("selecting next VR mode");
+		// }
 		
 		this.renderer=new vrMode(this);
 	};

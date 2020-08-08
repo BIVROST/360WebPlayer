@@ -29,15 +29,26 @@ rm compiler-latest.zip
 popd
 ```
 
-Note: on some systems, `gem` commands might require administrator privileges:
+Note: on some systems, `gem` and `npm install -g` commands might require administrator privileges:
 ```bash
 sudo gem install sass
 sudo gem install compass
+sudo npm install -g grunt-cli
 ```
 
 On recent MacOS, you might need to install `compass` to a different directory if using pre-installed ruby:
 ```
 sudo gem install -n /usr/local/bin compass
+```
+
+On WSL/ubuntu, `ruby-dev` is required for sass installation.
+```
+sudo apt-get install ruby-dev
+```
+
+Java JRE is required for Google Closure Compiler:
+```
+sudo apt install openjdk-8-jre-headless
 ```
 
 

@@ -273,7 +273,8 @@
 		this.__initGyroscope(player);
 		
 		
-		// WebVR support
+		// WebXR and legacy WebVR support
+		this.__initWebXR(player);
 		this.__initWebVR(player);
 	}; 
 		
@@ -674,6 +675,50 @@
 	
 	
 	
+	/// REGION: WebXR
+	{
+		Bivrost.Input.prototype.xrAvailable = false;
+		// Bivrost.Input.prototype.vrDisplaySize = { x:undefined, y:undefined };
+
+		/**
+		 * Initiates WebXR support
+		 * @param {Bivrost.Input} input
+		 * @param {Bivrost.Player} player
+		 */
+		Bivrost.Input.prototype.__initWebXR=function(input, player) {
+			if(!navigator.xr) {
+				log("WebVR: WebVR not supported");
+				return;
+			}
+
+			var input=this;
+
+			navigator.xr.isSessionSupported('immersive-vr').then(function(supported) {
+				if (supported) {
+					// input.vrDisplay = displays[0];
+
+					// var eyeLeft = input.vrDisplay.getEyeParameters("left");
+					// var eyeRight = input.vrDisplay.getEyeParameters("right");
+
+					// var width = eyeLeft.renderWidth + eyeRight.renderWidth;
+					// var height = Math.max(eyeLeft.renderWidth, eyeRight.renderWidth);
+
+					// input.vrDisplaySize.x=width;
+					// input.vrDisplaySize.y=height;
+
+					// log("WebVR: Found VR Display with size: "+width+"x"+height);
+					// input.onInputMethodAdded.publish(input);
+					input.xrAvailable = true;
+					log("WebXR: supported")
+				}
+				else {
+					log("WebXR: No VR Displays found");
+				}
+			});
+		};
+	}
+
+
 	/// REGION: Gyroscope
 	{
 		/**

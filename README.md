@@ -67,23 +67,22 @@ If you're interested in older releases, checkout [the Tags tab][download-link-ta
 Supported browsers
 ------------------
 
-
-| OS      | Browser                     | Panorama viewing | Video playback | Video streaming (HLS) | Legacy VR⁵ | WebVR | Headsets supported                         |
-| ------- | --------------------------- |:----------------:|:--------------:|:---------------------:|:----------:|:-----:| ------------------------------------------ |
-| Windows | Google Chrome               | ✔                | ✔              | ✔                     |            | ✔¹    | Oculus, Vive, Windows Mixed Reality⁶       |
-| Windows | Mozilla Firefox             | ✔                | ✔              | ✔                     |            | ✔²    | Oculus, OSVR, Vive, Windows Mixed Reality⁶ |
-| Windows | Microsoft Edge              | ✔                | ✔              | ✔                     |            | ✔     | Windows Mixed Reality, Hololens⁷           |
-| Windows | Internet Explorer (11+)     | ✔                | ✔              | ✔                     |            |       |                                            |
-| Mac OS  | Safari                      | ✔                | ✔⁴             | ✔                     |            |       |                                            |
-| Mac OS  | Google Chrome               | ✔                | ✔              | ✔                     |            |       |                                            |
-| Mac OS  | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                                            |
-| Android | Mozilla Firefox             | ✔                | ✔              | ✔                     |            |       |                                            |
-| Android | Google Chrome               | ✔                | ✔              | ✔                     | ✔          | ✔³    | Cardboard                                  |
-| Android | Samsung Internet            | ✔                | ✔              |                       | ✔          |       | Cardboard                                  |
-| Android | Samsung Internet for GearVR | ✔                | ✔              | ✔                     |            | ✔     | GearVR                                     |
-| iOS     | Safari                      | ✔                | ✔              |                       | ✔          |       | Cardboard                                  |
-| iOS     | Google Chrome               | ✔                | ✔              |                       | ✔          |       | Cardboard                                  |
-| iOS     | Mozilla Firefox             | ✔                | ✔              |                       |            |       |                                            |
+| OS      | Browser                     | Panorama viewing | Video playback | Video streaming (HLS) | WebXR | Legacy VR⁵ | legacy WebVR | Headsets supported                         |
+| ------- | --------------------------- |:----------------:|:--------------:|:---------------------:|:-----:|:----------:|:------------:| ------------------------------------------ |
+| Windows | Google Chrome               | ✔                | ✔              | ✔                     |  ✔    |            |      ✔¹      | Oculus, Vive, Windows Mixed Reality⁶       |
+| Windows | Mozilla Firefox             | ✔                | ✔              | ✔                     |   ✔⁸  |            |      ✔²      | Oculus, OSVR, Vive, Windows Mixed Reality⁶ |
+| Windows | Microsoft Edge              | ✔                | ✔              | ✔                     |   ✔   |            |      ✔       | Windows Mixed Reality, Hololens⁷           |
+| Windows | Internet Explorer (11+)     | ✔                | ✔              | ✔                     |       |            |              |                                            |
+| Mac OS  | Safari                      | ✔                | ✔⁴             | ✔                     |       |            |              |                                            |
+| Mac OS  | Google Chrome               | ✔                | ✔              | ✔                     |       |            |              |                                            |
+| Mac OS  | Mozilla Firefox             | ✔                | ✔              | ✔                     |       |            |              |                                            |
+| Android | Google Chrome               | ✔                | ✔              | ✔                     |   ✔   |  ✔         |      ✔³      | Cardboard                                  |
+| Android | Mozilla Firefox             | ✔                | ✔              | ✔                     |       |            |              |                                            |
+| Android | Samsung Internet            | ✔                | ✔              |                       |       | ✔          |              | Cardboard                                  |
+| Android | Samsung Internet for GearVR | ✔                | ✔              | ✔                     |   ✔   |            |      ✔       | GearVR                                     |
+| iOS     | Safari                      | ✔                | ✔              |                       |       | ✔          |              | Cardboard                                  |
+| iOS     | Google Chrome               | ✔                | ✔              |                       |       | ✔          |              | Cardboard                                  |
+| iOS     | Mozilla Firefox             | ✔                | ✔              |                       |       |            |              |                                            |
 
 ¹ - With a [dedicated WebVR Chromium build][webvr-chromium] or [Chrome Canary][webvr-chrome-canary]  
 ² - With [Firefox Nightly][webvr-firefox]  
@@ -91,7 +90,10 @@ Supported browsers
 ⁴ - Movies must be on the same domain ([broken CORS implementation][video-does-not-work])  
 ⁵ - Split screen with orientation sensor support (basic Cardboard)  
 ⁶ - Windows Mixed Reality support via Microsoft's Windows Mixed Reality for SteamVR  
-⁷ - Requires enabling WebVR in `about:flags`
+⁷ - Requires enabling WebVR in `about:flags`  
+⁸ - Requires enabling WebXR in `about:flags` or using Firefox Reality
+
+Note: some of these test results might be out of date.
 
 [video-does-not-work]: #video-does-not-work
 
@@ -136,6 +138,7 @@ Installation
    Don't forget to set the correct paths.
 3. [Configure the video player][configuration]
 4. [Encode media][media-preparation-guide]
+5. Make sure you serve the player and the page you're hosting it from on HTTPS. WebXR and gyroscope (orientation) features are disabled on non secure origins. Host media from the same server or enable [CORS][cors].
 
 [configuration]: #configuration
 [media-preparation-guide]: #media-preparation-guide
@@ -530,7 +533,7 @@ BIVROST Analytics for VR integration
 ------------------------------------
 
 The 360WebPlayer has a built-in support for gathering user analytics, just like the other BIVROST players.  
-For more information about BIVROST Analytics for VR, please contact us at [contact@bivrost360.com][email-sales].
+For more information about BIVROST Analytics for VR, please contact us at [contact@bivrost.pro][email-sales].
 
 Analytics works only with videos. 
 It does not work with static images (panoramas) or with infinite live streams. 
@@ -654,6 +657,7 @@ You can distinguish between the sessions with the `lookprovider` field of the se
 Look providers generated by the player:
 *	`bivrost:360WebPlayer:main-display` - gathered by the mono renderer - the classical desktop or mobile mode.
 *	`bivrost:360WebPlayer:webvr` - gathered by the WebVR view.
+*	`bivrost:360WebPlayer:webxr` - gathered by the WebXR view.
 *	`bivrost:360WebPlayer:legacy-stereo` - gathered by the legacy Stereo view (Cardboard support).
 
 
@@ -671,10 +675,24 @@ User Guide
 * ` [ `, ` ] ` - scroll movie by 5 seconds, forwards or backwards.
 * ` + `, ` - ` - zoom in/out (not available in VR mode).
 
+### Virtual Reality on desktop and mobile with WebXR
 
-### Virtual Reality on desktop and mobile with WebVR 
+WebXR is the new browser Virtual Reality standard. It has built in support on major platforms including:
 
-At the time of writing, WebVR is supported by Microsoft Edge, [Firefox Nightly][webvr-firefox], special [Windows builds of Chromium][webvr-chromium] and [Chrome Canary][webvr-chrome-canary], Google Chrome on Android with Cardboard (after enabling WebVR in `chrome://flags/#enable-webvr`) and [Samsung Internet Browser for Gear VR][webvr-samsung].
+- Chrome for Windows
+- Chrome for Android
+- Microsoft Edge (Chromium) for Windows 10
+- Firefox Reality
+
+When you have a supported platform, an headset button will be visible in 360WebPlayer - press it to enter VR.
+
+
+### Virtual Reality on desktop and mobile with legacy WebVR support
+
+WebXR is currently disabled in all new browsers and is superseded by WebXR.
+It has been left as a legacy fallback for devices that still might support it.
+
+WebVR was supported by Microsoft Edge, [Firefox Nightly][webvr-firefox], special [Windows builds of Chromium][webvr-chromium] and [Chrome Canary][webvr-chrome-canary], Google Chrome on Android with Cardboard (after enabling WebVR in `chrome://flags/#enable-webvr`) and [Samsung Internet Browser for Gear VR][webvr-samsung]. 
 
 When you have a supported platform, an headset button will be visible in 360WebPlayer - press it to enter VR.
 
@@ -689,6 +707,9 @@ For more platform specific instructions look at the [WebVR][webvr] website.
 
 
 ### Virtual Reality on mobile with legacy Google Cardboard support
+
+Most current Android devices are able to use WebXR which has better overall user experience. 
+This is a legacy fallback for mobile devices that have orientation sensors but do not support WebXR.
 
 You can use the Bivrost 360WebPlayer with Google Cardboard and its many clones with a simple split screen. Just press the "headset" button to go to VR mode.
 
@@ -726,6 +747,10 @@ Either your webserver doesn't support [Content-Range][content-range] or there ar
 
 [content-range]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.16
 
+### WebXR or legacy cardboard VR does not work on my page, but does work on other pages
+
+Force HTTPS on all pages embedding the player. Orientation events, WebXR and other features do not work on non-secure origins.
+This is a standards-backed security requirement implemented by current browsers.
 
 ### Where can I submit feature requests or bug reports? Where can I find the unminified version?
 
@@ -753,12 +778,14 @@ Please [contact sales at contact@bivrost360.com][email-sales] for more details.
 License
 -------
 
-Terms and conditions are [available in a separate document (english)](LICENSE.md) [(polish)](LICENSE-polish.md).
+This software is free and can be used only for noncommercial purposes. To purchase the commercial license read the terms and contact us: [contact@bivrost.pro][email-sales]
+
+Terms and conditions are [available in a separate document [English]](LICENSE.md) [[Polish]](LICENSE-polish.md).
 
 If you want to remove or replace our branding, are unsure about which license applies to you, please [contact us for help and additional licensing options][email-sales].
 
 [section-license]: #License
-[email-sales]: mailto:contact@bivrost360.com
+[email-sales]: mailto:contact@bivrost.pro
 
 
 ### Third party libraries
@@ -778,7 +805,7 @@ The BIVROST 360WebPlayer can be optionaly made to use third party libraries:
 Changelog
 ---------
 
-* 2016-03-14: initial public release
+* 2016-03-14: initial public release (version 1.0)
 * 2016-09-21: WebVR 1.1 support
 * 2016-12-21: GearVR support, stereo UI
 * 2016-12-30: Documentation update
@@ -786,5 +813,5 @@ Changelog
 * 2018-01-26: Move to GitLab, updated documentation
 * 2018-08-08: Moved back to GitHub, updated logo
 * 2019-04-05: Updated logo
-* 2020-07-16: Fixed issues with iOS 13 fullscreen and gyroscope
-* 2020-08-06: License updated
+* 2020-07-16: Fixed issues with iOS 13 fullscreen and gyroscope (version 1.1)
+* 2020-08-06: WebXR support, license updated (version 1.2)
