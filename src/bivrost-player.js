@@ -314,12 +314,19 @@
 			vrMode=vrModes[0];
 			log("selecting default VR mode");
 		}
-		// already in vr mode - toggle next available mode
+		// already in vr mode - reset to mono
 		else {
-			var index=(vrModes.indexOf(this.renderer.__proto__) + 1) % vrModes.length;
-			vrMode=vrModes[index];
-			log("selecting next VR mode");
+			log("back to mono");
+			this.vrExit();
+			return;
 		}
+
+		// // already in vr mode - toggle next available mode
+		// else {
+		// 	var index=(vrModes.indexOf(this.renderer.__proto__) + 1) % vrModes.length;
+		// 	vrMode=vrModes[index];
+		// 	log("selecting next VR mode");
+		// }
 		
 		this.renderer=new vrMode(this);
 	};

@@ -805,7 +805,7 @@ The BIVROST 360WebPlayer can be optionaly made to use third party libraries:
 Changelog
 ---------
 
-* 2016-03-14: initial public release
+* 2016-03-14: initial public release (version 1.0)
 * 2016-09-21: WebVR 1.1 support
 * 2016-12-21: GearVR support, stereo UI
 * 2016-12-30: Documentation update
@@ -813,5 +813,5 @@ Changelog
 * 2018-01-26: Move to GitLab, updated documentation
 * 2018-08-08: Moved back to GitHub, updated logo
 * 2019-04-05: Updated logo
-* 2020-07-16: Fixed issues with iOS 13 fullscreen and gyroscope
-* 2020-08-06: WebXR support, license updated
+* 2020-07-16: Fixed issues with iOS 13 fullscreen and gyroscope (version 1.1)
+* 2020-08-06: WebXR support, license updated (version 1.2)

@@ -25,21 +25,13 @@
 	 */
 	Bivrost.Renderer.WebXR.PLATFORM_NAME = "WebXR";
 	
-	// /**
-	//  * Temporary handle for cleanup in destroy()
-	//  */
-	// Bivrost.Renderer.WebXR.prototype._displayPresentChange;
-	
-	
-	Bivrost.Renderer.WebXR.prototype.xrSession = null;
-	Bivrost.Renderer.WebXR.prototype.xrRefSpace = null;
-
 
 	Bivrost.Renderer.WebXR.prototype.init = function(player) {
 		Bivrost.Renderer.prototype.init.call(this, player);
 
 		var thisRef = this;
 		var sessionInit = { optionalFeatures: [ 'local-floor', 'bounded-floor' ] };
+
 		navigator.xr.requestSession('immersive-vr', sessionInit).then(function(session)
 		{
 			// Called either when the user has explicitly ended the session by calling
@@ -54,38 +46,14 @@
 			// Listen for the sessions 'end' event so we can respond if the user
 			// or UA ends the session for any reason.
 			session.addEventListener('end', onSessionEnded);
-			
-			// // Create a WebGL context to render with, initialized to be compatible
-			// // with the XRDisplay we're presenting to.
-			// var canvas = document.createElement('canvas');
-			// var gl = canvas.getContext('webgl', { xrCompatible: true });
-			// thisRef.vrRenderer=new THREE.WebGLRenderer({ canvas:canvas, context:gl });
-			
-			// // Use the new WebGL context to create a XRWebGLLayer and set it as the
-			// // sessions baseLayer. This allows any content rendered to the layer to
-			// // be displayed on the XRDevice.
-			// session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
-			
-			// thisRef.webvrRenderDelegate = function(time, frame) {
-			// 	thisRef.renderWebXR(player.webglRenderer, player.view, frame, time);
-			// };
-			// // Get a reference space, which is required for querying poses. In this
-			// // case an 'local' reference space means that all poses will be relative
-			// // to the location where the XRDevice was first detected.
-			// thisRef.xrSession.requestReferenceSpace('local').then(function(refSpace) {
-			// 	thisRef.xrRefSpace = refSpace;
-				
-			// 	// Inform the session that we're ready to begin drawing.
-			// 	session.requestAnimationFrame(thisRef.webvrRenderDelegate);
-			// });
 
 			player.webglRenderer.xr.setSession( session );
+
+			thisRef.xrSession = session;
 
 			log("Started WebXR");
 
 		});
-
-		this._position=new THREE.Vector3(0,0,0);
 	};
 
 	
@@ -95,10 +63,9 @@
 		if(this.xrSession)
 			this.xrSession.end();
 
-		// cancel frames from now on
-		this.webvrRenderDelegate = null;
-
-		this.vrRenderer.dispose();
+		this.vrScene.dispose();
+		this.vrScene = null;
+		this.vrCamera = null;
 	};
 		
 	/**
@@ -108,23 +75,56 @@
 	 * @returns {undefined}
 	 */
 	Bivrost.Renderer.WebXR.prototype.render = function(webglRenderer, view) {
+		var firstFrame = false;
 		// scene data not yet copied from normal renderer
-		if(!this.vrLeftScene) {
-			this.vrLeftScene=view.leftScene.clone();
-			this.vrRightScene=view.rightScene.clone();
-			this.vrLeftCamera=view.leftCamera.clone();
-			this.vrRightCamera=view.rightCamera.clone();
+		if(!this.vrScene) {
+			firstFrame = true;
+			this.vrScene = new THREE.Scene();
+			this.vrSceneOrigin = new THREE.Group();
+			this.vrScene.add(this.vrSceneOrigin);
+			for(var i = 0; i < view.leftScene.children.length; i++)
+			{
+				if(view.leftScene.children[i] == view.leftCamera) continue;
+				var mesh = view.leftScene.children[i].clone();
+				mesh.layers.set(1);
+				//if(!view.enablePositionalCamera) mesh.scale
+				this.vrSceneOrigin.add(mesh);
+			}
+			for(var i = 0; i < view.rightScene.children.length; i++)
+			{
+				if(view.rightScene.children[i] == view.rightCamera) continue;
+				var mesh = view.rightScene.children[i].clone();
+				mesh.layers.set(2);
+				this.vrSceneOrigin.add(mesh);
+			}
+			this.vrCamera = view.leftCamera.clone();
+			this.vrCamera.layers.enable(1); // render left view when no stereo available
+			this.vrScene.add(this.vrCamera);
+			this.vrTranslation = new THREE.Vector3();
+			this.vrRotation = new THREE.Quaternion();
+			this.vrCameraPositionHelper = new THREE.Mesh();
+			this.vrCamera.add(this.vrCameraPositionHelper);
+			log("WebXR lazy init");
 		}
 		
 		// classical renderer only if WebXR has a separate screen
 		// TODO: check for hasExternalDisplay WebVR equivalent
-		if(this.vrLeftCamera) {
-			view.leftCamera.rotation.copy(this.vrLeftCamera.rotation);
-			view.leftCamera.position.copy(this.vrLeftCamera.position);
+		if(this.vrCamera) {
+			view.leftCamera.rotation.copy(this.vrCamera.rotation);
+			view.leftCamera.position.copy(this.vrCamera.position);
 		}
 
-		webglRenderer.clear();
-		webglRenderer.render(view.leftScene, view.leftCamera);	
+		this.vrCameraPositionHelper.getWorldPosition(this.vrTranslation);
+		this.vrCameraPositionHelper.getWorldQuaternion(this.vrRotation);
+
+		if(firstFrame || !view.enablePositionalCamera)
+		{
+			// TODO: rotation?
+
+			this.vrSceneOrigin.position.set(this.vrTranslation.x, this.vrTranslation.y, this.vrTranslation.z);
+		}
+
+		webglRenderer.render(this.vrScene, this.vrCamera);
 	};
 	
 	
@@ -133,92 +133,7 @@
 	Bivrost.Renderer.WebXR.prototype.vrLeftScene=null;
 	Bivrost.Renderer.WebXR.prototype.vrRightScene=null;
 
-	
-	/**
-	 * @type {THREE.Vector3}
-	 * @private
-	 */
-	Bivrost.Renderer.WebXR.prototype._position=null;
-		
-	// /**
-	//  * Stereo renreder on the WebXR surface, on a second rendering queue
-	//  * @param {THREE.WebGLRenderer} webglRenderer
-	//  * @param {Bivrost.View} view
-	//  * @param {?} frame
-	//  * @param {?} time
-	//  * @returns {undefined}
-	//  */
-	// Bivrost.Renderer.WebXR.prototype.renderWebXR = function(webglRenderer, view, frame, time) {
-	// 	var vrRenderer=this.vrRenderer;
 
-	// 	var thisRef = this;
-	// 	if(this.webvrRenderDelegate)
-	// 		this.xrSession.requestAnimationFrame(this.webvrRenderDelegate);
-
-	// 	// Get the XRDevice pose relative to the Reference Space we created
-	// 	// earlier. The pose may not be available for a variety of reasons, so
-	// 	// we'll exit the callback early if it comes back as null.
-	// 	var pose = frame.getViewerPose(this.xrRefSpace);
-	// 	if (!pose) {
-	// 		console.warn("No pose?");
-	// 		return;
-	// 	}
-
-	// 	// TODO: move these and use view params, decide on camera using eye enumeration
-
-	// 	// var orientation=view.transform.orientation;
-	// 	// var q=new THREE.Quaternion(orientation[0], orientation[1], orientation[2], orientation[3]);
-	// 	// this.q=q;
-	// 	// this.vrLeftCamera.rotation.setFromQuaternion(q);
-	// 	// this.vrRightCamera.rotation.setFromQuaternion(q);
-
-	// 	// this.vrLeftCamera.setCameraTransform(view.transform.position, view.transform.orientation);
-	// 	// this.vrRightCamera.setCameraTransform(view.transform.position, view.transform.orientation);
-
-
-	// 	// Ensure we're rendering to the layer's backbuffer.
-	// 	var layer = frame.session.renderState.baseLayer;
-	// 	// gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
-
-	// 	vrRenderer.setScissorTest(true);
-	// 	vrRenderer.clear();
-
-	// 	// console.log("----");
-	// 	// Loop through each of the views reported by the viewer pose.
-	// 	for (var i = 0; i < pose.views.length; i++) {
-	// 		var view = pose.views[i];
-	// 		// console.log(view);
-
-	// 		var viewport = layer.getViewport(view);
-	// 		vrRenderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
-	// 		vrRenderer.setScissor(viewport.x, viewport.y, viewport.width, viewport.height);
-	// 		this.vrLeftCamera.projectionMatrix.elements = view.projectionMatrix;
-
-	// 		// var pos = view.transform.position;
-	// 		// this.vrLeftCamera.position.set(pos.x, pos.y, pos.z);
-
-	// 		vrRenderer.render(this.vrLeftScene, this.vrLeftCamera);
-	// 	}
-
-	// 	// if(this.player.view.enablePositionalCamera && frameData.pose && frameData.pose.position) {
-	// 	// 	this._position.x = frameData.pose.position[0];
-	// 	// 	this._position.y = frameData.pose.position[1];
-	// 	// 	this._position.z = frameData.pose.position[2];
-	// 	// }
-
-
-	// 	// var euler = new THREE.Euler("yxz");
-	// 	// euler.setFromQuaternion(q);
-	// 	// this.onRenderMainView.publish({
-	// 	// 	euler: euler, 
-	// 	// 	fov: this.vrRightCamera.getEffectiveFOV(),
-	// 	// 	platform: Bivrost.Renderer.WebXR.PLATFORM_NAME
-	// 	// });
-
-	// 	// TODO: does not present?
-	// };
-	
-	
 	Bivrost.Renderer.WebXR.shouldWork = function(player) { return !!player.input.xrAvailable; };
 	
 	
