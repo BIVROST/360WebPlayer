@@ -186,13 +186,13 @@ module.exports = function (grunt) {
 			},
 			license_free: {
 				options: {tag: ""},
-				src: output_demo + "license-free.html",
-				dest: output_release + "license-free.html" 
+				src: output_demo + "license.html",
+				dest: output_release + "license.html" 
 			},
 			license_commercial: {
 				options: {tag: ""},
-				src: output_demo + "license-commercial.html",
-				dest: output_release + "license-commercial.html" 
+				src: output_demo + "license-polish.html",
+				dest: output_release + "license-polish.html" 
 			}
 		},
 		
