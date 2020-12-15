@@ -186,6 +186,23 @@
 	},
 
 	{
+		"slug": "HLS-force-native",
+		"title": "HLS force native",
+		"devel_only": true,
+		"description": [
+			"HLS used as normal video, forcing native use"
+		],
+		"options": [
+			{"attr": "source", "value": "video"}
+		],
+		"src": [
+			{"url":"surgery-hls/master-mini.m3u8"}
+		]
+	},
+
+
+
+	{
 		"slug": "resolution-480p",
 		"title": "Resolution example: 480p (extremely low resolution)",
 		"description": ["Resolution FWVGA, 854x480, ratio 16:9, sometimes called 480p"],

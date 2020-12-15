@@ -80,8 +80,8 @@ Supported browsers
 | Android | Mozilla Firefox             | ✔                | ✔              | ✔                     |       |            |              |                                            |
 | Android | Samsung Internet            | ✔                | ✔              |                       |       | ✔          |              | Cardboard                                  |
 | Android | Samsung Internet for GearVR | ✔                | ✔              | ✔                     |   ✔   |            |      ✔       | GearVR                                     |
-| iOS     | Safari                      | ✔                | ✔              |                       |       | ✔          |              | Cardboard                                  |
-| iOS     | Google Chrome               | ✔                | ✔              |                       |       | ✔          |              | Cardboard                                  |
+| iOS     | Safari                      | ✔                | ✔              | ✔                     |       | ✔          |              | Cardboard                                  |
+| iOS     | Google Chrome               | ✔                | ✔              | ✔                     |       | ✔          |              | Cardboard                                  |
 | iOS     | Mozilla Firefox             | ✔                | ✔              |                       |       |            |              |                                            |
 
 ¹ - With a [dedicated WebVR Chromium build][webvr-chromium] or [Chrome Canary][webvr-chrome-canary]  
@@ -179,7 +179,7 @@ Following configuration options are allowed:
 	Allowed values: `video`, `picture`, `stream-hls`, `autodetect`;
 	optional, default: `autodetect`
 
-	Warning: When using HLS, you have to include the [HLS.js][hls-js] third party library.
+	Warning: When using HLS, you have to include the [HLS.js][hls-js] third party library, even if native HLS support is used.
 	
 *	`projection`: how is the media projected (mapping from 2d to 3d)?
 	Allowed value: `equirectangular`, `dome`, `frame`, `cubemap`, `cubemap:configuration...`;

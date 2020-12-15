@@ -24,13 +24,14 @@
 	 * @param {boolean} [loop=false]
 	 */
 	Bivrost.HLSMedia = function(url, onload, projection, stereoscopy, loop) {
+		// NOTE: This is thrown even if native HLS is available and HLS.js is not used.
+		//       Better this way, than to fail in production.
 		if(!window.Hls)
 			throw "HLS streaming requires an external library HLS.js, please add https://github.com/dailymotion/hls.js"
-		
-		Bivrost.Media.call(this, url, onload, projection, stereoscopy, Bivrost.SOURCE_VIDEO, loop);
-		
+			
 		var thisRef = this;
 		
+
 
 		// TODO: add native HLS as an alternative?
 
@@ -38,15 +39,29 @@
 		var firstUrl=Object.keys(url)[0];
 		log("hls stream loading", firstUrl);
 
+		// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
+
+		// document.body.appendChild(video);
+
+		var nativeHLS = (function() { 
+			var tempVideo = document.createElement("video");
+			return Boolean(tempVideo.canPlayType('application/vnd.apple.mpegURL') || video.canPlayType('audio/mpegurl'));
+		})();
+
+		if (nativeHLS) {
+			log("Using native HLS");
+			Bivrost.VideoMedia.call(this, url, onload, projection, stereoscopy, Bivrost.SOURCE_VIDEO, loop);
+			return;
+		}
+
+		log("Using HLS.js")
+		Bivrost.Media.call(this, url, onload, projection, stereoscopy, Bivrost.SOURCE_VIDEO, loop);
+
 		var video;
 		video=document.createElement("video");
 		video.setAttribute("width", "800");	// any number will be ok
 		video.setAttribute("height", "400");	// any number will be ok
 		video.setAttribute("webkit-playsinline", "webkit-playsinline");
-		// video.setAttribute("autoplay", "false");	// autoplay done in Bivrost.Player.setMedia
-
-		// document.body.appendChild(video);
-
 
 		var hls=new Hls({debug:Bivrost.verbose?log:false});
 		hls.attachMedia(video);
@@ -109,7 +124,8 @@
 	
 	
 	/**
-	 * @type HLS
+	 * @type {?HLS}
+	 * can be null if native HLS is used
 	 */
 	Bivrost.HLSMedia.prototype.hls = null;
 	

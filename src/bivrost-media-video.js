@@ -33,6 +33,8 @@
 		log("video loading", Object.keys(url));
 
 		var video=document.createElement("video");
+		this.video=video;
+
 		video.setAttribute("width", "32");	// any number will be ok
 		video.setAttribute("height", "32");	// any number will be ok
 		video.setAttribute("crossOrigin", "anonymous");
@@ -64,6 +66,7 @@
 				log("video ended");
 			}
 		});
+
 
 		var videoLoadedDone=false;
 		var videoLoaded=function(ev) {
@@ -101,8 +104,6 @@
 
 		if(video.readyState > video.HAVE_CURRENT_DATA)
 			videoLoaded({type:"loaded-before"});
-
-		this.video=video;
 	};
 
 	Bivrost.extend(Bivrost.VideoMedia, Bivrost.Media);
