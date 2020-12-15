@@ -10,6 +10,32 @@ Install npm, ruby and java. Have them in your path.
 For Windows we advise to use cygwin.
 
 
+Development requirements
+------------------------
+
+To successfully build the project, the following tools are required:
+
+1. *npm* (for build process)
+2. *ruby* (for compass and sass)
+3. *java* (for running closure compiler)
+4. *7zip* (for installing closure compiler)
+
+These tools are then used to prepare the environment, install dependencies and build the project.
+
+If you have all four of these, proceed to the next section.
+
+### Tips:
+
+On WSL/ubuntu, `ruby-dev` is required for sass installation.
+```
+sudo apt-get install ruby-dev
+```
+
+Java JRE is required for Google Closure Compiler:
+```
+sudo apt install openjdk-8-jre-headless
+```
+
 Prepare the project
 -------------------
 
@@ -17,17 +43,19 @@ After a successful git checkout, `cd` into the 360WebPlayer's directory and:
 
 ```bash
 npm install
-npm install -g grunt-cli
 gem install sass
+npm install -g grunt-cli
 gem install compass
-mkdir node_modules/grunt-closure-compiler/build
+mkdir -p node_modules/grunt-closure-compiler/build
 pushd node_modules/grunt-closure-compiler/build
-wget https://dl.google.com/closure-compiler/compiler-latest.zip
-7z x compiler-latest.zip
-mv closure-compiler*jar compiler.jar
-rm compiler-latest.zip
+wget https://dl.google.com/closure-compiler/compiler-20200719.zip
+7z x -aos compiler-20200719.zip
+mv closure-compiler-v20200719.jar compiler.jar
+rm compiler-20200719.zip
 popd
 ```
+
+### Tips:
 
 Note: on some systems, `gem` and `npm install -g` commands might require administrator privileges:
 ```bash
@@ -41,15 +69,6 @@ On recent MacOS, you might need to install `compass` to a different directory if
 sudo gem install -n /usr/local/bin compass
 ```
 
-On WSL/ubuntu, `ruby-dev` is required for sass installation.
-```
-sudo apt-get install ruby-dev
-```
-
-Java JRE is required for Google Closure Compiler:
-```
-sudo apt install openjdk-8-jre-headless
-```
 
 
 Build the project
