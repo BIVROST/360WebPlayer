@@ -203,8 +203,9 @@ module.exports = function (grunt) {
 					output_release + "bivrost.css",
 					output_release + "bivrost-min.js",
 					output_release + "bivrost-debug.js",
-					output_release + "license-commercial.html",
-					output_release + "license-free.html",
+					output_release + "license.html",
+					output_release + "license-polish.html",
+					output_release + "development.html",
 					output_release + "readme.html"
 				],
 				dest: output_release + "BIVROST360WebPlayer-current.zip"

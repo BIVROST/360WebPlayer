@@ -815,3 +815,4 @@ Changelog
 * 2019-04-05: Updated logo
 * 2020-07-16: Fixed issues with iOS 13 fullscreen and gyroscope (version 1.1)
 * 2020-08-06: WebXR support, license updated (version 1.2)
+* 2020-12-15: Native HLS support (version 1.3)
