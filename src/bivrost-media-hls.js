@@ -10,6 +10,12 @@
 	 */
 	function log(/*vargs...*/) { Bivrost.log("Bivrost.HLSMedia", arguments); };
 
+	/* Check for iOS*/
+	var navigator = (window || {}).navigator
+	var isIOS = typeof navigator !== 'undefined' &&
+		(/iPad|iPhone|iPod/.test(navigator.userAgent || '') ||
+			(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1))
+
 
 	/**
 	 * Loads a media (still or video), you might want to add an onload
@@ -48,7 +54,7 @@
 			return Boolean(tempVideo.canPlayType('application/vnd.apple.mpegURL') || tempVideo.canPlayType('audio/mpegurl'));
 		})();
 
-		if (nativeHLS) {
+		if (isIOS && nativeHLS) {
 			log("Using native HLS");
 			Bivrost.VideoMedia.call(this, url, onload, projection, stereoscopy, Bivrost.SOURCE_VIDEO, loop);
 			return;
