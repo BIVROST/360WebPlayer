@@ -11,6 +11,7 @@ nb-configuration.xml
 .nb-gradle/
 
 .DS_Store
+thumbs.db
 /node_modules
 compiler.jar
 .sass-cache
@@ -18,3 +19,8 @@ compiler.jar
 bivrost-icon-*png
 
 output
+
+### IDE STUFFS
+.idea
+.vscode
+.history
