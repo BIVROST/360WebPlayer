@@ -2,7 +2,7 @@
 "use strict";
 
 (function() {
-	
+
 	/**
 	 * Logging helper
 	 * @private
@@ -15,7 +15,7 @@
 	 * Loads a media (still or video), you might want to add an onload
 	 * @constructor
 	 * @class
-	 * @param {string|object} url - url to the media, may be an 
+	 * @param {string|object} url - url to the media, may be an
 	 *		object with the key being the url and the value being the
 	 *		type or null.
 	 * @param {onloadCallback} onload
@@ -28,9 +28,9 @@
 		//       Better this way, than to fail in production.
 		if(!window.Hls)
 			throw "HLS streaming requires an external library HLS.js, please add https://github.com/dailymotion/hls.js"
-			
+
 		var thisRef = this;
-		
+
 
 
 		// TODO: add native HLS as an alternative?
@@ -43,9 +43,9 @@
 
 		// document.body.appendChild(video);
 
-		var nativeHLS = (function() { 
+		var nativeHLS = (function() {
 			var tempVideo = document.createElement("video");
-			return Boolean(tempVideo.canPlayType('application/vnd.apple.mpegURL') || video.canPlayType('audio/mpegurl'));
+			return Boolean(tempVideo.canPlayType('application/vnd.apple.mpegURL') || tempVideo.canPlayType('audio/mpegurl'));
 		})();
 
 		if (nativeHLS) {
@@ -65,7 +65,7 @@
 
 		var hls=new Hls({debug:Bivrost.verbose?log:false});
 		hls.attachMedia(video);
-		var videoLoadedDone=false;		
+		var videoLoadedDone=false;
 		hls.on(Hls.Events.MEDIA_ATTACHED, function() {
 			log("HLS MEDIA_ATTACHED");
 			hls.loadSource(firstUrl);
@@ -105,30 +105,30 @@
 				}
 			}
 		});
-		
+
 		this.video=video;
 		this.hls=hls;
 	};
 
 	Bivrost.extend(Bivrost.HLSMedia, Bivrost.Media);
-	
+
 	Bivrost.HLSMedia.extensions = ["m3u", "m3u8"];
-	
+
 	Bivrost.Media.store.register(Bivrost.SOURCE_STREAM_HLS, Bivrost.HLSMedia);
-	
-	
+
+
 	/**
 	 * @type {HTMLVideoElement}
 	 */
 	Bivrost.HLSMedia.prototype.video = null;
-	
-	
+
+
 	/**
 	 * @type {?HLS}
 	 * can be null if native HLS is used
 	 */
 	Bivrost.HLSMedia.prototype.hls = null;
-	
+
 	Bivrost.HLSMedia.prototype._setLoop = function(value) {
 		if(value)
 			this.video.setAttribute("loop", "true");
@@ -139,8 +139,8 @@
 	Bivrost.HLSMedia.prototype.play=function() { this.video.play(); };
 	Bivrost.HLSMedia.prototype.pause=function() { this.video.pause(); };
 	Bivrost.HLSMedia.prototype._getPaused=function() { return this.video.paused; };
-	
-	
+
+
 	Bivrost.HLSMedia.prototype._setTime=function(val) { throw "setting time in streams is not supported"; };
 	Bivrost.HLSMedia.prototype._getTime=function() { return this.video.currentTime; };
 	Bivrost.HLSMedia.prototype._getDuration=function() { return 1/0; };
