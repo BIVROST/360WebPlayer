@@ -112,6 +112,8 @@
 	Bivrost.Player.prototype.mainLoop = function(dt) {
 		this.input.update(dt);
 
+		if (this.media && this.media.update) this.media.update(dt);
+
 		try {
 			if(this.view && this.renderer) {
 				this.view.updateRotation(this.input.lookQuaternion);

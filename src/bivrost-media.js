@@ -39,6 +39,12 @@ Bivrost.SOURCE_STREAM_DASH="stream-dash";
 
 
 /**
+ * The source is a HTML5 canvas element
+ * @type String
+ */
+Bivrost.SOURCE_CANVAS="canvas"
+
+/**
  * All available sources
  * @type Array<string>
  */
@@ -47,7 +53,8 @@ Bivrost.AVAILABLE_SOURCES=[
 	Bivrost.SOURCE_VIDEO,
 	Bivrost.SOURCE_PICTURE,
 	Bivrost.SOURCE_STREAM_HLS,
-	Bivrost.SOURCE_STREAM_DASH
+	Bivrost.SOURCE_STREAM_DASH,
+	Bivrost.SOURCE_CANVAS
 ];
 
 

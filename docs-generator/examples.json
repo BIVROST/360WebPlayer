@@ -388,6 +388,22 @@
 			{ "attr": "analytics-uri", "value": "dump-post.php" },
 			{ "attr": "analytics-frequency", "value": 2 }
 		]
+	},
+
+	{
+		"slug": "canvas",
+		"title": "Generated input (canvas)",
+		"description": "A demo of playing locally generated input",
+		"options": [ 
+			{ "attr": "source", "value": "canvas" },
+			{"attr": "stereoscopy", "value":"mono"},
+			{"attr": "projection", "value":"frame"}
+
+		],
+		"scripts_additional": [
+			"../../docs-generator/canvas_source.js"
+		]
+
 	}
 
 ]
