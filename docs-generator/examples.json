@@ -200,6 +200,25 @@
 		]
 	},
 
+	{
+		"slug": "LLHLS",
+		"title": "Apple Low Latency HLS (ALHLS)",
+		"devel_only": true,
+		"description": [
+			"HLS low latency test"
+		],
+		"options": [
+			{"attr": "source", "value": "stream-hls"},
+			{"attr": "projection", "value": "frame"}
+		],
+		"scripts_additional": [
+			"hls.min.js"
+		],
+		"src": [
+			{"url":"https://ll-hls-test-apple.akamaized.net/cmaf/master.m3u8"}
+		]
+	},
+
 
 
 	{
