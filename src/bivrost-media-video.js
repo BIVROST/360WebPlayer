@@ -75,7 +75,7 @@
 			videoLoadedDone=true;
 
 			log("video loaded by event", ev.type);
-			var texture = new THREE.IEVideoTexture(video);
+			var texture = new THREE.VideoTexture(video);
 			texture.name=thisRef.title;
 			texture.minFilter = THREE.LinearFilter;
 			texture.magFilter = THREE.LinearFilter;

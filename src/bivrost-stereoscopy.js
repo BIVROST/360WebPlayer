@@ -104,20 +104,15 @@ Bivrost.Stereoscopy={
 	 * Helper function for cropping UVs
 	 * @param {THREE.Mesh} mesh
 	 * @param {Array<number>} scale
-	 * @param {?number} materialIndex
 	 */
-	scaleUV: function(mesh, scale, materialIndex) {
-		materialIndex=materialIndex || 0;
-		var uvs=mesh.geometry.faceVertexUvs[materialIndex];
-		for(var faceIndex=uvs.length-1; faceIndex >= 0; faceIndex--) {
-			for(var vertexIndex=uvs[faceIndex].length-1; vertexIndex >= 0; vertexIndex--) {
-				/** @type {THREE.Vector2} uvs */
-				var uv=uvs[faceIndex][vertexIndex];
-				uv.x=scale[0]+uv.x*scale[2];
-				uv.y=scale[1]+uv.y*scale[3];
-			}
+	scaleUV: function(mesh, scale) {
+		var uvs=mesh.geometry.attributes.uv;
+		for(var index = 0; index < uvs.count * uvs.itemSize; index += uvs.itemSize)
+		{
+			uvs.array[index] = scale[0] + uvs.array[index] * scale[2];
+			uvs.array[index + 1] = scale[1] + uvs.array[index + 1] * scale[3];
 		}
-		mesh.geometry.uvsNeedUpdate=true;
+		mesh.geometry.attributes.uv.needsUpdate = true;
 	},
 	
 	

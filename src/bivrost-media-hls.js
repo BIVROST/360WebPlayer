@@ -74,7 +74,7 @@
 					return;
 				videoLoadedDone=true;
 				log("video loaded by HLS manifest parse");
-				var texture = new THREE.IEVideoTexture(video);
+				var texture = new THREE.VideoTexture(video);
 				texture.name=thisRef.title;
 				texture.minFilter = THREE.LinearFilter;
 				texture.magFilter = THREE.LinearFilter;
