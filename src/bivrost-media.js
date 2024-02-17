@@ -256,7 +256,7 @@ Bivrost.AVAILABLE_SOURCES=[
 		arg("projection", this.projection);
 //		arg("autoplay", this.player.autoplay);
 		arg("loop", this.loop);
-		return "http://tools.bivrost360.com/open-in-native/" + "#" + encodeURI(protocol+args);
+		return "http://docs.bivrost.pro/open-in-native/" + "#" + encodeURI(protocol+args);
 	};
 	
 	

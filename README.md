@@ -45,7 +45,7 @@ Examples
 
 You can check out a live demo of the player at the [360WebPlayer samples page][live-demo].
 
-[live-demo]: https://tools.bivrost360.com/webplayer-docs
+[live-demo]: https://docs.bivrost.pro/webplayer-docs
 
 
 Download

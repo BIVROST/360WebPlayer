@@ -6,7 +6,7 @@ var output_devel = output_dir + "devel/";
 var output_release = output_dir + "release/";
 function relative_to_docs(path) { return "../../" + path; }
 
-var media_prefix_devel = "https://tools.bivrost360.com/webplayer-docs/";
+var media_prefix_devel = "https://docs.bivrost.pro/webplayer-docs/";
 var media_prefix = "media/";
 
 module.exports = function (grunt) {
